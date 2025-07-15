@@ -1,6 +1,6 @@
+import { QuestionCircleOutlined, GithubOutlined } from '@ant-design/icons'
 import LOGO_URL from '@/assets/logo.svg'
 const GITHUB_URL = 'https://github.com/zeMinng/drag-vue-form'
-const AVATAR_URL = 'https://avatars.githubusercontent.com/u/9919?s=200&v=4'
 const APP_NAME = 'DragVueForm'
 
 const ToolHeader: React.FC = () => {
@@ -19,13 +19,16 @@ const ToolHeader: React.FC = () => {
         </span>
       </div>
       {/* 右侧GitHub头像 */}
-      <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer">
-        <img
-          src={AVATAR_URL}
-          alt="GitHub"
-          style={{ width: 36, height: 36, borderRadius: '50%', cursor: 'pointer', border: '1px solid #eee' }}
-        />
-      </a>
+      <div className="flex">
+        <QuestionCircleOutlined />
+        <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer" style={{ 
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}>
+          <GithubOutlined style={{ fontSize: 32, textAlign: 'center', color: '#000' }} />
+        </a>
+      </div>
     </div>
   )
 }

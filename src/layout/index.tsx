@@ -11,15 +11,14 @@ const layoutStyle = {
 const headerStyle: React.CSSProperties = {
   textAlign: 'center',
   height: 60,
-  paddingInline: 32,
-  // lineHeight: '64px',
-  backgroundColor: 'transparent',
-  boxShadow: '0 2px 8px rgba(0, 21, 41, 0.35)',
+  lineHeight: '60px',
+  paddingInline: 16,
+  backgroundColor: '#fff',
+  borderBottom: '1px solid #e9ecf0',
 }
 const contentStyle: React.CSSProperties = {
   minHeight: 'calc(100vh - 60px)',
-  lineHeight: '120px',
-  color: '#fff',
+  backgroundColor: '#fff',
 }
 
 const MyLayout: React.FC = () => {
