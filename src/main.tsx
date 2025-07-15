@@ -4,6 +4,7 @@ import { BrowserRouter } from 'react-router-dom'
 import '@ant-design/v5-patch-for-react-19'
 import 'antd/dist/reset.css'
 import App from './App.tsx'
+import './styles/index.scss'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
