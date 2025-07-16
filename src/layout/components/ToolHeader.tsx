@@ -1,3 +1,4 @@
+import { Popover } from 'antd'
 import { QuestionCircleOutlined, GithubOutlined } from '@ant-design/icons'
 import LOGO_URL from '@/assets/logo.svg'
 const GITHUB_URL = 'https://github.com/zeMinng/drag-vue-form'
@@ -10,6 +11,7 @@ const ToolHeader: React.FC = () => {
       alignItems: 'center',
       justifyContent: 'space-between',
       height: '100%',
+      userSelect: 'none',
     }}>
       {/* 左侧Logo和App名 */}
       <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -20,7 +22,12 @@ const ToolHeader: React.FC = () => {
       </div>
       {/* 右侧GitHub头像 */}
       <div className="flex">
-        <QuestionCircleOutlined />
+        <Popover
+          trigger="click"
+          content="表单可视化编辑器：生成 Vue 3.x + Element Plus 代码，支持拖拽、配置、预览等功能"
+        >
+          <QuestionCircleOutlined style={{ fontSize: 16, marginRight: 16 }} />
+        </Popover>
         <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer" style={{ 
           display: 'flex',
           alignItems: 'center',

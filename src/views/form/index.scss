@@ -1,0 +1,23 @@
+.formWrap {
+  width: 100%;
+  height: 100%;
+  
+  .leftPanel,
+  .rightPanel {
+    flex-shrink: 0;
+    flex-basis: 20%;
+    background: #fff;
+  }
+
+  .leftPanel {
+
+  }
+
+  .centerPanel {
+    background: #f1f5f9;
+  }
+
+  .rightPanel {
+
+  }
+}
