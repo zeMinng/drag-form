@@ -6,28 +6,28 @@ body {
   margin: 0;
   overflow: hidden;
   font-family: 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', Arial, sans-serif;
-  background: #fff;
   color: #000;
+  background: #fff;
 }
 
 #root,
 .app {
   width: 100vw;
   height: 100vh;
-  min-height: 100vh;
   min-width: 100vw;
+  min-height: 100vh;
   font-size: 16px;
 }
 
 .center-loading {
+  display: flex;
   width: 100vw;
   height: 100vh;
-  min-height: 100vh;
   min-width: 100vw;
-  display: flex;
+  min-height: 100vh;
+  background: transparent;
   align-items: center;
   justify-content: center;
-  background: transparent;
 }
 
 *, *::before, *::after {
