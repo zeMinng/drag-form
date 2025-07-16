@@ -17,7 +17,7 @@ const headerStyle: React.CSSProperties = {
   borderBottom: '1px solid #e9ecf0',
 }
 const contentStyle: React.CSSProperties = {
-  minHeight: 'calc(100vh - 60px)',
+  height: 'calc(100vh - 60px)',
   backgroundColor: '#fff',
 }
 
