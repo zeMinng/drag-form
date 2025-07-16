@@ -1,5 +1,5 @@
-import Left from "./components/left"
-import Center from "./components/center"
+import Left from "./components/Left"
+import Center from "./components/Center"
 import Right from "./components/Right"
 
 import './index.scss'
