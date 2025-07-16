@@ -22,6 +22,7 @@ const Left: React.FC = () => {
       <div className="left-list">
         <List
           className='ListData'
+          split={false}
           dataSource={data}
           itemLayout="horizontal"
           renderItem={(item) => (
