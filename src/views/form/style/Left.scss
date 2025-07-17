@@ -27,13 +27,13 @@
           align-items: center;
 
           .ant-list-item-meta-avatar {
+            display: flex;
+            padding: 4px;
             margin: 0 16px 0 8px;
             background-color: #f1f5f9;
-            padding: 4px;
-            display: flex;
+            border-radius: 4px;
             align-items: center;
             justify-content: center;
-            border-radius: 4px;
           }
         }
 
