@@ -8,6 +8,7 @@ body {
   font-family: 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', Arial, sans-serif;
   color: #000;
   background: #fff;
+  user-select: none;
 }
 
 #root,

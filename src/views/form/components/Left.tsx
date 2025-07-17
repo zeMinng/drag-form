@@ -4,18 +4,27 @@ import { leftListSegmentedOptions, componentMappings } from '../static/mapping/l
 import type { ComponentCategory, ComponentMeta } from '../static/mapping/leftListMapping'
 import '../style/Left.scss'
 
-const DraggableListItem: React.FC<{ item: ComponentMeta }> = ({ item }) => {
-  const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
-    id: item.key,
-    data: item, // 拖拽时携带的数据
-  })
+export const DraggableListItem: React.FC<{ item: ComponentMeta; isDragging?: boolean }> = ({ item, isDragging }) => {
+  // 只有在 Left 里用 useDraggable，DragOverlay 里不用
+  const draggable = useDraggable ? useDraggable({ id: item.key, data: item }) : { attributes: {}, listeners: {}, setNodeRef: undefined, isDragging: false }
+
   
   return (
     <div
-      ref={setNodeRef}
-      {...attributes}
-      {...listeners}
-      style={{ opacity: isDragging ? 0.5 : 1, cursor: 'grab' }}
+      ref={draggable.setNodeRef}
+      {...draggable.attributes}
+      {...draggable.listeners}
+      style={{ 
+        opacity: isDragging ? 0.8: 1,
+        cursor: 'grab',
+        background: isDragging ? '#fff' : '#fff',
+        border: isDragging ? '1px solid #1890ff' : '',
+        boxShadow: isDragging ? '0 2px 8px rgba(24,144,255,0.2)' : 'none',
+        padding: isDragging ? '8px' : '0',
+        marginBottom: isDragging ? '8px' : '0',
+        borderRadius: isDragging ? '4px' : '0',
+        listStyle: isDragging ? 'none' : 'none',
+      }}
     >
       <List.Item className="left-list-item">
         <List.Item.Meta

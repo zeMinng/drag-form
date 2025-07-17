@@ -1,6 +1,8 @@
 import { useDroppable } from '@dnd-kit/core'
 import { useFormStore } from '@/store/modules/form'
 
+import '../style/Center.scss'
+
 const Center: React.FC = () => {
   const { centerItems } = useFormStore()
   const { setNodeRef, isOver } = useDroppable({ id: 'center-drop-area' })
@@ -11,8 +13,6 @@ const Center: React.FC = () => {
       className="center-container"
       style={{
         border: isOver ? '2px dashed #1890ff' : '2px dashed #eee',
-        minHeight: 200,
-        padding: 16,
       }}
     >
       {centerItems.length === 0 ? (

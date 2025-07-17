@@ -1,13 +1,19 @@
-import Left from "./components/Left"
+import Left, { DraggableListItem } from "./components/Left"
 import Center from "./components/Center"
 import Right from "./components/Right"
-import { DndContext } from '@dnd-kit/core'
+import { DndContext, DragOverlay } from '@dnd-kit/core'
 import { useFormStore } from '@/store/modules/form'
 
 import './index.scss'
 
 const Form: React.FC = () => {
   const addCenterItem = useFormStore(state => state.addCenterItem)
+  const [draggingItem, setDraggingItem] = useState<any>(null)
+
+  // 处理拖拽开始
+  const handleDragStart = (event: any) => {
+    setDraggingItem(event.active.data.current)
+  }
 
   // 处理拖拽结束
   const handleDragEnd = (event: any) => {
@@ -17,8 +23,17 @@ const Form: React.FC = () => {
     }
   }
 
+  // 处理拖拽取消
+  const handleDragCancel = () => {
+    setDraggingItem(null)
+  }
+
   return (
-    <DndContext onDragEnd={handleDragEnd}>
+    <DndContext
+      onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd}
+      onDragCancel={handleDragCancel}
+    >
       <div className="formWrap flex">
         <div className="leftPanel">
           <Left />
@@ -30,6 +45,11 @@ const Form: React.FC = () => {
           <Right />
         </div>
       </div>
+      <DragOverlay dropAnimation={null}>
+        {draggingItem ? (
+          <DraggableListItem item={draggingItem} isDragging />
+        ) : null}
+      </DragOverlay>
     </DndContext>
   )
 }
