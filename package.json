@@ -31,6 +31,7 @@
     "eslint-plugin-react-refresh": "^0.4.20",
     "globals": "^16.3.0",
     "postcss-scss": "^4.0.9",
+    "postcss-styled": "^0.34.0",
     "sass": "^1.89.2",
     "stylelint": "^16.21.1",
     "stylelint-config-standard-scss": "^15.0.1",

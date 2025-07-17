@@ -6,8 +6,7 @@ import '../style/Left.scss'
 
 export const DraggableListItem: React.FC<{ item: ComponentMeta; isDragging?: boolean }> = ({ item, isDragging }) => {
   // 只有在 Left 里用 useDraggable，DragOverlay 里不用
-  const draggable = useDraggable ? useDraggable({ id: item.key, data: item }) : { attributes: {}, listeners: {}, setNodeRef: undefined, isDragging: false }
-
+  const draggable = useDraggable({ id: item.key, data: item })
   
   return (
     <div
