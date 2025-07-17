@@ -1,8 +1,9 @@
 import { Modal } from 'antd'
 import { DeleteOutlined, EyeOutlined, PlayCircleOutlined, DownloadOutlined } from '@ant-design/icons'
-import { useDroppable } from '@dnd-kit/core'
+import { DndContext, useDroppable, useDraggable, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core'
+import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
 import { useFormStore } from '@/store/modules/form'
-
 import '../style/Center.scss'
 
 const clearTheCanvas = () => {
@@ -27,7 +28,6 @@ const save = () => {
 }
 
 const CenterTop: React.FC = () => {
-
   return (
     <div className="centerTop">
       <Flex gap="small" wrap>
@@ -48,30 +48,76 @@ const CenterTop: React.FC = () => {
   )
 }
 
+// SortableItem 组件
+const SortableItem: React.FC<{ item: any }> = ({ item }) => {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: item.id })
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+    cursor: 'move',
+  }
+  return (
+    <div ref={setNodeRef} style={style} {...attributes} {...listeners} className="center-item">
+      <i className={`iconfont ${item.icon}`} /> {item.title}
+    </div>
+  )
+}
+
 const Center: React.FC = () => {
   const { centerItems } = useFormStore()
+  const setCenterItems = (items: any[]) => useFormStore.setState({ centerItems: items })
   const { setNodeRef, isOver } = useDroppable({ id: 'center-drop-area' })
+
+  // dnd-kit sensors
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
+  )
+
+  // 拖拽结束处理
+  const handleDragEnd = (event: any) => {
+    const { active, over } = event
+    if (!over) return
+    if (active.id === over.id) return
+    // 排序
+    const oldIndex = centerItems.findIndex((item: any) => item.id === active.id)
+    const newIndex = centerItems.findIndex((item: any) => item.id === over.id)
+    if (oldIndex !== -1 && newIndex !== -1) {
+      setCenterItems(arrayMove(centerItems, oldIndex, newIndex))
+    }
+    // TODO: 这里可以扩展支持左侧拖入插入任意位置（需结合自定义拖拽数据）
+  }
 
   return (
     <div className='centerWrap'>
       <CenterTop />
-      <div
-        ref={setNodeRef}
-        className="center-container"
-        style={{
-          border: isOver ? '2px dashed #1890ff' : '2px dashed #eee',
-        }}
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={handleDragEnd}
       >
-        {centerItems.length === 0 ? (
-          <div className="center-placeholder">请从左侧拖拽组件到这里</div>
-        ) : (
-          centerItems.map((item) => (
-            <div key={item.id} className="center-item">
-              <i className={`iconfont ${item.icon}`} /> {item.title}
-            </div>
-          ))
-        )}
-      </div>
+        <SortableContext
+          items={centerItems.map((item: any) => item.id)}
+          strategy={verticalListSortingStrategy}
+        >
+          <div
+            ref={setNodeRef}
+            className="center-container"
+            style={{
+              border: isOver ? '2px dashed #1890ff' : '2px dashed #eee',
+              minHeight: 120,
+            }}
+          >
+            {centerItems.length === 0 ? (
+              <div className="center-placeholder">请从左侧拖拽组件到这里</div>
+            ) : (
+              centerItems.map((item: any) => (
+                <SortableItem key={item.id} item={item} />
+              ))
+            )}
+          </div>
+        </SortableContext>
+      </DndContext>
     </div>
   )
 }
