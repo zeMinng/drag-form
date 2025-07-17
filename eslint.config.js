@@ -31,8 +31,11 @@ export default tseslint.config([
         caughtErrors: 'all',
         caughtErrorsIgnorePattern: '^_'
       }],
+      // 是否可以空函数
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/no-empty-function': 'warn',
+      // 是否可以any类型
+      '@typescript-eslint/no-explicit-any': 'off',
     },
   },
 ])

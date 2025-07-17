@@ -1,7 +1,7 @@
-import { useDroppable } from '@dnd-kit/core'
-import { useFormStore } from '@/store/modules/form'
 import { Modal } from 'antd'
 import { DeleteOutlined, EyeOutlined, PlayCircleOutlined, DownloadOutlined } from '@ant-design/icons'
+import { useDroppable } from '@dnd-kit/core'
+import { useFormStore } from '@/store/modules/form'
 
 import '../style/Center.scss'
 
