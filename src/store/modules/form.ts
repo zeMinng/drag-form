@@ -6,7 +6,6 @@ export interface CenterItem {
   title: string
   description?: string
   icon?: string
-  // 你可以根据需要扩展更多字段
 }
 
 interface FormState {
@@ -21,7 +20,8 @@ export const useFormStore = createPersistedStore<FormState>(
     addCenterItem: (item) =>
       set((state) => ({
         centerItems: [...state.centerItems, { ...item, id: `${item.type}_${Date.now()}` }]
-      })),
+      }
+    )),
   })
 )
 
