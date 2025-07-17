@@ -1,5 +1,6 @@
 import { Segmented, List } from 'antd'
 import { useDraggable } from '@dnd-kit/core'
+import IconFont from '@/components/Icon'
 import { leftListSegmentedOptions, componentMappings } from '../static/mapping/leftListMapping'
 import type { ComponentCategory, ComponentMeta } from '../static/mapping/leftListMapping'
 import '../style/Left.scss'
@@ -27,7 +28,7 @@ export const DraggableListItem: React.FC<{ item: ComponentMeta; isDragging?: boo
     >
       <List.Item className="left-list-item">
         <List.Item.Meta
-          avatar={<i className={`iconfont ${item.icon}`} />}
+          avatar={<IconFont type={item.icon || ''} className="left-list-icon" />}
           title={item.title}
           description={item.description}
         />
