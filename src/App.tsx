@@ -3,6 +3,7 @@ import Router from './router'
 import { Spin, ConfigProvider } from 'antd'
 import zhCN from 'antd/es/locale/zh_CN'
 import './App.css'
+import '@/styles/iconFont.css'
 // const LazyComponent = React.lazy(() => new Promise(() => {})); // 永远不resolve
 
 const App: React.FC = () => (

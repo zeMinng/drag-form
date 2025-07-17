@@ -20,7 +20,7 @@ export const leftListSegmentedOptions = [
 
 // 输入型组件
 export const inputMapping: ComponentMeta[] = [
-  { key: 'input', title: '输入框', description: '用于输入文本的基础组件', icon: 'icon-input' },
+  { key: 'input', title: '输入框', description: '用于输入文本的基础组件', icon: 'icon-shurukuang' },
   { key: 'textarea', title: '文本域', description: '多行文本输入框', icon: 'icon-textarea' },
   { key: 'password', title: '密码框', description: '用于输入密码的组件', icon: 'icon-password' },
   { key: 'number', title: '数字输入框', description: '只允许输入数字的输入框', icon: 'icon-number' },
