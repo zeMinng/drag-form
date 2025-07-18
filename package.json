@@ -18,10 +18,7 @@
     "dayjs": "^1.11.13",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "react-markdown": "^10.1.0",
     "react-router-dom": "^7.6.3",
-    "rehype-highlight": "^7.0.2",
-    "remark-gfm": "^4.0.1",
     "uuid": "^11.1.0",
     "zustand": "^5.0.6"
   },
