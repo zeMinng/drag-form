@@ -1,6 +1,7 @@
 import { useNavigate, useLocation } from 'react-router-dom'
 import { Menu } from 'antd'
 import type { MenuProps } from 'antd'
+
 type MenuItem = Required<MenuProps>['items'][number]
 const items: MenuItem[] = [
   {
@@ -14,7 +15,6 @@ const MenuWrap: React.FC = () => {
   const location = useLocation()
 
   const pathKey = location.pathname.split('/')[1]
-  console.log('%c [ pathKey ]-16', 'font-size:13px; background:pink; color:#bf2c9f;', pathKey)
   const current = pathKey || ''
   const onClick: MenuProps['onClick'] = (e) => {
     navigate(`/${e.key}`)
