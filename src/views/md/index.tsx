@@ -1,8 +1,9 @@
+import { MarkdownRenderer } from '@/components/MarkdownRenderer'
+
 const DesignIdeas: React.FC = () => {
   return (
     <div>
-      {/* <Markdown /> */}
-      sdf
+      <MarkdownRenderer fileName="designIdeas.md" />
     </div>
   )
 }
