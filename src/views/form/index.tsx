@@ -11,7 +11,12 @@ import './index.scss'
 const Form: React.FC = () => {
   const addCenterItem = useFormStore(state => state.addCenterItem)
   const [draggingItem, setDraggingItem] = useState<any>(null)
-
+  
+  const { centerItems } = useFormStore()
+  useEffect(() => {
+    console.log('%c [ 缓存的拖动数组 ]', 'font-size:13px; background:pink; color:#bf2c9f;', centerItems)
+  }, [centerItems])
+  
   // 处理拖拽开始
   const handleDragStart = (event: DragStartEvent) => {
     setDraggingItem(event.active.data.current)

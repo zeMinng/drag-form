@@ -1,4 +1,5 @@
 import { createPersistedStore } from '@/store'
+import { v4 as uuidv4 } from 'uuid'
 
 export interface CenterItem {
   id: string
@@ -19,7 +20,7 @@ export const useFormStore = createPersistedStore<FormState>(
     centerItems: [],
     addCenterItem: (item) =>
       set((state) => ({
-        centerItems: [...state.centerItems, { ...item, id: `${item.type}_${Date.now()}` }]
+        centerItems: [...state.centerItems, { ...item, id: uuidv4().substring(0, 8) }]
       }
     )),
   })

@@ -1,5 +1,6 @@
 import { Popover } from 'antd'
 import { QuestionCircleOutlined, GithubOutlined } from '@ant-design/icons'
+import MenuWrap from './Menu'
 import LOGO_URL from '@/assets/logo.svg'
 const GITHUB_URL = 'https://github.com/zeMinng/drag-vue-form'
 const APP_NAME = 'DragVueForm'
@@ -22,19 +23,22 @@ const ToolHeader: React.FC = () => {
       </div>
       {/* 右侧GitHub头像 */}
       <div className="flex">
-        <Popover
-          trigger="click"
-          content="表单可视化编辑器：生成 Vue 3.x + Element Plus 代码，支持拖拽、配置、预览等功能"
-        >
-          <QuestionCircleOutlined style={{ fontSize: 16, marginRight: 16 }} />
-        </Popover>
-        <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer" style={{ 
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}>
-          <GithubOutlined style={{ fontSize: 32, textAlign: 'center', color: '#000' }} />
-        </a>
+        <Flex gap="middle" align="center">
+          <MenuWrap />
+          <Popover
+            trigger="click"
+            content="表单可视化编辑器：生成 Vue 3.x + Element Plus 代码，支持拖拽、配置、预览等功能"
+          >
+            <QuestionCircleOutlined style={{ fontSize: 16, }} />
+          </Popover>
+          <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer" style={{ 
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}>
+            <GithubOutlined style={{ fontSize: 32, textAlign: 'center', color: '#000' }} />
+          </a>
+        </Flex>
       </div>
     </div>
   )

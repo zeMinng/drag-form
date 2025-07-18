@@ -2,7 +2,7 @@ import type { RouteObject } from 'react-router-dom'
 import { lazy } from 'react'
 import Layout from '@/layout'
 const Form = lazy(() => import('@/views/form'))
-const Home = lazy(() => import('@/views/system/home'))
+const Md = lazy(() => import('@/views/md'))
 const NotFound = lazy(() => import('@/views/error/notFound'))
 
 const routes: RouteObject[] = [
@@ -15,8 +15,8 @@ const routes: RouteObject[] = [
         element: <Form />,
       },
       {
-        path: '/home',
-        element: <Home />
+        path: '/md',
+        element: <Md />
       },
       {
         path: '*',
