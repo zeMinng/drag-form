@@ -2,6 +2,7 @@ import { Modal } from 'antd'
 import { DeleteOutlined, EyeOutlined, PlayCircleOutlined, DownloadOutlined } from '@ant-design/icons'
 import { DndContext, useDroppable, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core'
 import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable'
+import { restrictToParentElement, restrictToVerticalAxis } from '@dnd-kit/modifiers'
 import { CSS } from '@dnd-kit/utilities'
 import { useFormStore } from '@/store/modules/form'
 import '../style/Center.scss'
@@ -94,6 +95,12 @@ const Center: React.FC = () => {
       <DndContext
         sensors={sensors}
         collisionDetection={closestCenter}
+        modifiers={[
+          // 只允许纵向拖拽（X 始终固定）
+          restrictToVerticalAxis,
+          // 并且不允许移动出父容器
+          restrictToParentElement,
+        ]}
         onDragEnd={handleDragEnd}
       >
         <SortableContext
