@@ -9,7 +9,6 @@ import { useFormStore } from '@/store/modules/form'
 import './index.scss'
 
 const Form: React.FC = () => {
-  const addCenterItem = useFormStore(state => state.addCenterItem)
   const [draggingItem, setDraggingItem] = useState<any>(null)
   
   const { centerItems } = useFormStore()
@@ -22,12 +21,10 @@ const Form: React.FC = () => {
     setDraggingItem(event.active.data.current)
   }
 
-  // 处理拖拽结束
+  // 处理拖拽结束 - 现在主要由Center组件内部处理
   const handleDragEnd = (event: any) => {
-    const { over, active } = event
-    if (over && over.id === 'center-drop-area' && active.data.current) {
-      addCenterItem(active.data.current)
-    }
+    // 拖拽结束逻辑现在在Center组件中处理
+    setDraggingItem(null)
   }
 
   // 处理拖拽取消

@@ -49,8 +49,19 @@ const CenterTop: React.FC = () => {
   )
 }
 
+// 插入指示器组件
+const InsertIndicator: React.FC<{ isVisible: boolean; position: 'top' | 'bottom' }> = ({ isVisible, position }) => {
+  if (!isVisible) return null
+  return (
+    <div className={`insert-indicator insert-${position}`}>
+      <div className="insert-line"></div>
+      <div className="insert-dot"></div>
+    </div>
+  )
+}
+
 // SortableItem 组件
-const SortableItem: React.FC<{ item: any }> = ({ item }) => {
+const SortableItem: React.FC<{ item: any; index: number }> = ({ item, index }) => {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: item.id })
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -66,7 +77,7 @@ const SortableItem: React.FC<{ item: any }> = ({ item }) => {
 }
 
 const Center: React.FC = () => {
-  const { centerItems } = useFormStore()
+  const { centerItems, addCenterItem } = useFormStore()
   const setCenterItems = (items: any[]) => useFormStore.setState({ centerItems: items })
   const { setNodeRef, isOver } = useDroppable({ id: 'center-drop-area' })
 
@@ -79,14 +90,41 @@ const Center: React.FC = () => {
   const handleDragEnd = (event: any) => {
     const { active, over } = event
     if (!over) return
+    
+    // 处理从左侧拖入的新组件
+    if (active.data.current && active.data.current.type === 'component') {
+      const newItem = {
+        id: `new-${Date.now()}`,
+        type: active.data.current.key,
+        title: active.data.current.title,
+        description: active.data.current.description,
+        icon: active.data.current.icon,
+      }
+      
+      // 如果拖到了容器上，添加到末尾
+      if (over.id === 'center-drop-area') {
+        addCenterItem(newItem)
+        return
+      }
+      
+      // 如果拖到了某个项目上，根据鼠标位置决定插入位置
+      const targetIndex = centerItems.findIndex((item: any) => item.id === over.id)
+      if (targetIndex !== -1) {
+        const newItems = [...centerItems]
+        // 默认插入到目标项目之前
+        newItems.splice(targetIndex, 0, newItem)
+        setCenterItems(newItems)
+        return
+      }
+    }
+    
+    // 处理内部排序
     if (active.id === over.id) return
-    // 排序
     const oldIndex = centerItems.findIndex((item: any) => item.id === active.id)
     const newIndex = centerItems.findIndex((item: any) => item.id === over.id)
     if (oldIndex !== -1 && newIndex !== -1) {
       setCenterItems(arrayMove(centerItems, oldIndex, newIndex))
     }
-    // TODO: 这里可以扩展支持左侧拖入插入任意位置（需结合自定义拖拽数据）
   }
 
   return (
@@ -118,8 +156,8 @@ const Center: React.FC = () => {
             {centerItems.length === 0 ? (
               <div className="center-placeholder">请从左侧拖拽组件到这里</div>
             ) : (
-              centerItems.map((item: any) => (
-                <SortableItem key={item.id} item={item} />
+              centerItems.map((item: any, index: number) => (
+                <SortableItem key={item.id} item={item} index={index} />
               ))
             )}
           </div>
