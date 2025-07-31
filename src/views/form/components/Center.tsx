@@ -77,7 +77,7 @@ const SortableItem: React.FC<{ item: any; index: number }> = ({ item, index }) =
 }
 
 const Center: React.FC = () => {
-  const { centerItems, addCenterItem } = useFormStore()
+  const { centerItems } = useFormStore()
   const setCenterItems = (items: any[]) => useFormStore.setState({ centerItems: items })
   const { setNodeRef, isOver } = useDroppable({ id: 'center-drop-area' })
 
@@ -86,39 +86,12 @@ const Center: React.FC = () => {
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
   )
 
-  // 拖拽结束处理
+  // 拖拽结束处理 - 只处理内部排序
   const handleDragEnd = (event: any) => {
     const { active, over } = event
     if (!over) return
     
-    // 处理从左侧拖入的新组件
-    if (active.data.current && active.data.current.type === 'component') {
-      const newItem = {
-        id: `new-${Date.now()}`,
-        type: active.data.current.key,
-        title: active.data.current.title,
-        description: active.data.current.description,
-        icon: active.data.current.icon,
-      }
-      
-      // 如果拖到了容器上，添加到末尾
-      if (over.id === 'center-drop-area') {
-        addCenterItem(newItem)
-        return
-      }
-      
-      // 如果拖到了某个项目上，根据鼠标位置决定插入位置
-      const targetIndex = centerItems.findIndex((item: any) => item.id === over.id)
-      if (targetIndex !== -1) {
-        const newItems = [...centerItems]
-        // 默认插入到目标项目之前
-        newItems.splice(targetIndex, 0, newItem)
-        setCenterItems(newItems)
-        return
-      }
-    }
-    
-    // 处理内部排序
+    // 只处理内部排序，不处理从左侧拖入
     if (active.id === over.id) return
     const oldIndex = centerItems.findIndex((item: any) => item.id === active.id)
     const newIndex = centerItems.findIndex((item: any) => item.id === over.id)

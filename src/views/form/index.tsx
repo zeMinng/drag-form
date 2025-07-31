@@ -9,9 +9,10 @@ import { useFormStore } from '@/store/modules/form'
 import './index.scss'
 
 const Form: React.FC = () => {
+  const { centerItems, addCenterItem } = useFormStore()
+  const setCenterItems = (items: any[]) => useFormStore.setState({ centerItems: items })
   const [draggingItem, setDraggingItem] = useState<any>(null)
   
-  const { centerItems } = useFormStore()
   useEffect(() => {
     console.log('%c [ 缓存的拖动数组 ]', 'font-size:13px; background:pink; color:#bf2c9f;', centerItems)
   }, [centerItems])
@@ -21,10 +22,40 @@ const Form: React.FC = () => {
     setDraggingItem(event.active.data.current)
   }
 
-  // 处理拖拽结束 - 现在主要由Center组件内部处理
+  // 处理拖拽结束 - 处理从左侧拖入新组件
   const handleDragEnd = (event: any) => {
-    // 拖拽结束逻辑现在在Center组件中处理
+    const { active, over } = event
     setDraggingItem(null)
+    
+    if (!over) return
+    
+    // 处理从左侧拖入的新组件
+    if (active.data.current && active.data.current.type === 'component') {
+      const newItem = {
+        id: `new-${Date.now()}`,
+        type: active.data.current.key,
+        title: active.data.current.title,
+        description: active.data.current.description,
+        icon: active.data.current.icon,
+      }
+      
+      // 如果拖到了容器上，添加到末尾
+      console.log('%c [ over ]-44', 'font-size:13px; background:pink; color:#bf2c9f;', over)
+      if (over.id === 'center-drop-area') {
+        addCenterItem(newItem)
+        return
+      }
+      
+      // 如果拖到了某个项目上，插入到该项目之前
+      const targetIndex = centerItems.findIndex((item: any) => item.id === over.id)
+      console.log('%c [ targetIndex ]-50', 'font-size:13px; background:pink; color:#bf2c9f;', targetIndex)
+      if (targetIndex !== -1) {
+        const newItems = [...centerItems]
+        newItems.splice(targetIndex, 0, newItem)
+        setCenterItems(newItems)
+        return
+      }
+    }
   }
 
   // 处理拖拽取消
