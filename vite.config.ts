@@ -12,5 +12,8 @@ export default defineConfig({
   },
   server: {
     open: true,
+    allowedHosts: [
+      'devserver-dev--drag-vue-form.netlify.app', // 允许 Netlify 开发域名
+    ],
   },
 })
