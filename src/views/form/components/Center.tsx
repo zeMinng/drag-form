@@ -59,9 +59,10 @@ const SortableItem: React.FC<{ item: CenterItem; index?: number }> = ({ item }) 
 
 interface CenterProps {
   insertIndex?: number | null
+  isDraggingOver?: boolean
 }
 
-const Center: React.FC<CenterProps> = ({ insertIndex }) => {
+const Center: React.FC<CenterProps> = ({ insertIndex, isDraggingOver = false }) => {
   const { centerItems } = useFormStore()
   const setCenterItems = (items: any[]) => useFormStore.setState({ centerItems: items })
   const { setNodeRef, isOver } = useDroppable({ id: 'center-drop-area' })
@@ -73,7 +74,7 @@ const Center: React.FC<CenterProps> = ({ insertIndex }) => {
         ref={setNodeRef}
         className="center-container"
         style={{
-          border: isOver ? '2px dashed #1890ff' : '2px dashed #eee',
+          border: (isOver || isDraggingOver) ? '2px dashed #1890ff' : '2px dashed #eee',
           minHeight: 120,
         }}
       >

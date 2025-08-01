@@ -51,6 +51,7 @@ const Form: React.FC = () => {
   const setCenterItems = (items: CenterItem[]) => useFormStore.setState({ centerItems: items })
   const [draggingItem, setDraggingItem] = useState<DraggingItem | null>(null)
   const [insertIndex, setInsertIndex] = useState<number | null>(null)
+  const [isDraggingOver, setIsDraggingOver] = useState(false)
   
   // 移除调试代码，生产环境不需要
   useEffect(() => {
@@ -82,8 +83,13 @@ const Form: React.FC = () => {
     if (active.data.current && active.data.current.type === 'component' && over) {
       const insertIndex = calculateInsertIndex(over.id)
       setInsertIndex(insertIndex)
+      setIsDraggingOver(true)
     } else {
       setInsertIndex(null)
+      // 只有在没有拖拽到任何有效目标时才关闭边框
+      if (!over || (over.id !== 'center-drop-area' && !centerItems.find(item => item.id === over.id))) {
+        setIsDraggingOver(false)
+      }
     }
   }
 
@@ -129,6 +135,7 @@ const Form: React.FC = () => {
     const { active, over } = event
     setDraggingItem(null)
     setInsertIndex(null)
+    setIsDraggingOver(false)
     
     if (!over) return
     
@@ -148,6 +155,8 @@ const Form: React.FC = () => {
   // 处理拖拽取消
   const handleDragCancel = () => {
     setDraggingItem(null)
+    setInsertIndex(null)
+    setIsDraggingOver(false)
   }
 
   return (
@@ -166,7 +175,7 @@ const Form: React.FC = () => {
             items={centerItems.map((item: any) => item.id)}
             strategy={verticalListSortingStrategy}
           >
-            <Center insertIndex={insertIndex} />
+            <Center insertIndex={insertIndex} isDraggingOver={isDraggingOver} />
           </SortableContext>
         </div>
         <div className="rightPanel">
