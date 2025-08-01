@@ -64,7 +64,7 @@ interface CenterProps {
 
 const Center: React.FC<CenterProps> = ({ insertIndex, isDraggingOver = false }) => {
   const { centerItems } = useFormStore()
-  const setCenterItems = (items: any[]) => useFormStore.setState({ centerItems: items })
+  // const setCenterItems = (items: any[]) => useFormStore.setState({ centerItems: items })
   const { setNodeRef, isOver } = useDroppable({ id: 'center-drop-area' })
 
   return (
