@@ -1,10 +1,10 @@
+import React from 'react'
 import { Modal } from 'antd'
 import { DeleteOutlined, EyeOutlined, PlayCircleOutlined, DownloadOutlined } from '@ant-design/icons'
-import { DndContext, useDroppable, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core'
-import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable'
-import { restrictToParentElement, restrictToVerticalAxis } from '@dnd-kit/modifiers'
+import { useDroppable } from '@dnd-kit/core'
+import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { useFormStore } from '@/store/modules/form'
+import { useFormStore, type CenterItem } from '@/store/modules/form'
 import '../style/Center.scss'
 
 const clearTheCanvas = () => {
@@ -17,14 +17,6 @@ const clearTheCanvas = () => {
         centerItems: [],
       })
     },
-  })
-}
-
-const save = () => {
-  Modal.confirm({
-    title: '提示',
-    content: '草泥马',
-    centered: true,
   })
 }
 
@@ -41,7 +33,7 @@ const CenterTop: React.FC = () => {
         <Button icon={<DownloadOutlined />} color="primary" variant="filled">
           导出Vue文件
         </Button>
-        <Button icon={<PlayCircleOutlined />} color="primary" variant="filled" onClick={() => save()}>
+        <Button icon={<PlayCircleOutlined />} color="primary" variant="filled">
           运行
         </Button>
       </Flex>
@@ -49,19 +41,8 @@ const CenterTop: React.FC = () => {
   )
 }
 
-// 插入指示器组件
-// const InsertIndicator: React.FC<{ isVisible: boolean; position: 'top' | 'bottom' }> = ({ isVisible, position }) => {
-//   if (!isVisible) return null
-//   return (
-//     <div className={`insert-indicator insert-${position}`}>
-//       <div className="insert-line"></div>
-//       <div className="insert-dot"></div>
-//     </div>
-//   )
-// }
-
 // SortableItem 组件
-const SortableItem: React.FC<{ item: any; index?: number }> = ({ item }) => {
+const SortableItem: React.FC<{ item: CenterItem; index?: number }> = ({ item }) => {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: item.id })
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -76,66 +57,50 @@ const SortableItem: React.FC<{ item: any; index?: number }> = ({ item }) => {
   )
 }
 
-const Center: React.FC = () => {
+interface CenterProps {
+  insertIndex?: number | null
+}
+
+const Center: React.FC<CenterProps> = ({ insertIndex }) => {
   const { centerItems } = useFormStore()
   const setCenterItems = (items: any[]) => useFormStore.setState({ centerItems: items })
   const { setNodeRef, isOver } = useDroppable({ id: 'center-drop-area' })
 
-  // dnd-kit sensors
-  const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
-  )
-
-  // 拖拽结束处理 - 只处理内部排序
-  const handleDragEnd = (event: any) => {
-    const { active, over } = event
-    if (!over) return
-    
-    // 只处理内部排序，不处理从左侧拖入
-    if (active.id === over.id) return
-    const oldIndex = centerItems.findIndex((item: any) => item.id === active.id)
-    const newIndex = centerItems.findIndex((item: any) => item.id === over.id)
-    if (oldIndex !== -1 && newIndex !== -1) {
-      setCenterItems(arrayMove(centerItems, oldIndex, newIndex))
-    }
-  }
-
   return (
     <div className='centerWrap'>
       <CenterTop />
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCenter}
-        modifiers={[
-          // 只允许纵向拖拽（X 始终固定）
-          restrictToVerticalAxis,
-          // 并且不允许移动出父容器
-          restrictToParentElement,
-        ]}
-        onDragEnd={handleDragEnd}
+      <div
+        ref={setNodeRef}
+        className="center-container"
+        style={{
+          border: isOver ? '2px dashed #1890ff' : '2px dashed #eee',
+          minHeight: 120,
+        }}
       >
-        <SortableContext
-          items={centerItems.map((item: any) => item.id)}
-          strategy={verticalListSortingStrategy}
-        >
-          <div
-            ref={setNodeRef}
-            className="center-container"
-            style={{
-              border: isOver ? '2px dashed #1890ff' : '2px dashed #eee',
-              minHeight: 120,
-            }}
-          >
-            {centerItems.length === 0 ? (
-              <div className="center-placeholder">请从左侧拖拽组件到这里</div>
-            ) : (
-              centerItems.map((item: any, index: number) => (
-                <SortableItem key={item.id} item={item} index={index} />
-              ))
-            )}
+        {centerItems.length === 0 ? (
+          <div className="center-placeholder">请从左侧拖拽组件到这里</div>
+        ) : (
+          centerItems.map((item: CenterItem, index: number) => (
+            <React.Fragment key={item.id}>
+              {/* 在指定位置显示插入指示器 */}
+              {insertIndex === index && (
+                <div className="insert-indicator insert-top">
+                  <div className="insert-line"></div>
+                  <div className="insert-dot"></div>
+                </div>
+              )}
+              <SortableItem item={item} index={index} />
+            </React.Fragment>
+          ))
+        )}
+        {/* 在末尾显示插入指示器 */}
+        {insertIndex === centerItems.length && centerItems.length > 0 && (
+          <div className="insert-indicator insert-bottom">
+            <div className="insert-line"></div>
+            <div className="insert-dot"></div>
           </div>
-        </SortableContext>
-      </DndContext>
+        )}
+      </div>
     </div>
   )
 }
