@@ -50,18 +50,18 @@ const CenterTop: React.FC = () => {
 }
 
 // 插入指示器组件
-const InsertIndicator: React.FC<{ isVisible: boolean; position: 'top' | 'bottom' }> = ({ isVisible, position }) => {
-  if (!isVisible) return null
-  return (
-    <div className={`insert-indicator insert-${position}`}>
-      <div className="insert-line"></div>
-      <div className="insert-dot"></div>
-    </div>
-  )
-}
+// const InsertIndicator: React.FC<{ isVisible: boolean; position: 'top' | 'bottom' }> = ({ isVisible, position }) => {
+//   if (!isVisible) return null
+//   return (
+//     <div className={`insert-indicator insert-${position}`}>
+//       <div className="insert-line"></div>
+//       <div className="insert-dot"></div>
+//     </div>
+//   )
+// }
 
 // SortableItem 组件
-const SortableItem: React.FC<{ item: any; index: number }> = ({ item, index }) => {
+const SortableItem: React.FC<{ item: any; index?: number }> = ({ item }) => {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: item.id })
   const style = {
     transform: CSS.Transform.toString(transform),
