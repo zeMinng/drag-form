@@ -49,19 +49,8 @@ const CenterTop: React.FC = () => {
   )
 }
 
-// 插入指示器组件
-// const InsertIndicator: React.FC<{ isVisible: boolean; position: 'top' | 'bottom' }> = ({ isVisible, position }) => {
-//   if (!isVisible) return null
-//   return (
-//     <div className={`insert-indicator insert-${position}`}>
-//       <div className="insert-line"></div>
-//       <div className="insert-dot"></div>
-//     </div>
-//   )
-// }
-
 // SortableItem 组件
-const SortableItem: React.FC<{ item: any; index?: number }> = ({ item }) => {
+const SortableItem: React.FC<{ item: any }> = ({ item }) => {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: item.id })
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -86,18 +75,18 @@ const Center: React.FC = () => {
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
   )
 
-  // 拖拽结束处理 - 只处理内部排序
+  // 拖拽结束处理
   const handleDragEnd = (event: any) => {
     const { active, over } = event
     if (!over) return
-    
-    // 只处理内部排序，不处理从左侧拖入
     if (active.id === over.id) return
+    // 排序
     const oldIndex = centerItems.findIndex((item: any) => item.id === active.id)
     const newIndex = centerItems.findIndex((item: any) => item.id === over.id)
     if (oldIndex !== -1 && newIndex !== -1) {
       setCenterItems(arrayMove(centerItems, oldIndex, newIndex))
     }
+    // TODO: 这里可以扩展支持左侧拖入插入任意位置（需结合自定义拖拽数据）
   }
 
   return (
@@ -129,8 +118,8 @@ const Center: React.FC = () => {
             {centerItems.length === 0 ? (
               <div className="center-placeholder">请从左侧拖拽组件到这里</div>
             ) : (
-              centerItems.map((item: any, index: number) => (
-                <SortableItem key={item.id} item={item} index={index} />
+              centerItems.map((item: any) => (
+                <SortableItem key={item.id} item={item} />
               ))
             )}
           </div>

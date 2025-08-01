@@ -6,13 +6,7 @@ import type { ComponentCategory, ComponentMeta } from '../static/mapping/leftLis
 import '../style/Left.scss'
 
 const DraggableListItem: React.FC<{ item: ComponentMeta }> = ({ item }) => {
-  const draggable = useDraggable({ 
-    id: item.key, 
-    data: { 
-      ...item, 
-      type: 'component' // 添加类型标识，用于区分组件拖拽
-    } 
-  })
+  const draggable = useDraggable({ id: item.key, data: item })
   return (
     <List.Item
       className="left-list-item"
