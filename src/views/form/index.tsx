@@ -6,6 +6,7 @@ import Right from "./components/Right"
 import { DndContext, DragOverlay } from '@dnd-kit/core'
 import type { DragStartEvent, DragEndEvent, DragOverEvent } from '@dnd-kit/core'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
+import { useSensor, useSensors, PointerSensor } from '@dnd-kit/core'
 import { useFormStore, type CenterItem } from '@/store/modules/form'
 
 import './index.scss'
@@ -52,6 +53,15 @@ const Form: React.FC = () => {
   const [draggingItem, setDraggingItem] = useState<DraggingItem | null>(null)
   const [insertIndex, setInsertIndex] = useState<number | null>(null)
   const [isDraggingOver, setIsDraggingOver] = useState(false)
+  
+  // 配置传感器，需要移动一定距离才开始拖拽
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8, // 需要移动8px才开始拖拽
+      },
+    })
+  )
   
   // 移除调试代码，生产环境不需要
   useEffect(() => {
@@ -161,6 +171,7 @@ const Form: React.FC = () => {
 
   return (
     <DndContext
+      sensors={sensors}
       onDragStart={handleDragStart}
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}

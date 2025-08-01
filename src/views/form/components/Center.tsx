@@ -1,10 +1,11 @@
 import React from 'react'
-import { Modal } from 'antd'
+import { Modal, Flex, Button } from 'antd'
 import { DeleteOutlined, EyeOutlined, PlayCircleOutlined, DownloadOutlined } from '@ant-design/icons'
 import { useDroppable } from '@dnd-kit/core'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { useFormStore, type CenterItem } from '@/store/modules/form'
+import { getComponentConfig } from '../static/formComponents/formComponents'
 import '../style/Center.scss'
 
 const clearTheCanvas = () => {
@@ -41,6 +42,30 @@ const CenterTop: React.FC = () => {
   )
 }
 
+// 通用组件容器
+const FormComponentWrapper: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => (
+  <div className='flex' style={{ width: '100%' }}>
+    <div className="leftName" style={{ width: '100px',textAlign: 'right', padding: '6px 12px 0 0', fontSize: 14, fontWeight: 500, color: '#333' }}>
+      {title}
+    </div>
+    {children}
+  </div>
+)
+
+// 根据类型渲染对应的组件
+const renderComponentByType = (item: CenterItem) => {
+  const config = getComponentConfig(item.type)
+  const Component = config.component
+  
+  return (
+    <FormComponentWrapper title={item.title}>
+      <Component {...config.props}>
+        {config.children}
+      </Component>
+    </FormComponentWrapper>
+  )
+}
+
 // SortableItem 组件
 const SortableItem: React.FC<{ item: CenterItem; index?: number }> = ({ item }) => {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: item.id })
@@ -52,7 +77,9 @@ const SortableItem: React.FC<{ item: CenterItem; index?: number }> = ({ item }) 
   }
   return (
     <div ref={setNodeRef} style={style} {...attributes} {...listeners} className="center-item">
-      <i className={`iconfont ${item.icon}`} /> {item.title}
+      <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+        {renderComponentByType(item)}
+      </div>
     </div>
   )
 }
