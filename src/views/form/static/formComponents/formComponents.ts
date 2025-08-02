@@ -1,6 +1,15 @@
 import React from 'react'
 import { Input, InputNumber, Select, Radio, Checkbox, DatePicker, Switch, Slider } from 'antd'
 
+// 属性配置类型
+export interface PropConfig {
+  type: 'string' | 'number' | 'boolean' | 'select' | 'textarea'
+  label: string
+  defaultValue?: any
+  placeholder?: string
+  options?: Array<{ label: string; value: any }>
+}
+
 // 组件配置类型
 export interface ComponentConfig {
   component: React.ComponentType<any>
@@ -9,6 +18,7 @@ export interface ComponentConfig {
   label?: string
   description?: string
   icon?: string
+  propsConfig?: Record<string, PropConfig> // 属性配置
 }
 
 // 默认组件配置
@@ -18,29 +28,108 @@ const defaultConfigs: Record<string, ComponentConfig> = {
     props: { placeholder: '请输入内容' },
     label: '输入框',
     description: '单行文本输入',
+    propsConfig: {
+      placeholder: {
+        type: 'string',
+        label: '占位符',
+        defaultValue: '请输入内容',
+        placeholder: '请输入占位符文本'
+      },
+      disabled: {
+        type: 'boolean',
+        label: '禁用状态',
+        defaultValue: false
+      }
+    }
   },
   number: {
     component: InputNumber,
     props: { placeholder: '请输入数字' },
     label: '数字输入',
     description: '只允许输入数字的输入框',
+    propsConfig: {
+      placeholder: {
+        type: 'string',
+        label: '占位符',
+        defaultValue: '请输入数字',
+        placeholder: '请输入占位符文本'
+      },
+      min: {
+        type: 'number',
+        label: '最小值',
+        defaultValue: undefined
+      },
+      max: {
+        type: 'number',
+        label: '最大值',
+        defaultValue: undefined
+      },
+      disabled: {
+        type: 'boolean',
+        label: '禁用状态',
+        defaultValue: false
+      }
+    }
   },
   password: {
     component: Input.Password,
     props: { placeholder: '请输入密码' },
     label: '密码输入',
     description: '密码输入框',
+    propsConfig: {
+      placeholder: {
+        type: 'string',
+        label: '占位符',
+        defaultValue: '请输入密码',
+        placeholder: '请输入占位符文本'
+      },
+      disabled: {
+        type: 'boolean',
+        label: '禁用状态',
+        defaultValue: false
+      }
+    }
   },
   textarea: {
     component: Input.TextArea,
     props: { placeholder: '请输入内容', rows: 3 },
     label: '多行输入',
     description: '多行文本输入',
+    propsConfig: {
+      placeholder: {
+        type: 'string',
+        label: '占位符',
+        defaultValue: '请输入内容',
+        placeholder: '请输入占位符文本'
+      },
+      rows: {
+        type: 'number',
+        label: '行数',
+        defaultValue: 3
+      },
+      disabled: {
+        type: 'boolean',
+        label: '禁用状态',
+        defaultValue: false
+      }
+    }
   },
   switch: {
     component: Switch,
     label: '开关',
     description: '开关组件',
+    propsConfig: {
+      checked: {
+        type: 'boolean',
+        label: '默认状态',
+        defaultValue: false
+      },
+      disabled: {
+        type: 'boolean',
+        label: '禁用状态',
+        defaultValue: false
+      }
+    }
   },
 
   select: {
@@ -53,6 +142,29 @@ const defaultConfigs: Record<string, ComponentConfig> = {
     ],
     label: '下拉选择',
     description: '下拉选择框',
+    propsConfig: {
+      placeholder: {
+        type: 'string',
+        label: '占位符',
+        defaultValue: '请选择',
+        placeholder: '请输入占位符文本'
+      },
+      disabled: {
+        type: 'boolean',
+        label: '禁用状态',
+        defaultValue: false
+      },
+      mode: {
+        type: 'select',
+        label: '选择模式',
+        defaultValue: undefined,
+        options: [
+          { label: '单选', value: undefined },
+          { label: '多选', value: 'multiple' },
+          { label: '标签', value: 'tags' }
+        ]
+      }
+    }
   },
   radio: {
     component: Radio.Group,
@@ -63,6 +175,13 @@ const defaultConfigs: Record<string, ComponentConfig> = {
     ],
     label: '单选框',
     description: '单选按钮组',
+    propsConfig: {
+      disabled: {
+        type: 'boolean',
+        label: '禁用状态',
+        defaultValue: false
+      }
+    }
   },
   checkbox: {
     component: Checkbox.Group,
@@ -73,18 +192,60 @@ const defaultConfigs: Record<string, ComponentConfig> = {
     ],
     label: '复选框',
     description: '多选按钮组',
+    propsConfig: {
+      disabled: {
+        type: 'boolean',
+        label: '禁用状态',
+        defaultValue: false
+      }
+    }
   },
   date: {
     component: DatePicker,
     props: { style: { width: '100%' }, placeholder: '请选择日期' },
     label: '日期选择',
     description: '日期选择器',
+    propsConfig: {
+      placeholder: {
+        type: 'string',
+        label: '占位符',
+        defaultValue: '请选择日期',
+        placeholder: '请输入占位符文本'
+      },
+      disabled: {
+        type: 'boolean',
+        label: '禁用状态',
+        defaultValue: false
+      }
+    }
   },
   slider: {
     component: Slider,
     props: { defaultValue: 30 },
     label: '滑块',
     description: '滑块组件',
+    propsConfig: {
+      min: {
+        type: 'number',
+        label: '最小值',
+        defaultValue: 0
+      },
+      max: {
+        type: 'number',
+        label: '最大值',
+        defaultValue: 100
+      },
+      defaultValue: {
+        type: 'number',
+        label: '默认值',
+        defaultValue: 30
+      },
+      disabled: {
+        type: 'boolean',
+        label: '禁用状态',
+        defaultValue: false
+      }
+    }
   }
 }
 

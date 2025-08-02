@@ -33,6 +33,7 @@
   }
 
   .center-item {
+    position: relative;
     display: flex;
     padding: 12px 16px;
     margin-bottom: 8px;
@@ -46,6 +47,23 @@
     &:hover {
       background: #e9ecef;
       border-color: #adb5bd;
+    }
+
+    &.selected {
+      background: #e6f7ff;
+      border-color: #1890ff;
+      box-shadow: 0 0 0 2px rgb(24 144 255 / 20%);
+
+      &::before {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 4px;
+        background: #1890ff;
+        border-radius: 2px;
+        content: '';
+      }
     }
 
     .componentWrap {

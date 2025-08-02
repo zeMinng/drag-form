@@ -16,6 +16,7 @@ const clearTheCanvas = () => {
     onOk: () => {
       useFormStore.setState({
         centerItems: [],
+        selectedItemId: null,
       })
     },
   })
@@ -55,9 +56,12 @@ const renderComponentByType = (item: CenterItem) => {
   const config = getComponentConfig(item.type)
   const Component = config.component
   
+  // 合并默认属性和自定义属性
+  const mergedProps = { ...config.props, ...item.props }
+  
   return (
     <FormComponentWrapper title={item.title}>
-      <Component {...config.props}>
+      <Component {...mergedProps}>
         {config.children}
       </Component>
     </FormComponentWrapper>
@@ -67,14 +71,31 @@ const renderComponentByType = (item: CenterItem) => {
 // SortableItem 组件
 const SortableItem: React.FC<{ item: CenterItem; index?: number }> = ({ item }) => {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: item.id })
+  const { selectedItemId, setSelectedItemId } = useFormStore()
+  
+  const isSelected = selectedItemId === item.id
+  
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.5 : 1,
     cursor: 'move',
   }
+  
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    setSelectedItemId(isSelected ? null : item.id)
+  }
+  
   return (
-    <div ref={setNodeRef} style={style} {...attributes} {...listeners} className="center-item">
+    <div 
+      ref={setNodeRef} 
+      style={style} 
+      {...attributes} 
+      {...listeners} 
+      className={`center-item ${isSelected ? 'selected' : ''}`}
+      onClick={handleClick}
+    >
       <div className="componentWrap">
         {renderComponentByType(item)}
       </div>
@@ -88,9 +109,13 @@ interface CenterProps {
 }
 
 const Center: React.FC<CenterProps> = ({ insertIndex, isDraggingOver = false }) => {
-  const { centerItems } = useFormStore()
-  // const setCenterItems = (items: any[]) => useFormStore.setState({ centerItems: items })
+  const { centerItems, setSelectedItemId } = useFormStore()
   const { setNodeRef, isOver } = useDroppable({ id: 'center-drop-area' })
+
+  // 点击空白区域取消选中
+  const handleContainerClick = () => {
+    setSelectedItemId(null)
+  }
 
   return (
     <div className='centerWrap'>
@@ -102,6 +127,7 @@ const Center: React.FC<CenterProps> = ({ insertIndex, isDraggingOver = false }) 
           border: (isOver || isDraggingOver) ? '2px dashed #1890ff' : '2px dashed #eee',
           minHeight: 120,
         }}
+        onClick={handleContainerClick}
       >
         {centerItems.length === 0 ? (
           <div className="center-placeholder">请从左侧拖拽组件到这里</div>
