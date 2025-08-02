@@ -44,11 +44,9 @@ const CenterTop: React.FC = () => {
 
 // 通用组件容器
 const FormComponentWrapper: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => (
-  <div className='flex' style={{ width: '100%' }}>
-    <div className="leftName" style={{ width: '100px',textAlign: 'right', padding: '6px 12px 0 0', fontSize: 14, fontWeight: 500, color: '#333' }}>
-      {title}
-    </div>
-    {children}
+  <div className="componentItem">
+    <div className="itemTitle">{title}</div>
+    <div className="itemContent">{children}</div>
   </div>
 )
 
@@ -77,7 +75,7 @@ const SortableItem: React.FC<{ item: CenterItem; index?: number }> = ({ item }) 
   }
   return (
     <div ref={setNodeRef} style={style} {...attributes} {...listeners} className="center-item">
-      <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+      <div className="componentWrap">
         {renderComponentByType(item)}
       </div>
     </div>
@@ -114,7 +112,7 @@ const Center: React.FC<CenterProps> = ({ insertIndex, isDraggingOver = false }) 
               {insertIndex === index && (
                 <div className="insert-indicator insert-top">
                   <div className="insert-line"></div>
-                  <div className="insert-dot"></div>
+                  <div className="insert-dot">拖到这里</div>
                 </div>
               )}
               <SortableItem item={item} index={index} />
@@ -125,7 +123,7 @@ const Center: React.FC<CenterProps> = ({ insertIndex, isDraggingOver = false }) 
         {insertIndex === centerItems.length && centerItems.length > 0 && (
           <div className="insert-indicator insert-bottom">
             <div className="insert-line"></div>
-            <div className="insert-dot"></div>
+            <div className="insert-dot">拖到这里</div>
           </div>
         )}
       </div>
