@@ -1,8 +1,46 @@
+import { Tabs } from 'antd'
+import '../style/Right.scss'
+
+const ComponentConfig: React.FC = () => {
+  return (
+    <div className="componentConfig">
+      组件属性
+    </div>
+  )
+}
+
+const FormConfig: React.FC = () => {
+  return (
+    <div className="formConfig">
+      表单配置
+    </div>
+  )
+}
 
 const Right: React.FC = () => {
-  return <>
-    右侧属性面板
-  </>
+  const [tabIndex, setTabIndex] = useState('component')
+
+  const tabItems = [
+    { key: 'component', label: '组件属性' },
+    { key: 'form', label: '表单配置' },
+  ]
+
+  return (
+    <div className="right">
+      <Tabs
+        activeKey={tabIndex}
+        centered
+        size="middle"
+        items={tabItems}
+        className="custom-tabs"
+        onChange={setTabIndex}
+      />
+      <div className="right-board">
+        {tabIndex === 'component' && <ComponentConfig />}
+        {tabIndex === 'form' && <FormConfig />}
+      </div>
+    </div>
+  )
 }
 
 export default Right

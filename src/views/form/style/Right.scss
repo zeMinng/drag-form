@@ -1,0 +1,24 @@
+.right {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  .custom-tabs {
+    .ant-tabs-nav {
+      width: 100%;
+    }
+
+    .ant-tabs-nav-list {
+      display: grid;
+      width: 100%;
+      grid-template-columns: 1fr 1fr; /* 两列，各占一半 */
+    }
+
+    .ant-tabs-tab {
+      display: flex;
+      width: 100%;
+      margin: 0;
+      justify-content: center;
+    }
+  }
+}
