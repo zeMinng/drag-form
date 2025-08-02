@@ -70,7 +70,15 @@ const Form: React.FC = () => {
   
   // 处理拖拽开始
   const handleDragStart = (event: DragStartEvent) => {
-    setDraggingItem(event.active.data.current as DraggingItem)
+    const { active } = event
+    
+    // 只处理从左侧拖入的新组件，不显示center内部排序的拖拽覆盖层
+    if (active.data.current && active.data.current.type === 'component') {
+      setDraggingItem(event.active.data.current as DraggingItem)
+    } else {
+      // center内部的排序拖拽 - 不显示拖拽覆盖层
+      setDraggingItem(null)
+    }
     setInsertIndex(null)
   }
 
