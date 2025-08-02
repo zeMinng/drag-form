@@ -66,8 +66,8 @@
           flex: 1;
         }
 
-        :where(.css-dev-only-do-not-override-pjilya).ant-input-number{
-          width: 30%;
+        .ant-input-number{
+          width: 50%;
         }
       }
     }
