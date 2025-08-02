@@ -15,6 +15,7 @@ interface FormState {
   selectedItemId: string | null // 当前选中的组件ID
   addCenterItem: (item: Omit<CenterItem, 'id'>) => void
   updateCenterItem: (id: string, updates: Partial<CenterItem>) => void
+  removeCenterItem: (id: string) => void
   setSelectedItemId: (id: string | null) => void
   getSelectedItem: () => CenterItem | null
 }
@@ -36,7 +37,15 @@ export const useFormStore = createPersistedStore<FormState>(
         centerItems: state.centerItems.map(item => 
           item.id === id ? { ...item, ...updates } : item
         )
-      })),
+      }
+    )),
+    
+    removeCenterItem: (id) =>
+      set((state) => ({
+        centerItems: state.centerItems.filter(item => item.id !== id),
+        selectedItemId: state.selectedItemId === id ? null : state.selectedItemId
+      }
+    )),
     
     setSelectedItemId: (id) => set({ selectedItemId: id }),
     
@@ -46,22 +55,3 @@ export const useFormStore = createPersistedStore<FormState>(
     },
   })
 )
-
-// interface UserInfoState {
-//   name: string
-//   email?: string
-
-//   setName: (name: string) => void
-//   setEmail: (email: string) => void
-// }
-
-// export const useUserInfoStore = createPersistedStore<UserInfoState>(
-//   'userInfo',
-//   (set, _get, _api) => ({
-//     name: '',
-//     email: undefined,
-
-//     setName: (name) => set({ name }),
-//     setEmail: (email) => set({ email }),
-//   })
-// )

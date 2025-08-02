@@ -4,6 +4,7 @@ import { DeleteOutlined, EyeOutlined, PlayCircleOutlined, DownloadOutlined } fro
 import { useDroppable } from '@dnd-kit/core'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
+import IconFont from '@/components/Icon'
 import { useFormStore, type CenterItem } from '@/store/modules/form'
 import { getComponentConfig } from '../../static/formComponents/formComponents'
 import './index.scss'
@@ -71,7 +72,7 @@ const renderComponentByType = (item: CenterItem) => {
 // SortableItem 组件
 const SortableItem: React.FC<{ item: CenterItem; index?: number }> = ({ item }) => {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: item.id })
-  const { selectedItemId, setSelectedItemId } = useFormStore()
+  const { selectedItemId, setSelectedItemId, removeCenterItem } = useFormStore()
   
   const isSelected = selectedItemId === item.id
   
@@ -84,7 +85,14 @@ const SortableItem: React.FC<{ item: CenterItem; index?: number }> = ({ item }) 
   
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation()
-    setSelectedItemId(isSelected ? null : item.id)
+    // 点击组件本身的任何地方都选中该组件
+    setSelectedItemId(item.id)
+  }
+
+  // 删除中部指定元素
+  const handleDelete = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    removeCenterItem(item.id)
   }
   
   return (
@@ -96,6 +104,16 @@ const SortableItem: React.FC<{ item: CenterItem; index?: number }> = ({ item }) 
       className={`center-item ${isSelected ? 'selected' : ''}`}
       onClick={handleClick}
     >
+      {/* 删除按钮 */}
+      <div 
+        className="delete-btn"
+        onClick={handleDelete}
+        style={{
+          display: isSelected ? 'flex' : 'none',
+        }}
+      >
+        <IconFont type="icon-shanchu" />
+      </div>
       <div className="componentWrap">
         {renderComponentByType(item)}
       </div>
@@ -109,12 +127,12 @@ interface CenterProps {
 }
 
 const Center: React.FC<CenterProps> = ({ insertIndex, isDraggingOver = false }) => {
-  const { centerItems, setSelectedItemId } = useFormStore()
+  const { centerItems } = useFormStore()
   const { setNodeRef, isOver } = useDroppable({ id: 'center-drop-area' })
 
   // 点击空白区域取消选中
   const handleContainerClick = () => {
-    setSelectedItemId(null)
+    // setSelectedItemId(null)
   }
 
   return (
