@@ -1,5 +1,5 @@
 import React from 'react'
-import { Input, Select, Radio, Checkbox, DatePicker, Switch, Slider } from 'antd'
+import { Input, InputNumber, Select, Radio, Checkbox, DatePicker, Switch, Slider } from 'antd'
 
 // 组件配置类型
 export interface ComponentConfig {
@@ -18,15 +18,31 @@ const defaultConfigs: Record<string, ComponentConfig> = {
     props: { placeholder: '请输入内容' },
     label: '输入框',
     description: '单行文本输入',
-    icon: 'icon-input'
+  },
+  number: {
+    component: InputNumber,
+    props: { placeholder: '请输入数字' },
+    label: '数字输入',
+    description: '只允许输入数字的输入框',
+  },
+  password: {
+    component: Input.Password,
+    props: { placeholder: '请输入密码' },
+    label: '密码输入',
+    description: '密码输入框',
   },
   textarea: {
     component: Input.TextArea,
     props: { placeholder: '请输入内容', rows: 3 },
     label: '多行输入',
     description: '多行文本输入',
-    icon: 'icon-textarea'
   },
+  switch: {
+    component: Switch,
+    label: '开关',
+    description: '开关组件',
+  },
+
   select: {
     component: Select,
     props: { placeholder: '请选择', style: { width: '100%' } },
@@ -37,7 +53,6 @@ const defaultConfigs: Record<string, ComponentConfig> = {
     ],
     label: '下拉选择',
     description: '下拉选择框',
-    icon: 'icon-select'
   },
   radio: {
     component: Radio.Group,
@@ -48,7 +63,6 @@ const defaultConfigs: Record<string, ComponentConfig> = {
     ],
     label: '单选框',
     description: '单选按钮组',
-    icon: 'icon-radio'
   },
   checkbox: {
     component: Checkbox.Group,
@@ -59,27 +73,18 @@ const defaultConfigs: Record<string, ComponentConfig> = {
     ],
     label: '复选框',
     description: '多选按钮组',
-    icon: 'icon-checkbox'
   },
   date: {
     component: DatePicker,
     props: { style: { width: '100%' }, placeholder: '请选择日期' },
     label: '日期选择',
     description: '日期选择器',
-    icon: 'icon-date'
-  },
-  switch: {
-    component: Switch,
-    label: '开关',
-    description: '开关组件',
-    icon: 'icon-switch'
   },
   slider: {
     component: Slider,
     props: { defaultValue: 30 },
     label: '滑块',
     description: '滑块组件',
-    icon: 'icon-slider'
   }
 }
 
