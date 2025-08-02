@@ -11,7 +11,7 @@ export interface CenterItem {
 
 interface FormState {
   centerItems: CenterItem[]
-  addCenterItem: (item: CenterItem) => void
+  addCenterItem: (item: Omit<CenterItem, 'id'>) => void
 }
 
 export const useFormStore = createPersistedStore<FormState>(
