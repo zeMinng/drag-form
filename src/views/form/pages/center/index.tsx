@@ -5,8 +5,8 @@ import { useDroppable } from '@dnd-kit/core'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { useFormStore, type CenterItem } from '@/store/modules/form'
-import { getComponentConfig } from '../static/formComponents/formComponents'
-import '../style/Center.scss'
+import { getComponentConfig } from '../../static/formComponents/formComponents'
+import './index.scss'
 
 const clearTheCanvas = () => {
   Modal.confirm({

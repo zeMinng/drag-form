@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import IconFont from '@/components/Icon'
-import Left from "./components/Left"
-import Center from "./components/Center"
-import Right from "./components/Right"
+import Left from "./left"
+import Center from "./center"
+import Right from "./right"
 import { DndContext, DragOverlay } from '@dnd-kit/core'
 import type { DragStartEvent, DragEndEvent, DragOverEvent } from '@dnd-kit/core'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'

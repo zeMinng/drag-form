@@ -1,5 +1,5 @@
 import { Tabs } from 'antd'
-import '../style/Right.scss'
+import './index.scss'
 
 const ComponentConfig: React.FC = () => {
   return (

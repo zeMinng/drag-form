@@ -1,9 +1,9 @@
 import { Segmented, List } from 'antd'
 import { useDraggable } from '@dnd-kit/core'
 import IconFont from '@/components/Icon'
-import { leftListSegmentedOptions, componentMappings } from '../static/mapping/leftListMapping'
-import type { ComponentCategory, ComponentMeta } from '../static/mapping/leftListMapping'
-import '../style/Left.scss'
+import { leftListSegmentedOptions, componentMappings } from '../../static/mapping/leftListMapping'
+import type { ComponentCategory, ComponentMeta } from '../../static/mapping/leftListMapping'
+import './index.scss'
 
 const DraggableListItem: React.FC<{ item: ComponentMeta }> = ({ item }) => {
   const draggable = useDraggable({ 

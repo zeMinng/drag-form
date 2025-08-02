@@ -1,7 +1,7 @@
 import type { RouteObject } from 'react-router-dom'
 import { lazy } from 'react'
 import Layout from '@/layout'
-const Form = lazy(() => import('@/views/form'))
+const Form = lazy(() => import('@/views/form/pages/index'))
 const NotFound = lazy(() => import('@/views/error/notFound'))
 
 const routes: RouteObject[] = [
