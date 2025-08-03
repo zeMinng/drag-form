@@ -4,6 +4,8 @@ import { DeleteOutlined, EyeOutlined, PlayCircleOutlined, DownloadOutlined } fro
 import { useDroppable } from '@dnd-kit/core'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
+import IconFont from '@/components/Icon'
+import DownloadOutVue from '../downloadOutVue/index'
 import { useFormStore, type CenterItem } from '@/store/modules/form'
 import { getComponentConfig } from '../../static/formComponents/formComponents'
 import './index.scss'
@@ -16,12 +18,15 @@ const clearTheCanvas = () => {
     onOk: () => {
       useFormStore.setState({
         centerItems: [],
+        selectedItemId: null,
       })
     },
   })
 }
 
 const CenterTop: React.FC = () => {
+  const [modalVisible, setModalVisible] = useState(false)
+
   return (
     <div className="centerTop">
       <Flex gap="small" wrap>
@@ -31,13 +36,18 @@ const CenterTop: React.FC = () => {
         <Button icon={<EyeOutlined />} color="cyan" variant="filled">
           查看JSON
         </Button>
-        <Button icon={<DownloadOutlined />} color="primary" variant="filled">
+        <Button icon={<DownloadOutlined />} color="primary" variant="filled" onClick={() => setModalVisible(true)}>
           导出Vue文件
         </Button>
         <Button icon={<PlayCircleOutlined />} color="primary" variant="filled">
           运行
         </Button>
       </Flex>
+
+      <DownloadOutVue
+        open={modalVisible}
+        onClose={() => setModalVisible(false)}
+      />
     </div>
   )
 }
@@ -55,9 +65,12 @@ const renderComponentByType = (item: CenterItem) => {
   const config = getComponentConfig(item.type)
   const Component = config.component
   
+  // 合并默认属性和自定义属性
+  const mergedProps = { ...config.props, ...item.props }
+  
   return (
     <FormComponentWrapper title={item.title}>
-      <Component {...config.props}>
+      <Component {...mergedProps}>
         {config.children}
       </Component>
     </FormComponentWrapper>
@@ -67,14 +80,48 @@ const renderComponentByType = (item: CenterItem) => {
 // SortableItem 组件
 const SortableItem: React.FC<{ item: CenterItem; index?: number }> = ({ item }) => {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: item.id })
+  const { selectedItemId, setSelectedItemId, removeCenterItem } = useFormStore()
+  
+  const isSelected = selectedItemId === item.id
+  
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.5 : 1,
     cursor: 'move',
   }
+  
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    // 点击组件本身的任何地方都选中该组件
+    setSelectedItemId(item.id)
+  }
+
+  // 删除中部指定元素
+  const handleDelete = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    removeCenterItem(item.id)
+  }
+  
   return (
-    <div ref={setNodeRef} style={style} {...attributes} {...listeners} className="center-item">
+    <div 
+      ref={setNodeRef} 
+      style={style} 
+      {...attributes} 
+      {...listeners} 
+      className={`center-item ${isSelected ? 'selected' : ''}`}
+      onClick={handleClick}
+    >
+      {/* 删除按钮 */}
+      <div 
+        className="delete-btn"
+        onClick={handleDelete}
+        style={{
+          display: isSelected ? 'flex' : 'none',
+        }}
+      >
+        <IconFont type="icon-shanchu" />
+      </div>
       <div className="componentWrap">
         {renderComponentByType(item)}
       </div>
@@ -89,8 +136,12 @@ interface CenterProps {
 
 const Center: React.FC<CenterProps> = ({ insertIndex, isDraggingOver = false }) => {
   const { centerItems } = useFormStore()
-  // const setCenterItems = (items: any[]) => useFormStore.setState({ centerItems: items })
   const { setNodeRef, isOver } = useDroppable({ id: 'center-drop-area' })
+
+  // 点击空白区域取消选中
+  const handleContainerClick = () => {
+    // setSelectedItemId(null)
+  }
 
   return (
     <div className='centerWrap'>
@@ -102,6 +153,7 @@ const Center: React.FC<CenterProps> = ({ insertIndex, isDraggingOver = false }) 
           border: (isOver || isDraggingOver) ? '2px dashed #1890ff' : '2px dashed #eee',
           minHeight: 120,
         }}
+        onClick={handleContainerClick}
       >
         {centerItems.length === 0 ? (
           <div className="center-placeholder">请从左侧拖拽组件到这里</div>
