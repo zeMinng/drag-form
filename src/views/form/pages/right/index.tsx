@@ -36,9 +36,9 @@ const ComponentConfig: React.FC = () => {
     updateCenterItem(selectedItem.id, { title })
   }
 
-  const handleDescriptionChange = (description: string) => {
-    updateCenterItem(selectedItem.id, { description })
-  }
+  // const handleDescriptionChange = (description: string) => {
+  //   updateCenterItem(selectedItem.id, { description })
+  // }
 
   // 渲染属性编辑器
   const renderPropEditor = (propName: string, propConfig: any) => {

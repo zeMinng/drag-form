@@ -5,6 +5,7 @@ import { useDroppable } from '@dnd-kit/core'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import IconFont from '@/components/Icon'
+import DownloadOutVue from '../downloadOutVue/index'
 import { useFormStore, type CenterItem } from '@/store/modules/form'
 import { getComponentConfig } from '../../static/formComponents/formComponents'
 import './index.scss'
@@ -24,6 +25,8 @@ const clearTheCanvas = () => {
 }
 
 const CenterTop: React.FC = () => {
+  const [modalVisible, setModalVisible] = useState(false)
+
   return (
     <div className="centerTop">
       <Flex gap="small" wrap>
@@ -33,13 +36,18 @@ const CenterTop: React.FC = () => {
         <Button icon={<EyeOutlined />} color="cyan" variant="filled">
           查看JSON
         </Button>
-        <Button icon={<DownloadOutlined />} color="primary" variant="filled">
+        <Button icon={<DownloadOutlined />} color="primary" variant="filled" onClick={() => setModalVisible(true)}>
           导出Vue文件
         </Button>
         <Button icon={<PlayCircleOutlined />} color="primary" variant="filled">
           运行
         </Button>
       </Flex>
+
+      <DownloadOutVue
+        open={modalVisible}
+        onClose={() => setModalVisible(false)}
+      />
     </div>
   )
 }
