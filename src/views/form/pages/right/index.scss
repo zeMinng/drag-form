@@ -6,6 +6,7 @@
   .custom-tabs {
     .ant-tabs-nav {
       width: 100%;
+      margin-bottom: 0;
     }
 
     .ant-tabs-nav-list {
@@ -24,22 +25,22 @@
 
   .right-board {
     flex: 1;
-    padding: 16px;
+    padding: 0 16px 16px;
     overflow-y: auto;
-    background: #fff;
 
     .componentConfig,
     .formConfig {
       .config-section {
         margin-bottom: 24px;
 
-        h4 {
+        .sectionTitle {
           padding-bottom: 8px;
           margin: 0 0 16px;
-          font-size: 14px;
+
+          // font-size: 14px;
           font-weight: 600;
           color: #333;
-          border-bottom: 1px solid #f0f0f0;
+          border-bottom: 1px solid #e9ecf0;
         }
 
         .ant-form-item {

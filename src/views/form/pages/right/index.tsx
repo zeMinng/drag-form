@@ -11,6 +11,7 @@ const { Option } = Select
 const ComponentConfig: React.FC = () => {
   const { getSelectedItem, updateCenterItem } = useFormStore()
   const selectedItem = getSelectedItem()
+  console.log('%c [ selectedItem ]-14', 'font-size:13px; background:pink; color:#bf2c9f;', selectedItem)
 
   if (!selectedItem) {
     return (
@@ -375,54 +376,46 @@ const ComponentConfig: React.FC = () => {
   return (
     <div className="componentConfig">
       <div className="config-section">
-        <h4>基础信息</h4>
-        <Form layout="vertical" size="small">
-          <Form.Item label="组件标题">
+        <Divider size="small" dashed variant="dashed" style={{ borderColor: '#e9ecf0' }}>基础信息</Divider>
+        <Form layout="vertical">
+          <Form.Item label="标题">
             <Input
               value={selectedItem.title}
-              placeholder="请输入组件标题"
+              placeholder="请输入标题"
               onChange={(e) => handleTitleChange(e.target.value)}
             />
           </Form.Item>
-          <Form.Item label="组件描述">
+          {/* <Form.Item label="组件描述">
             <TextArea
               value={selectedItem.description || ''}
               placeholder="请输入组件描述"
               rows={2}
               onChange={(e) => handleDescriptionChange(e.target.value)}
             />
-          </Form.Item>
-        </Form>
-      </div>
-
-      <Divider />
-
-      <div className="config-section">
-        <h4>组件属性</h4>
-        <Form layout="vertical" size="small">
+          </Form.Item> */}
           {Object.entries(specificProps).map(([propName, propConfig]: [string, any]) => (
             <Form.Item key={propName} label={propConfig.label || propName}>
               {renderPropEditor(propName, propConfig)}
             </Form.Item>
           ))}
+
+          {/* {
+            config.propsConfig && Object.keys(config.propsConfig).length > 0 && (
+              <>
+                {Object.entries(config.propsConfig).map(([propName, propConfig]: [string, any]) => (
+                  <Form.Item key={propName} label={propConfig.label || propName}>
+                    {renderPropEditor(propName, propConfig)}
+                  </Form.Item>
+                ))}
+              </>
+            )
+          } */}
         </Form>
       </div>
 
-      {config.propsConfig && Object.keys(config.propsConfig).length > 0 && (
-        <>
-          <Divider />
-          <div className="config-section">
-            <h4>高级属性</h4>
-            <Form layout="vertical" size="small">
-              {Object.entries(config.propsConfig).map(([propName, propConfig]: [string, any]) => (
-                <Form.Item key={propName} label={propConfig.label || propName}>
-                  {renderPropEditor(propName, propConfig)}
-                </Form.Item>
-              ))}
-            </Form>
-          </div>
-        </>
-      )}
+      <div className="config-section">
+        {/* <Divider size="small" dashed variant="dashed" style={{ borderColor: '#e9ecf0' }}>正则校验</Divider> */}
+      </div>
     </div>
   )
 }
