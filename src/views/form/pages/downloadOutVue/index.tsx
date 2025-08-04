@@ -1,4 +1,6 @@
+import Mustache from 'mustache'
 import { Modal, Radio, message } from 'antd'
+import template from '@/templates/FormExport.vue.mustache?raw'
 import { useFormStore } from '@/store/modules/form'
 
 interface Props {
@@ -18,9 +20,21 @@ const DownloadOutVue: React.FC<Props> = ({ open, onClose }) => {
 
   const onOk = async () => {
     const values = await form.validateFields() // 2. 获取并验证表单值
-
     const { filename } = values
-    const vueContent = `<template>\n  <div>你好啊！这是我的第一导出</div>\n ${JSON.stringify(centerItems)}\n</template>\n<script setup>\n// logic here\n</script>\n`
+
+    const vueContent = Mustache.render(template, {
+      items: centerItems.map(item => ({
+        type: item.type,
+        label: item.title,
+        attrs: {
+          placeholder: item.description,
+          ...item?.props
+        }
+      })),
+      // Mustache 默认会 HTML 转义，我们希望注入 JSON 原始文本
+      json: (text: any) => JSON.stringify(text, null, 2)
+    })
+
     const blob = new Blob([vueContent], { type: 'text/plain;charset=utf-8' })
     const url = window.URL.createObjectURL(blob)
 

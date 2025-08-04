@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom'
 import ToolHeader from './components/ToolHeader'
-import { Flex, Layout } from 'antd'
+import { Flex, Layout, Modal } from 'antd'
 const { Header, Content } = Layout
 
 const layoutStyle = {
@@ -22,6 +22,13 @@ const contentStyle: React.CSSProperties = {
 }
 
 const MyLayout: React.FC = () => {
+  // 判断是否生产环境
+  const isProd = import.meta.env.PROD
+  const [isModalOpen, setIsModalOpen] = useState(isProd)
+  const handleClose = () => {
+    setIsModalOpen(false)
+  }
+
   return <>
     <Flex gap="middle" wrap>
       <Layout style={layoutStyle}>
@@ -30,6 +37,20 @@ const MyLayout: React.FC = () => {
         </Header>
         <Content style={contentStyle}>
           <Outlet />
+
+          <Modal
+            title="重大通知"
+            centered
+            open={isModalOpen}
+            onOk={handleClose}
+            onCancel={handleClose}
+            okText="确定"
+            cancelText="关闭"
+          >
+            <p></p>
+            <p>🎉 恭喜，现已支持简单导出 Vue 3 + element-pulse + ts 代码！</p>
+            <p>但是还有已知bug，请等待...</p>
+          </Modal>
         </Content>
       </Layout>
     </Flex>
