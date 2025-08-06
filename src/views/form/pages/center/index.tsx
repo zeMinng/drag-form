@@ -1,13 +1,15 @@
-import React from 'react'
-import { Modal, Flex, Button } from 'antd'
-import { DeleteOutlined, EyeOutlined, PlayCircleOutlined, DownloadOutlined } from '@ant-design/icons'
+import React, { useState, useRef } from 'react'
+import { Modal, Flex, Button, message } from 'antd'
+import { DeleteOutlined, EyeOutlined, PlayCircleOutlined, DownloadOutlined, CopyOutlined } from '@ant-design/icons'
 import { useDroppable } from '@dnd-kit/core'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import IconFont from '@/components/Icon'
 import DownloadOutVue from '../downloadOutVue/index'
 import { useFormStore, type CenterItem } from '@/store/modules/form'
-import { getComponentConfig } from '../../static/formComponents/formComponents'
+import { getComponentConfig } from '@/utils/componentRegistry'
+import { ComponentWrapper } from '@/utils/componentRenderer'
+import { generateVueComponent } from '@/utils/codeGenerator'
 import './index.scss'
 
 const clearTheCanvas = () => {
@@ -26,6 +28,36 @@ const clearTheCanvas = () => {
 
 const CenterTop: React.FC = () => {
   const [modalVisible, setModalVisible] = useState(false)
+  const [codeModalVisible, setCodeModalVisible] = useState(false)
+  const { centerItems } = useFormStore()
+  const codeRef = useRef<HTMLPreElement>(null)
+
+  const handleViewCode = () => {
+    setCodeModalVisible(true)
+  }
+
+  const handleCopyCode = async () => {
+    try {
+      await navigator.clipboard.writeText(generatedCode)
+      message.success('代码已复制到剪贴板')
+    } catch (error) {
+      // 如果 clipboard API 不可用，使用传统方法
+      if (codeRef.current) {
+        const range = document.createRange()
+        range.selectNodeContents(codeRef.current)
+        const selection = window.getSelection()
+        if (selection) {
+          selection.removeAllRanges()
+          selection.addRange(range)
+          document.execCommand('copy')
+          selection.removeAllRanges()
+          message.success('代码已复制到剪贴板')
+        }
+      }
+    }
+  }
+
+  const generatedCode = generateVueComponent(centerItems)
 
   return (
     <div className="centerTop">
@@ -33,8 +65,8 @@ const CenterTop: React.FC = () => {
         <Button icon={<DeleteOutlined />} color="danger" variant="filled" onClick={() => clearTheCanvas()}>
           清空画布
         </Button>
-        <Button icon={<EyeOutlined />} color="cyan" variant="filled">
-          查看JSON
+        <Button icon={<EyeOutlined />} color="cyan" variant="filled" onClick={handleViewCode}>
+          查看代码
         </Button>
         <Button icon={<DownloadOutlined />} color="primary" variant="filled" onClick={() => setModalVisible(true)}>
           导出Vue文件
@@ -48,32 +80,70 @@ const CenterTop: React.FC = () => {
         open={modalVisible}
         onClose={() => setModalVisible(false)}
       />
+
+      <Modal
+        title="生成的Vue 3 + TypeScript + Element Plus代码"
+        open={codeModalVisible}
+        onCancel={() => setCodeModalVisible(false)}
+        width={900}
+        centered
+        footer={[
+          <Button key="copy" icon={<CopyOutlined />} type="primary" onClick={handleCopyCode}>
+            复制代码
+          </Button>,
+          <Button key="close" onClick={() => setCodeModalVisible(false)}>
+            关闭
+          </Button>
+        ]}
+      >
+        <div style={{ position: 'relative' }}>
+          <pre 
+            ref={codeRef}
+            style={{ 
+              background: '#1e1e1e', 
+              color: '#d4d4d4',
+              padding: '16px', 
+              borderRadius: '6px',
+              maxHeight: '400px',
+              overflow: 'auto',
+              fontSize: '13px',
+              lineHeight: '1.5',
+              fontFamily: 'Consolas, Monaco, "Courier New", monospace',
+              userSelect: 'text',
+              cursor: 'text',
+              whiteSpace: 'pre-wrap',
+            }}
+          >
+            {generatedCode}
+          </pre>
+        </div>
+      </Modal>
     </div>
   )
 }
 
-// 通用组件容器
-const FormComponentWrapper: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => (
-  <div className="componentItem">
-    <div className="itemTitle">{title}</div>
-    <div className="itemContent">{children}</div>
-  </div>
-)
-
 // 根据类型渲染对应的组件
 const renderComponentByType = (item: CenterItem) => {
   const config = getComponentConfig(item.type)
+  if (!config) {
+    return (
+      <ComponentWrapper title={item.title}>
+        <div>未知组件类型: {item.type}</div>
+      </ComponentWrapper>
+    )
+  }
+  
   const Component = config.component
   
   // 合并默认属性和自定义属性
   const mergedProps = { ...config.props, ...item.props }
   
   return (
-    <FormComponentWrapper title={item.title}>
+    <ComponentWrapper title={item.title}>
       <Component {...mergedProps}>
         {config.children}
       </Component>
-    </FormComponentWrapper>
+    </ComponentWrapper>
   )
 }
 
