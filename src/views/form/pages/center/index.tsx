@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react'
-import { Modal, Flex, Button, message } from 'antd'
+import { Modal, Flex, Button, message, Radio, Checkbox } from 'antd'
 import { DeleteOutlined, EyeOutlined, PlayCircleOutlined, DownloadOutlined, CopyOutlined } from '@ant-design/icons'
 import { useDroppable } from '@dnd-kit/core'
 import { useSortable } from '@dnd-kit/sortable'
@@ -137,6 +137,44 @@ const renderComponentByType = (item: CenterItem) => {
   
   // 合并默认属性和自定义属性
   const mergedProps = { ...config.props, ...item.props }
+  
+  // 处理 radio 和 checkbox 的选项配置
+  if (item.type === 'radio' || item.type === 'checkbox') {
+    const optionsText = item.props?.options || '选项1,选项2,选项3'
+    const optionsArray = optionsText.split(',').map((option: string, index: number) => ({
+      label: option.trim(),
+      value: `option${index + 1}`
+    }))
+    
+    // 为 Radio.Group 和 Checkbox.Group 提供正确的选项格式
+    const children = optionsArray.map((option: { label: string; value: string }) => {
+      if (item.type === 'radio') {
+        return React.createElement(Radio, { 
+          key: option.value, 
+          value: option.value 
+        }, option.label)
+      } else {
+        return React.createElement(Checkbox, { 
+          key: option.value, 
+          value: option.value 
+        }, option.label)
+      }
+    })
+    
+    // 使用 Ant Design 组件，但传递转换后的选项
+    const componentProps = {
+      ...mergedProps,
+      options: optionsArray // 传递转换后的选项数组
+    }
+    
+    return (
+      <ComponentWrapper title={item.title}>
+        <Component {...componentProps}>
+          {children}
+        </Component>
+      </ComponentWrapper>
+    )
+  }
   
   return (
     <ComponentWrapper title={item.title}>
