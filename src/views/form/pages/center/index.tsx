@@ -1,5 +1,5 @@
 import React, { useState, useRef, useMemo, useCallback } from 'react'
-import { Modal, Flex, Button, message, Radio, Checkbox } from 'antd'
+import { Modal, Flex, Button, message, Radio, Checkbox, Drawer, Space } from 'antd'
 import { DeleteOutlined, EyeOutlined, PlayCircleOutlined, DownloadOutlined, CopyOutlined } from '@ant-design/icons'
 import { useDroppable } from '@dnd-kit/core'
 import { useSortable } from '@dnd-kit/sortable'
@@ -58,6 +58,10 @@ const CenterTop: React.FC = () => {
     }
   }, [centerItems])
 
+  const handleViewJSON = useCallback(() => {
+    // setCodeModalVisible(true)
+  }, [])
+
   const generatedCode = useMemo(() => generateVueComponent(centerItems), [centerItems])
 
   return (
@@ -66,15 +70,15 @@ const CenterTop: React.FC = () => {
         <Button icon={<DeleteOutlined />} color="danger" variant="filled" onClick={() => clearTheCanvas()}>
           清空画布
         </Button>
-        <Button icon={<EyeOutlined />} color="cyan" variant="filled" onClick={handleViewCode}>
-          查看代码
-        </Button>
         <Button icon={<DownloadOutlined />} color="primary" variant="filled" onClick={() => setModalVisible(true)}>
           导出Vue文件
         </Button>
-        <Button icon={<PlayCircleOutlined />} color="primary" variant="filled">
-          运行
+        <Button icon={<EyeOutlined />} color="cyan" variant="filled" onClick={handleViewCode}>
+          预览代码
         </Button>
+        {/* <Button icon={<PlayCircleOutlined />} color="primary" variant="filled">
+          运行
+        </Button> */}
       </Flex>
 
       <DownloadOutVue
@@ -82,20 +86,26 @@ const CenterTop: React.FC = () => {
         onClose={() => setModalVisible(false)}
       />
 
-      <Modal
-        title="生成的Vue 3 + TypeScript + Element Plus代码"
+      <Drawer
+        title="预览代码"
+        placement="right"
+        closable={false}
+        size="large"
+        onClose={() => setCodeModalVisible(false)}
         open={codeModalVisible}
-        onCancel={() => setCodeModalVisible(false)}
-        width={900}
-        centered
-        footer={[
-          <Button key="copy" icon={<CopyOutlined />} type="primary" onClick={handleCopyCode}>
-            复制代码
-          </Button>,
-          <Button key="close" onClick={() => setCodeModalVisible(false)}>
-            关闭
-          </Button>
-        ]}
+        extra={
+          <Space>
+            <Button key="view" icon={<EyeOutlined />} type="primary" onClick={handleViewJSON}>
+              查看JSON
+            </Button>
+            <Button key="copy" icon={<CopyOutlined />} type="primary" onClick={handleCopyCode}>
+              复制代码
+            </Button>
+            <Button key="close" onClick={() => setCodeModalVisible(false)}>
+              关闭
+            </Button>
+          </Space>
+        }
       >
         <div style={{ position: 'relative' }}>
           <pre 
@@ -105,7 +115,6 @@ const CenterTop: React.FC = () => {
               color: '#d4d4d4',
               padding: '16px', 
               borderRadius: '6px',
-              maxHeight: '400px',
               overflow: 'auto',
               fontSize: '13px',
               lineHeight: '1.5',
@@ -118,7 +127,7 @@ const CenterTop: React.FC = () => {
             {generatedCode}
           </pre>
         </div>
-      </Modal>
+      </Drawer>
     </div>
   )
 }

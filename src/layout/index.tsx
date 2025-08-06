@@ -48,7 +48,7 @@ const MyLayout: React.FC = () => {
             cancelText="关闭"
           >
             <p></p>
-            <p>🎉 恭喜，现已支持简单导出 Vue 3 + element-pulse + ts 代码！</p>
+            <p>🎉 恭喜，现已支持简单导出 Vue 3 + element-plus + ts 代码！</p>
             <p>但是还有已知bug，请等待...</p>
           </Modal>
         </Content>
