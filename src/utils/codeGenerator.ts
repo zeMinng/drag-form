@@ -33,7 +33,7 @@ export const generateVueTemplate = (items: CenterItem[]): string => {
     
     // 构建属性字符串
     const propsStr = Object.entries(props)
-      .filter(([key, value]) => value !== undefined && value !== null && value !== '')
+      .filter(([_key, value]) => value !== undefined && value !== null && value !== '')
       .map(([key, value]) => {
         if (typeof value === 'boolean') {
           return value ? key : ''
@@ -75,7 +75,7 @@ export const generateVueTemplate = (items: CenterItem[]): string => {
         const props = item.props || {}
         
         const propsStr = Object.entries(props)
-          .filter(([key, value]) => value !== undefined && value !== null && value !== '')
+          .filter(([_key, value]) => value !== undefined && value !== null && value !== '')
           .map(([key, value]) => {
             if (typeof value === 'boolean') {
               return value ? key : ''
