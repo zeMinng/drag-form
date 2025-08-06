@@ -1,6 +1,6 @@
 import React, { useState, useRef, useMemo, useCallback } from 'react'
 import { Modal, Flex, Button, message, Radio, Checkbox, Drawer, Space } from 'antd'
-import { DeleteOutlined, EyeOutlined, PlayCircleOutlined, DownloadOutlined, CopyOutlined } from '@ant-design/icons'
+import { DeleteOutlined, EyeOutlined, DownloadOutlined, CopyOutlined } from '@ant-design/icons'
 import { useDroppable } from '@dnd-kit/core'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'

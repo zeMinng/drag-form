@@ -52,7 +52,7 @@ export const useFormStore = createPersistedStore<FormState>(
     )),
     
     updateCenterItems: (items) =>
-      set((state) => ({
+      set((_state) => ({
         centerItems: items
       }
     )),
