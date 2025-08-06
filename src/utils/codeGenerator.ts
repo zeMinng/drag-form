@@ -60,7 +60,8 @@ export const generateVueTemplate = (items: CenterItem[]): string => {
     // 构建完整的标签
     const attributes = [vmodelStr, propsStr, additionalProps].filter(Boolean).join(' ')
     
-    return `<${tag} ${attributes}></${tag}>`
+    // 用el-form-item包裹
+    return `<el-form-item label="${item.title || ''}" prop="${vmodel}">\n  <${tag} ${attributes}></${tag}>\n</el-form-item>`
   }
 
   // 递归处理布局组件
@@ -88,6 +89,9 @@ export const generateVueTemplate = (items: CenterItem[]): string => {
           .filter(Boolean)
           .join(' ')
 
+
+        // const children = item.children ? processLayoutItems(item.children) : ''
+        // return `<${tag} ${propsStr}>\n${children}\n</${tag}>`
         return `<${tag} ${propsStr}>\n  <!-- 布局组件内容 -->\n</${tag}>`
       }
 
@@ -175,7 +179,7 @@ const onReset = () => {
     const vmodel = item.vmodel || config.vmodel || 'value'
     const defaultValue = getDefaultValueByType(item.type)
     
-    formFields.push(`  ${vmodel}: ${defaultValue}`)
+    formFields.push(`  ${vmodel}: ${defaultValue},`)
     
     // 生成验证规则
     if (item.props?.required) {

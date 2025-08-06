@@ -1,9 +1,13 @@
 import React, { useState, useRef, useMemo, useCallback } from 'react'
 import { Modal, Flex, Button, message, Radio, Checkbox, Drawer, Space } from 'antd'
-import { DeleteOutlined, EyeOutlined, DownloadOutlined, CopyOutlined } from '@ant-design/icons'
+import { DeleteOutlined, EyeOutlined, DownloadOutlined, CopyOutlined, FormOutlined } from '@ant-design/icons'
 import { useDroppable } from '@dnd-kit/core'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
+import Prism from 'prismjs'
+import 'prismjs/themes/prism-tomorrow.css'
+import 'prismjs/components/prism-typescript'
+import 'prismjs/components/prism-css'
 import IconFont from '@/components/Icon'
 import DownloadOutVue from '../downloadOutVue/index'
 import { useFormStore, type CenterItem } from '@/store/modules/form'
@@ -69,28 +73,28 @@ const CenterTop: React.FC = () => {
     setIsEditing(false)
   }, [centerItems])
 
-  const handleCopyJSON = useCallback(async () => {
-    try {
-      const jsonData = isEditing ? editedJson : JSON.stringify(centerItems, null, 2)
-      await navigator.clipboard.writeText(jsonData)
-      message.success('JSON数据已复制到剪贴板')
-    } catch (error) {
-      // 如果 clipboard API 不可用，使用传统方法
-      const currentRef = isEditing ? jsonTextareaRef.current : jsonPreRef.current
-      if (currentRef) {
-        const range = document.createRange()
-        range.selectNodeContents(currentRef)
-        const selection = window.getSelection()
-        if (selection) {
-          selection.removeAllRanges()
-          selection.addRange(range)
-          document.execCommand('copy')
-          selection.removeAllRanges()
-          message.success('JSON数据已复制到剪贴板')
-        }
-      }
-    }
-  }, [centerItems, isEditing, editedJson])
+  // const handleCopyJSON = useCallback(async () => {
+  //   try {
+  //     const jsonData = isEditing ? editedJson : JSON.stringify(centerItems, null, 2)
+  //     await navigator.clipboard.writeText(jsonData)
+  //     message.success('JSON数据已复制到剪贴板')
+  //   } catch (error) {
+  //     // 如果 clipboard API 不可用，使用传统方法
+  //     const currentRef = isEditing ? jsonTextareaRef.current : jsonPreRef.current
+  //     if (currentRef) {
+  //       const range = document.createRange()
+  //       range.selectNodeContents(currentRef)
+  //       const selection = window.getSelection()
+  //       if (selection) {
+  //         selection.removeAllRanges()
+  //         selection.addRange(range)
+  //         document.execCommand('copy')
+  //         selection.removeAllRanges()
+  //         message.success('JSON数据已复制到剪贴板')
+  //       }
+  //     }
+  //   }
+  // }, [centerItems, isEditing, editedJson])
 
   const handleEditJSON = useCallback(() => {
     setIsEditing(true)
@@ -130,20 +134,26 @@ const CenterTop: React.FC = () => {
   const generatedCode = useMemo(() => generateVueComponent(centerItems), [centerItems])
   const jsonData = useMemo(() => JSON.stringify(centerItems, null, 2), [centerItems])
 
+  useEffect(() => {
+    if (codeModalVisible) {
+      Prism.highlightAll()
+    }
+  }, [codeModalVisible, generatedCode])
+
   return (
     <div className="centerTop">
       <Flex gap="small" wrap>
         <Button icon={<DeleteOutlined />} color="danger" variant="filled" onClick={() => clearTheCanvas()}>
           清空画布
         </Button>
+        <Button icon={<FormOutlined />} color="primary" variant="filled" onClick={handleViewJSON}>
+          编辑JSON
+        </Button>
         <Button icon={<DownloadOutlined />} color="primary" variant="filled" onClick={() => setModalVisible(true)}>
-          导出Vue文件
+          导出vue文件
         </Button>
-        <Button icon={<EyeOutlined />} color="cyan" variant="filled" onClick={handleViewCode}>
+        <Button icon={<EyeOutlined />} color="primary" variant="filled" onClick={handleViewCode}>
           预览代码
-        </Button>
-        <Button icon={<EyeOutlined />} color="green" variant="filled" onClick={handleViewJSON}>
-          查看JSON
         </Button>
         {/* <Button icon={<PlayCircleOutlined />} color="primary" variant="filled">
           运行
@@ -174,13 +184,12 @@ const CenterTop: React.FC = () => {
         }
       >
         <div style={{ position: 'relative' }}>
-          <pre 
+          <pre
             ref={codeRef}
-            style={{ 
-              background: '#1e1e1e', 
-              color: '#d4d4d4',
-              padding: '16px', 
-              borderRadius: '6px',
+            style={{
+              margin: 0,
+              background: '#1e1e1e',
+              borderRadius: '8px',
               overflow: 'auto',
               fontSize: '13px',
               lineHeight: '1.5',
@@ -190,7 +199,7 @@ const CenterTop: React.FC = () => {
               whiteSpace: 'pre-wrap',
             }}
           >
-            {generatedCode}
+            <code className="language-markup">{generatedCode}</code>
           </pre>
         </div>
       </Drawer>
@@ -206,12 +215,12 @@ const CenterTop: React.FC = () => {
           <Space>
             {!isEditing ? (
               <>
-                <Button key="edit" icon={<EyeOutlined />} type="primary" onClick={handleEditJSON}>
+                <Button key="edit" icon={<FormOutlined />} type="primary" onClick={handleEditJSON}>
                   编辑JSON
                 </Button>
-                <Button key="copy" icon={<CopyOutlined />} type="primary" onClick={handleCopyJSON}>
+                {/* <Button key="copy" icon={<CopyOutlined />} type="primary" onClick={handleCopyJSON}>
                   复制JSON
-                </Button>
+                </Button> */}
               </>
             ) : (
               <>
