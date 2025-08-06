@@ -25,6 +25,7 @@ interface FormState {
   selectedItemId: string | null // 当前选中的组件ID
   addCenterItem: (item: Omit<CenterItem, 'id'>) => void
   updateCenterItem: (id: string, updates: Partial<CenterItem>) => void
+  updateCenterItems: (items: CenterItem[]) => void
   removeCenterItem: (id: string) => void
   setSelectedItemId: (id: string | null) => void
   getSelectedItem: () => CenterItem | null
@@ -47,6 +48,12 @@ export const useFormStore = createPersistedStore<FormState>(
         centerItems: state.centerItems.map(item => 
           item.id === id ? { ...item, ...updates } : item
         )
+      }
+    )),
+    
+    updateCenterItems: (items) =>
+      set((state) => ({
+        centerItems: items
       }
     )),
     

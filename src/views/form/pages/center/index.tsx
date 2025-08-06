@@ -29,8 +29,13 @@ const clearTheCanvas = () => {
 const CenterTop: React.FC = () => {
   const [modalVisible, setModalVisible] = useState(false)
   const [codeModalVisible, setCodeModalVisible] = useState(false)
-  const { centerItems } = useFormStore()
+  const [jsonModalVisible, setJsonModalVisible] = useState(false)
+  const [isEditing, setIsEditing] = useState(false)
+  const [editedJson, setEditedJson] = useState('')
+  const { centerItems, updateCenterItems } = useFormStore()
   const codeRef = useRef<HTMLPreElement>(null)
+  const jsonTextareaRef = useRef<HTMLTextAreaElement>(null)
+  const jsonPreRef = useRef<HTMLPreElement>(null)
 
   const handleViewCode = useCallback(() => {
     setCodeModalVisible(true)
@@ -59,10 +64,71 @@ const CenterTop: React.FC = () => {
   }, [centerItems])
 
   const handleViewJSON = useCallback(() => {
-    // setCodeModalVisible(true)
+    setJsonModalVisible(true)
+    setEditedJson(JSON.stringify(centerItems, null, 2))
+    setIsEditing(false)
+  }, [centerItems])
+
+  const handleCopyJSON = useCallback(async () => {
+    try {
+      const jsonData = isEditing ? editedJson : JSON.stringify(centerItems, null, 2)
+      await navigator.clipboard.writeText(jsonData)
+      message.success('JSON数据已复制到剪贴板')
+    } catch (error) {
+      // 如果 clipboard API 不可用，使用传统方法
+      const currentRef = isEditing ? jsonTextareaRef.current : jsonPreRef.current
+      if (currentRef) {
+        const range = document.createRange()
+        range.selectNodeContents(currentRef)
+        const selection = window.getSelection()
+        if (selection) {
+          selection.removeAllRanges()
+          selection.addRange(range)
+          document.execCommand('copy')
+          selection.removeAllRanges()
+          message.success('JSON数据已复制到剪贴板')
+        }
+      }
+    }
+  }, [centerItems, isEditing, editedJson])
+
+  const handleEditJSON = useCallback(() => {
+    setIsEditing(true)
   }, [])
 
+  const handleSaveJSON = useCallback(() => {
+    try {
+      const parsedData = JSON.parse(editedJson)
+      // 验证数据结构
+      if (Array.isArray(parsedData)) {
+        // 验证每个项目都有必要的字段
+        const isValidData = parsedData.every((item: any) => 
+          item && typeof item === 'object' && 
+          item.id && item.type && item.title
+        )
+        
+        if (isValidData) {
+          updateCenterItems(parsedData)
+          message.success('JSON数据已成功更新')
+          setIsEditing(false)
+        } else {
+          message.error('JSON数据格式不正确，每个项目必须包含id、type、title字段')
+        }
+      } else {
+        message.error('JSON数据必须是数组格式')
+      }
+    } catch (error) {
+      message.error('JSON格式错误，请检查语法')
+    }
+  }, [editedJson, updateCenterItems])
+
+  const handleCancelEdit = useCallback(() => {
+    setIsEditing(false)
+    setEditedJson(JSON.stringify(centerItems, null, 2))
+  }, [centerItems])
+
   const generatedCode = useMemo(() => generateVueComponent(centerItems), [centerItems])
+  const jsonData = useMemo(() => JSON.stringify(centerItems, null, 2), [centerItems])
 
   return (
     <div className="centerTop">
@@ -75,6 +141,9 @@ const CenterTop: React.FC = () => {
         </Button>
         <Button icon={<EyeOutlined />} color="cyan" variant="filled" onClick={handleViewCode}>
           预览代码
+        </Button>
+        <Button icon={<EyeOutlined />} color="green" variant="filled" onClick={handleViewJSON}>
+          查看JSON
         </Button>
         {/* <Button icon={<PlayCircleOutlined />} color="primary" variant="filled">
           运行
@@ -95,9 +164,6 @@ const CenterTop: React.FC = () => {
         open={codeModalVisible}
         extra={
           <Space>
-            <Button key="view" icon={<EyeOutlined />} type="primary" onClick={handleViewJSON}>
-              查看JSON
-            </Button>
             <Button key="copy" icon={<CopyOutlined />} type="primary" onClick={handleCopyCode}>
               复制代码
             </Button>
@@ -126,6 +192,88 @@ const CenterTop: React.FC = () => {
           >
             {generatedCode}
           </pre>
+        </div>
+      </Drawer>
+
+      <Drawer
+        title="查看JSON数据"
+        placement="right"
+        closable={false}
+        size="large"
+        onClose={() => setJsonModalVisible(false)}
+        open={jsonModalVisible}
+        extra={
+          <Space>
+            {!isEditing ? (
+              <>
+                <Button key="edit" icon={<EyeOutlined />} type="primary" onClick={handleEditJSON}>
+                  编辑JSON
+                </Button>
+                <Button key="copy" icon={<CopyOutlined />} type="primary" onClick={handleCopyJSON}>
+                  复制JSON
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button key="save" type="primary" onClick={handleSaveJSON}>
+                  保存
+                </Button>
+                <Button key="cancel" onClick={handleCancelEdit}>
+                  取消
+                </Button>
+              </>
+            )}
+            <Button key="close" onClick={() => setJsonModalVisible(false)}>
+              关闭
+            </Button>
+          </Space>
+        }
+      >
+        <div style={{ position: 'relative', height: '100%' }}>
+          {isEditing ? (
+            <textarea
+              ref={jsonTextareaRef}
+              value={editedJson}
+              onChange={(e) => setEditedJson(e.target.value)}
+              style={{ 
+                background: '#f6f8fa', 
+                color: '#24292e',
+                padding: '16px', 
+                borderRadius: '6px',
+                overflow: 'auto',
+                fontSize: '13px',
+                lineHeight: '1.5',
+                fontFamily: 'Consolas, Monaco, "Courier New", monospace',
+                border: '1px solid #e1e4e8',
+                width: '100%',
+                height: '100%',
+                resize: 'vertical',
+                outline: 'none',
+                boxSizing: 'border-box',
+              }}
+              placeholder="请输入有效的JSON数据..."
+            />
+          ) : (
+            <pre 
+              ref={jsonPreRef}
+              style={{ 
+                background: '#f6f8fa', 
+                color: '#24292e',
+                padding: '16px', 
+                borderRadius: '6px',
+                overflow: 'auto',
+                fontSize: '13px',
+                lineHeight: '1.5',
+                fontFamily: 'Consolas, Monaco, "Courier New", monospace',
+                userSelect: 'text',
+                cursor: 'text',
+                whiteSpace: 'pre-wrap',
+                border: '1px solid #e1e4e8',
+              }}
+            >
+              {jsonData}
+            </pre>
+          )}
         </div>
       </Drawer>
     </div>
