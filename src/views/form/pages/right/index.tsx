@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useMemo, useCallback } from 'react'
 import { Tabs, Form, Input, InputNumber, Select, Switch, Divider, Empty, ColorPicker, Slider, Radio, Checkbox } from 'antd'
 import { useFormStore } from '@/store/modules/form'
 import { getComponentConfig } from '@/utils/componentRegistry'
@@ -16,10 +16,10 @@ interface PropEditorProps {
   onChange: (propName: string, value: any) => void
 }
 
-const PropEditor: React.FC<PropEditorProps> = ({ propName, propConfig, value, onChange }) => {
-  const handleChange = (newValue: any) => {
+const PropEditor: React.FC<PropEditorProps> = React.memo(({ propName, propConfig, value, onChange }) => {
+  const handleChange = useCallback((newValue: any) => {
     onChange(propName, newValue)
-  }
+  }, [propName, onChange])
 
   switch (propConfig.type) {
     case 'string':
@@ -137,12 +137,29 @@ const PropEditor: React.FC<PropEditorProps> = ({ propName, propConfig, value, on
         />
       )
   }
-}
+})
 
 // 组件属性配置
 const ComponentConfig: React.FC = () => {
   const { getSelectedItem, updateCenterItem } = useFormStore()
   const selectedItem = getSelectedItem()
+
+  const handlePropChange = useCallback((propName: string, value: any) => {
+    if (!selectedItem) return
+    const currentProps = selectedItem.props || {}
+    const newProps = { ...currentProps, [propName]: value }
+    updateCenterItem(selectedItem.id, { props: newProps })
+  }, [selectedItem, updateCenterItem])
+
+  const handleTitleChange = useCallback((title: string) => {
+    if (!selectedItem) return
+    updateCenterItem(selectedItem.id, { title })
+  }, [selectedItem, updateCenterItem])
+
+  const handleVmodelChange = useCallback((vmodel: string) => {
+    if (!selectedItem) return
+    updateCenterItem(selectedItem.id, { vmodel })
+  }, [selectedItem, updateCenterItem])
 
   if (!selectedItem) {
     return (
@@ -168,19 +185,6 @@ const ComponentConfig: React.FC = () => {
   }
   
   const currentProps = selectedItem.props || {}
-
-  const handlePropChange = (propName: string, value: any) => {
-    const newProps = { ...currentProps, [propName]: value }
-    updateCenterItem(selectedItem.id, { props: newProps })
-  }
-
-  const handleTitleChange = (title: string) => {
-    updateCenterItem(selectedItem.id, { title })
-  }
-
-  const handleVmodelChange = (vmodel: string) => {
-    updateCenterItem(selectedItem.id, { vmodel })
-  }
 
   return (
     <div className="componentConfig">
@@ -233,6 +237,12 @@ const ComponentConfig: React.FC = () => {
 const FormConfig: React.FC = () => {
   const { centerItems, getSelectedItem } = useFormStore()
 
+  const stats = useMemo(() => ({
+    total: centerItems.length,
+    configured: centerItems.filter(item => item.props && Object.keys(item.props).length > 0).length,
+    selected: centerItems.filter(item => item.id === getSelectedItem()?.id).length
+  }), [centerItems, getSelectedItem])
+
   return (
     <div className="formConfig">
       <div className="config-section">
@@ -279,19 +289,15 @@ const FormConfig: React.FC = () => {
         <div className="stats">
           <div className="stat-item">
             <span className="stat-label">总组件数：</span>
-            <span className="stat-value">{centerItems.length}</span>
+            <span className="stat-value">{stats.total}</span>
           </div>
           <div className="stat-item">
             <span className="stat-label">已配置：</span>
-            <span className="stat-value">
-              {centerItems.filter(item => item.props && Object.keys(item.props).length > 0).length}
-            </span>
+            <span className="stat-value">{stats.configured}</span>
           </div>
           <div className="stat-item">
             <span className="stat-label">已选中：</span>
-            <span className="stat-value">
-              {centerItems.filter(item => item.id === getSelectedItem()?.id).length}
-            </span>
+            <span className="stat-value">{stats.selected}</span>
           </div>
         </div>
       </div>
@@ -302,10 +308,14 @@ const FormConfig: React.FC = () => {
 const Right: React.FC = () => {
   const [tabIndex, setTabIndex] = useState('component')
 
-  const tabItems = [
+  const tabItems = useMemo(() => [
     { key: 'component', label: '组件属性' },
     { key: 'form', label: '表单配置' },
-  ]
+  ], [])
+
+  const handleTabChange = useCallback((key: string) => {
+    setTabIndex(key)
+  }, [])
 
   return (
     <div className="right">
@@ -315,7 +325,7 @@ const Right: React.FC = () => {
         size="middle"
         items={tabItems}
         className="custom-tabs"
-        onChange={setTabIndex}
+        onChange={handleTabChange}
       />
       <div className="right-board">
         {tabIndex === 'component' && <ComponentConfig />}

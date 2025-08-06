@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useMemo, useCallback } from 'react'
 import { Modal, Flex, Button, message, Radio, Checkbox } from 'antd'
 import { DeleteOutlined, EyeOutlined, PlayCircleOutlined, DownloadOutlined, CopyOutlined } from '@ant-design/icons'
 import { useDroppable } from '@dnd-kit/core'
@@ -32,12 +32,13 @@ const CenterTop: React.FC = () => {
   const { centerItems } = useFormStore()
   const codeRef = useRef<HTMLPreElement>(null)
 
-  const handleViewCode = () => {
+  const handleViewCode = useCallback(() => {
     setCodeModalVisible(true)
-  }
+  }, [])
 
-  const handleCopyCode = async () => {
+  const handleCopyCode = useCallback(async () => {
     try {
+      const generatedCode = generateVueComponent(centerItems)
       await navigator.clipboard.writeText(generatedCode)
       message.success('代码已复制到剪贴板')
     } catch (error) {
@@ -55,9 +56,9 @@ const CenterTop: React.FC = () => {
         }
       }
     }
-  }
+  }, [centerItems])
 
-  const generatedCode = generateVueComponent(centerItems)
+  const generatedCode = useMemo(() => generateVueComponent(centerItems), [centerItems])
 
   return (
     <div className="centerTop">
@@ -199,17 +200,17 @@ const SortableItem: React.FC<{ item: CenterItem; index?: number }> = ({ item }) 
     cursor: 'move',
   }
   
-  const handleClick = (e: React.MouseEvent) => {
+  const handleClick = useCallback((e: React.MouseEvent) => {
     e.stopPropagation()
     // 点击组件本身的任何地方都选中该组件
     setSelectedItemId(item.id)
-  }
+  }, [item.id, setSelectedItemId])
 
   // 删除中部指定元素
-  const handleDelete = (e: React.MouseEvent) => {
+  const handleDelete = useCallback((e: React.MouseEvent) => {
     e.stopPropagation()
     removeCenterItem(item.id)
-  }
+  }, [item.id, removeCenterItem])
   
   return (
     <div 
@@ -247,9 +248,9 @@ const Center: React.FC<CenterProps> = ({ insertIndex, isDraggingOver = false }) 
   const { setNodeRef, isOver } = useDroppable({ id: 'center-drop-area' })
 
   // 点击空白区域取消选中
-  const handleContainerClick = () => {
+  const handleContainerClick = useCallback(() => {
     // setSelectedItemId(null)
-  }
+  }, [])
 
   return (
     <div className='centerWrap'>

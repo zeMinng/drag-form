@@ -1,6 +1,20 @@
 import { getComponentConfig } from './componentRegistry'
 import type { CenterItem } from '@/store/modules/form'
 
+// 缓存机制
+const codeCache = new Map<string, string>()
+
+// 生成缓存键
+const generateCacheKey = (items: CenterItem[]): string => {
+  return JSON.stringify(items.map(item => ({
+    id: item.id,
+    type: item.type,
+    title: item.title,
+    vmodel: item.vmodel,
+    props: item.props
+  })))
+}
+
 // 生成Vue模板代码
 export const generateVueTemplate = (items: CenterItem[]): string => {
   if (items.length === 0) {
@@ -113,19 +127,21 @@ ${formFields.join('\n')}
 const getTypeScriptTypeByComponentType = (type: string): string => {
   switch (type) {
     case 'input':
-    case 'password':
     case 'textarea':
-    case 'select':
-    case 'radio':
-    case 'date':
+    case 'password':
       return 'string'
     case 'number':
     case 'slider':
       return 'number'
-    case 'checkbox':
-      return 'string[]'
     case 'switch':
+    case 'checkbox':
       return 'boolean'
+    case 'radio':
+      return 'string'
+    case 'select':
+    case 'date':
+    case 'time':
+      return 'string'
     default:
       return 'string'
   }
@@ -133,8 +149,24 @@ const getTypeScriptTypeByComponentType = (type: string): string => {
 
 // 生成Vue 3 Composition API script代码
 export const generateVueScript = (items: CenterItem[]): string => {
+  if (items.length === 0) {
+    return `import { reactive } from 'vue'
+
+const form = reactive({})
+
+const onSubmit = () => {
+  console.log('表单数据:', form)
+}
+
+const onReset = () => {
+  Object.keys(form).forEach(key => {
+    form[key] = getDefaultValueByType('input')
+  })
+}`
+  }
+
   const formFields: string[] = []
-  const formDefaults: string[] = []
+  const formRules: string[] = []
   
   items.forEach(item => {
     const config = getComponentConfig(item.type)
@@ -144,51 +176,46 @@ export const generateVueScript = (items: CenterItem[]): string => {
     const defaultValue = getDefaultValueByType(item.type)
     
     formFields.push(`  ${vmodel}: ${defaultValue}`)
-    formDefaults.push(`  ${vmodel}: ${defaultValue}`)
+    
+    // 生成验证规则
+    if (item.props?.required) {
+      formRules.push(`  ${vmodel}: [
+    { required: true, message: '请输入${item.title || vmodel}', trigger: 'blur' }
+  ]`)
+    }
   })
 
-  const formData = formFields.length > 0 ? formFields.join(',\n') : '  // 暂无字段'
-  const formDefaultsData = formDefaults.length > 0 ? formDefaults.join(',\n') : '  // 暂无字段'
+  const formDataStr = formFields.length > 0 ? formFields.join('\n') : '  // 暂无字段'
+  const formRulesStr = formRules.length > 0 ? formRules.join(',\n') : '  // 暂无验证规则'
 
   return `import { reactive, ref } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 
-${generateTypeScriptInterfaces(items)}
-
-// 表单引用
 const formRef = ref<FormInstance>()
 
-// 表单数据
-const form = reactive<FormData>({
-${formData}
+const form = reactive({
+${formDataStr}
 })
 
-// 表单验证规则
 const formRules: FormRules = {
-  // 在这里添加表单验证规则
+${formRulesStr}
 }
 
-// 表单提交
 const onSubmit = async () => {
   if (!formRef.value) return
   
   try {
     await formRef.value.validate()
     console.log('表单数据:', form)
-    // 在这里处理表单提交逻辑
+    // 这里可以发送到服务器
   } catch (error) {
     console.error('表单验证失败:', error)
   }
 }
 
-// 表单重置
 const onReset = () => {
   if (!formRef.value) return
-  
   formRef.value.resetFields()
-  Object.assign(form, {
-${formDefaultsData}
-  })
 }`
 }
 
@@ -196,21 +223,20 @@ ${formDefaultsData}
 const getDefaultValueByType = (type: string): string => {
   switch (type) {
     case 'input':
-    case 'password':
     case 'textarea':
+    case 'password':
       return "''"
     case 'number':
-      return '0'
-    case 'select':
-    case 'radio':
-      return "''"
-    case 'checkbox':
-      return '[]'
-    case 'switch':
-      return 'false'
     case 'slider':
       return '0'
+    case 'switch':
+    case 'checkbox':
+      return 'false'
+    case 'radio':
+      return "''"
+    case 'select':
     case 'date':
+    case 'time':
       return "''"
     default:
       return "''"
@@ -219,10 +245,16 @@ const getDefaultValueByType = (type: string): string => {
 
 // 生成完整的Vue 3 + TypeScript + Element Plus组件代码
 export const generateVueComponent = (items: CenterItem[]): string => {
+  // 检查缓存
+  const cacheKey = generateCacheKey(items)
+  if (codeCache.has(cacheKey)) {
+    return codeCache.get(cacheKey)!
+  }
+
   const template = generateVueTemplate(items)
   const script = generateVueScript(items)
-
-  return `<template>
+  
+  const fullCode = `<template>
   <div class="form-container">
     <el-form
       ref="formRef"
@@ -232,7 +264,7 @@ export const generateVueComponent = (items: CenterItem[]): string => {
       @submit.prevent="onSubmit"
     >
 ${template.split('\n').map(line => `      ${line}`).join('\n')}
-      
+
       <el-form-item>
         <el-button type="primary" @click="onSubmit">提交</el-button>
         <el-button @click="onReset">重置</el-button>
@@ -256,4 +288,17 @@ ${script}
   margin-bottom: 20px;
 }
 </style>`
+
+  // 缓存结果
+  codeCache.set(cacheKey, fullCode)
+  
+  // 限制缓存大小，避免内存泄漏
+  if (codeCache.size > 100) {
+    const firstKey = codeCache.keys().next().value
+    if (firstKey) {
+      codeCache.delete(firstKey)
+    }
+  }
+
+  return fullCode
 } 
