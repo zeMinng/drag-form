@@ -1,11 +1,12 @@
+import React, { useState, useMemo } from 'react'
 import { Segmented, List } from 'antd'
 import { useDraggable } from '@dnd-kit/core'
 import IconFont from '@/components/Icon'
-import { leftListSegmentedOptions, componentMappings } from '../../static/mapping/leftListMapping'
-import type { ComponentCategory, ComponentMeta } from '../../static/mapping/leftListMapping'
+import { getComponentMetasByCategory } from '@/utils/componentRegistry'
+import type { ComponentCategory, ComponentMeta } from '@/types/component'
 import './index.scss'
 
-const DraggableListItem: React.FC<{ item: ComponentMeta }> = ({ item }) => {
+const DraggableListItem: React.FC<{ item: ComponentMeta }> = React.memo(({ item }) => {
   const draggable = useDraggable({ 
     id: item.key, 
     data: { 
@@ -27,12 +28,18 @@ const DraggableListItem: React.FC<{ item: ComponentMeta }> = ({ item }) => {
       />
     </List.Item>
   )
-}
+})
 
 const Left: React.FC = () => {
   const [selectedType, setSelectedType] = useState<ComponentCategory>('input')
 
-  const data: ComponentMeta[] = componentMappings[selectedType] || []
+  const data = useMemo(() => getComponentMetasByCategory(selectedType), [selectedType])
+
+  const leftListSegmentedOptions = useMemo(() => [
+    { label: '输入型', value: 'input' },
+    { label: '选择型', value: 'select' },
+    { label: '布局型', value: 'layout' },
+  ] satisfies { label: string; value: ComponentCategory }[], [])
 
   return (
     <div className="left">
