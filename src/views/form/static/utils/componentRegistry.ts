@@ -151,11 +151,11 @@ const defaultConfigs: Record<string, ComponentConfig> = {
         min: 1,
         max: 10000
       },
-      showCount: {
-        type: 'boolean',
-        label: '显示字数统计',
-        defaultValue: false
-      },
+      // showCount: {
+      //   type: 'boolean',
+      //   label: '显示字数统计',
+      //   defaultValue: false
+      // },
       disabled: {
         type: 'boolean',
         label: '禁用状态',
@@ -329,11 +329,11 @@ const defaultConfigs: Record<string, ComponentConfig> = {
           { label: '月-日', value: 'MM-DD' }
         ]
       },
-      showTime: {
-        type: 'boolean',
-        label: '显示时间选择',
-        defaultValue: false
-      }
+      // showTime: {
+      //   type: 'boolean',
+      //   label: '显示时间选择',
+      //   defaultValue: false
+      // }
     }
   },
   slider: {
