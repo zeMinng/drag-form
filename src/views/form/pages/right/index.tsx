@@ -1,8 +1,8 @@
 import React, { useState, useMemo, useCallback } from 'react'
 import { Tabs, Form, Input, InputNumber, Select, Switch, Divider, Empty, ColorPicker, Slider, Radio, Checkbox } from 'antd'
 import { useFormStore } from '@/store/modules/form'
-import { getComponentConfig } from '@/utils/componentRegistry'
-import type { PropConfig } from '@/types/component'
+import { getComponentConfig } from '@/views/form/static/utils/componentRegistry'
+import type { PropConfig } from '@/views/form/static/type/component'
 import './index.scss'
 
 const { TextArea } = Input

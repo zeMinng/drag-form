@@ -1,14 +1,6 @@
-/*
- * @Author: zeMing 2439340964@qq.com
- * @Date: 2025-07-17 10:53:15
- * @LastEditors: zeMing 2439340964@qq.com
- * @LastEditTime: 2025-08-06 10:45:08
- * @FilePath: \drag-vue-form\src\store\modules\form.ts
- * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
- */
 import { createPersistedStore } from '@/store'
 import { v4 as uuidv4 } from 'uuid'
-import type { FormComponent } from '@/types/component'
+import type { FormComponent } from '@/views/form/static/type/component'
 
 export interface CenterItem extends FormComponent {
   id: string

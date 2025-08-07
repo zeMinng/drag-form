@@ -1,6 +1,6 @@
 import React from 'react'
 import { Input, InputNumber, Select, Radio, Checkbox, DatePicker, Switch, Slider } from 'antd'
-import type { ComponentConfig, ComponentMeta, ComponentCategory, ComponentRegistry } from '@/types/component'
+import type { ComponentConfig, ComponentMeta, ComponentCategory, ComponentRegistry } from '@/views/form/static/type/component'
 
 // 默认组件配置
 const defaultConfigs: Record<string, ComponentConfig> = {
