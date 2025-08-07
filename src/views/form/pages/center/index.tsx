@@ -305,6 +305,12 @@ const renderComponentByType = (item: CenterItem) => {
   // 合并默认属性和自定义属性
   const mergedProps = { ...config.props, ...item.props }
   
+  // 过滤掉不兼容的属性，避免 React 警告
+  const filterIncompatibleProps = (props: any) => {
+    const { clearable, ...rest } = props
+    return rest
+  }
+  
   // 处理 radio 和 checkbox 的选项配置
   if (item.type === 'radio' || item.type === 'checkbox') {
     const optionsText = item.props?.options || '选项1,选项2,选项3'
@@ -330,7 +336,7 @@ const renderComponentByType = (item: CenterItem) => {
     
     // 使用 Ant Design 组件，但传递转换后的选项
     const componentProps = {
-      ...mergedProps,
+      ...filterIncompatibleProps(mergedProps),
       options: optionsArray // 传递转换后的选项数组
     }
     
@@ -345,7 +351,7 @@ const renderComponentByType = (item: CenterItem) => {
   
   return (
     <ComponentWrapper title={item.title}>
-      <Component {...mergedProps}>
+      <Component {...filterIncompatibleProps(mergedProps)}>
         {config.children}
       </Component>
     </ComponentWrapper>

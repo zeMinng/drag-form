@@ -35,7 +35,7 @@ const defaultConfigs: Record<string, ComponentConfig> = {
       clearable: {
         type: 'boolean',
         label: '允许清空',
-        defaultValue: true
+        defaultValue: undefined
       }
     }
   },
@@ -117,7 +117,7 @@ const defaultConfigs: Record<string, ComponentConfig> = {
       clearable: {
         type: 'boolean',
         label: '允许清空',
-        defaultValue: true
+        defaultValue: undefined
       }
     }
   },
@@ -232,7 +232,7 @@ const defaultConfigs: Record<string, ComponentConfig> = {
       clearable: {
         type: 'boolean',
         label: '允许清空',
-        defaultValue: true
+        defaultValue: undefined
       },
       showSearch: {
         type: 'boolean',
