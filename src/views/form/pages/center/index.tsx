@@ -50,7 +50,7 @@ const CenterTop: React.FC = () => {
       const generatedCode = generateVueComponent(centerItems)
       await navigator.clipboard.writeText(generatedCode)
       message.success('代码已复制到剪贴板')
-    } catch (error) {
+    } catch {
       // 如果 clipboard API 不可用，使用传统方法
       if (codeRef.current) {
         const range = document.createRange()
@@ -121,7 +121,7 @@ const CenterTop: React.FC = () => {
       } else {
         message.error('JSON数据必须是数组格式')
       }
-    } catch (error) {
+    } catch {
       message.error('JSON格式错误，请检查语法')
     }
   }, [editedJson, updateCenterItems])
@@ -307,6 +307,7 @@ const renderComponentByType = (item: CenterItem) => {
   
   // 过滤掉不兼容的属性，避免 React 警告
   const filterIncompatibleProps = (props: any) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { clearable, ...rest } = props
     return rest
   }

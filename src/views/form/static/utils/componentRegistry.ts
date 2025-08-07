@@ -102,11 +102,6 @@ const defaultConfigs: Record<string, ComponentConfig> = {
         defaultValue: '请输入密码',
         placeholder: '请输入占位符文本'
       },
-      disabled: {
-        type: 'boolean',
-        label: '禁用状态',
-        defaultValue: false
-      },
       maxlength: {
         type: 'number',
         label: '最大长度',
@@ -114,11 +109,16 @@ const defaultConfigs: Record<string, ComponentConfig> = {
         min: 1,
         max: 1000
       },
+      disabled: {
+        type: 'boolean',
+        label: '禁用状态',
+        defaultValue: false
+      },
       clearable: {
         type: 'boolean',
         label: '允许清空',
         defaultValue: undefined
-      }
+      },
     }
   },
   textarea: {
@@ -172,6 +172,15 @@ const defaultConfigs: Record<string, ComponentConfig> = {
     tag: 'el-switch',
     vmodel: 'switch',
     propsConfig: {
+      size: {
+        type: 'select',
+        label: '尺寸',
+        defaultValue: 'default',
+        options: [
+          { label: '默认', value: 'default' },
+          { label: '小', value: 'small' }
+        ]
+      },
       checked: {
         type: 'boolean',
         label: '默认状态',
@@ -182,15 +191,6 @@ const defaultConfigs: Record<string, ComponentConfig> = {
         label: '禁用状态',
         defaultValue: false
       },
-      size: {
-        type: 'select',
-        label: '尺寸',
-        defaultValue: 'default',
-        options: [
-          { label: '默认', value: 'default' },
-          { label: '小', value: 'small' }
-        ]
-      }
     }
   },
   select: {
@@ -214,11 +214,6 @@ const defaultConfigs: Record<string, ComponentConfig> = {
         defaultValue: '请选择',
         placeholder: '请输入占位符文本'
       },
-      disabled: {
-        type: 'boolean',
-        label: '禁用状态',
-        defaultValue: false
-      },
       mode: {
         type: 'select',
         label: '选择模式',
@@ -228,6 +223,11 @@ const defaultConfigs: Record<string, ComponentConfig> = {
           { label: '多选', value: 'multiple' },
           { label: '标签', value: 'tags' }
         ]
+      },
+      disabled: {
+        type: 'boolean',
+        label: '禁用状态',
+        defaultValue: false
       },
       clearable: {
         type: 'boolean',
@@ -255,18 +255,18 @@ const defaultConfigs: Record<string, ComponentConfig> = {
     tag: 'el-radio-group',
     vmodel: 'radio',
     propsConfig: {
-      disabled: {
-        type: 'boolean',
-        label: '禁用状态',
-        defaultValue: false
-      },
       options: {
         type: 'textarea',
         label: '选项配置',
         defaultValue: '选项1,选项2,选项3',
         placeholder: '请输入选项，用逗号分隔',
         rows: 3
-      }
+      },
+      disabled: {
+        type: 'boolean',
+        label: '禁用状态',
+        defaultValue: false
+      },
     }
   },
   checkbox: {
@@ -283,18 +283,18 @@ const defaultConfigs: Record<string, ComponentConfig> = {
     tag: 'el-checkbox-group',
     vmodel: 'checkbox',
     propsConfig: {
-      disabled: {
-        type: 'boolean',
-        label: '禁用状态',
-        defaultValue: false
-      },
       options: {
         type: 'textarea',
         label: '选项配置',
         defaultValue: '选项1,选项2,选项3',
         placeholder: '请输入选项，用逗号分隔',
         rows: 3
-      }
+      },
+      disabled: {
+        type: 'boolean',
+        label: '禁用状态',
+        defaultValue: false
+      },
     }
   },
   date: {
@@ -313,11 +313,6 @@ const defaultConfigs: Record<string, ComponentConfig> = {
         defaultValue: '请选择日期',
         placeholder: '请输入占位符文本'
       },
-      disabled: {
-        type: 'boolean',
-        label: '禁用状态',
-        defaultValue: false
-      },
       format: {
         type: 'select',
         label: '日期格式',
@@ -328,6 +323,11 @@ const defaultConfigs: Record<string, ComponentConfig> = {
           { label: '年-月-日 时:分:秒', value: 'YYYY-MM-DD HH:mm:ss' },
           { label: '月-日', value: 'MM-DD' }
         ]
+      },
+      disabled: {
+        type: 'boolean',
+        label: '禁用状态',
+        defaultValue: false
       },
       // showTime: {
       //   type: 'boolean',

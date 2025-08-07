@@ -246,8 +246,8 @@ const FormConfig: React.FC = () => {
   return (
     <div className="formConfig">
       <div className="config-section">
-        <h4>表单信息</h4>
-        <Form layout="vertical" size="small">
+        <Divider size="small" dashed plain variant="dashed" style={{ borderColor: '#e9ecf0' }}>表单信息</Divider>
+        <Form layout="vertical">
           <Form.Item label="表单标题">
             <Input placeholder="请输入表单标题" />
           </Form.Item>
@@ -255,13 +255,9 @@ const FormConfig: React.FC = () => {
             <TextArea placeholder="请输入表单描述" rows={3} />
           </Form.Item>
         </Form>
-      </div>
 
-      <Divider />
-
-      <div className="config-section">
-        <h4>表单设置</h4>
-        <Form layout="vertical" size="small">
+        <Divider size="small" dashed plain variant="dashed" style={{ borderColor: '#e9ecf0' }}>表单设置</Divider>
+        <Form layout="vertical">
           <Form.Item label="布局方式">
             <Select defaultValue="vertical" style={{ width: '100%' }}>
               <Option value="vertical">垂直布局</Option>
@@ -280,12 +276,8 @@ const FormConfig: React.FC = () => {
             <Switch defaultChecked />
           </Form.Item>
         </Form>
-      </div>
 
-      <Divider />
-
-      <div className="config-section">
-        <h4>组件统计</h4>
+        <Divider size="small" dashed plain variant="dashed" style={{ borderColor: '#e9ecf0' }}>组件统计</Divider>
         <div className="stats">
           <div className="stat-item">
             <span className="stat-label">总组件数：</span>
