@@ -1,7 +1,8 @@
 import { Outlet } from 'react-router-dom'
 import ToolHeader from './components/ToolHeader'
-import { Flex, Layout, Modal } from 'antd'
+import { Flex, Layout, Modal, Typography  } from 'antd'
 const { Header, Content } = Layout
+const { Paragraph } = Typography
 
 const layoutStyle = {
   overflow: 'hidden',
@@ -39,17 +40,20 @@ const MyLayout: React.FC = () => {
           <Outlet />
 
           <Modal
-            title="重大通知"
+            title="公告"
             centered
             open={isModalOpen}
             onOk={handleClose}
             onCancel={handleClose}
-            okText="确定"
-            cancelText="关闭"
+            footer={null}
           >
-            <p></p>
-            <p>🎉 恭喜，现已支持简单导出 Vue 3 + element-plus + ts 代码！</p>
-            <p>但是还有已知bug，请等待...</p>
+            <Paragraph>
+              🎉 恭喜，现已支持导出 Vue3 + Element-Plus + TS 代码！
+            </Paragraph>
+            <Paragraph>
+              {/* 目前主要支持的功能有：拖拽、配置、预览、导出等。还有很多功能正在开发中，敬请期待！ */}
+              已知问题：导出的代码中有一些不完美的地方，后续会进行完善！
+            </Paragraph>
           </Modal>
         </Content>
       </Layout>

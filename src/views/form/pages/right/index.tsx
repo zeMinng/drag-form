@@ -189,7 +189,7 @@ const ComponentConfig: React.FC = () => {
   return (
     <div className="componentConfig">
       <div className="config-section">
-        <Divider size="small" dashed variant="dashed" style={{ borderColor: '#e9ecf0' }}>基础信息</Divider>
+        <Divider size="small" dashed plain variant="dashed" style={{ borderColor: '#e9ecf0' }}>基础信息</Divider>
         <Form layout="vertical">
           <Form.Item label="标题">
             <Input
@@ -211,7 +211,7 @@ const ComponentConfig: React.FC = () => {
       {/* 组件属性配置 */}
       {config.propsConfig && Object.keys(config.propsConfig).length > 0 && (
         <div className="config-section">
-          <Divider size="small" dashed variant="dashed" style={{ borderColor: '#e9ecf0' }}>组件属性</Divider>
+          <Divider size="small" dashed plain variant="dashed" style={{ borderColor: '#e9ecf0' }}>组件属性</Divider>
           <Form layout="vertical">
             {Object.entries(config.propsConfig).map(([propName, propConfig]) => {
               const value = currentProps[propName] ?? propConfig.defaultValue
