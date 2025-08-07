@@ -16,23 +16,23 @@ const defaultConfigs: Record<string, ComponentConfig> = {
     propsConfig: {
       placeholder: {
         type: 'string',
-        label: '占位符',
+        label: '占位提示',
         defaultValue: '请输入内容',
         placeholder: '请输入占位符文本'
       },
-      disabled: {
-        type: 'boolean',
-        label: '禁用状态',
-        defaultValue: false
-      },
-      maxLength: {
+      maxlength: {
         type: 'number',
         label: '最大长度',
         defaultValue: undefined,
         min: 1,
         max: 1000
       },
-      allowClear: {
+      disabled: {
+        type: 'boolean',
+        label: '禁用状态',
+        defaultValue: false
+      },
+      clearable: {
         type: 'boolean',
         label: '允许清空',
         defaultValue: true
@@ -51,7 +51,7 @@ const defaultConfigs: Record<string, ComponentConfig> = {
     propsConfig: {
       placeholder: {
         type: 'string',
-        label: '占位符',
+        label: '占位提示',
         defaultValue: '请输入数字',
         placeholder: '请输入占位符文本'
       },
@@ -98,7 +98,7 @@ const defaultConfigs: Record<string, ComponentConfig> = {
     propsConfig: {
       placeholder: {
         type: 'string',
-        label: '占位符',
+        label: '占位提示',
         defaultValue: '请输入密码',
         placeholder: '请输入占位符文本'
       },
@@ -107,14 +107,14 @@ const defaultConfigs: Record<string, ComponentConfig> = {
         label: '禁用状态',
         defaultValue: false
       },
-      maxLength: {
+      maxlength: {
         type: 'number',
         label: '最大长度',
         defaultValue: undefined,
         min: 1,
         max: 1000
       },
-      allowClear: {
+      clearable: {
         type: 'boolean',
         label: '允许清空',
         defaultValue: true
@@ -133,7 +133,7 @@ const defaultConfigs: Record<string, ComponentConfig> = {
     propsConfig: {
       placeholder: {
         type: 'string',
-        label: '占位符',
+        label: '占位提示',
         defaultValue: '请输入内容',
         placeholder: '请输入占位符文本'
       },
@@ -144,7 +144,7 @@ const defaultConfigs: Record<string, ComponentConfig> = {
         min: 1,
         max: 20
       },
-      maxLength: {
+      maxlength: {
         type: 'number',
         label: '最大长度',
         defaultValue: undefined,
@@ -210,7 +210,7 @@ const defaultConfigs: Record<string, ComponentConfig> = {
     propsConfig: {
       placeholder: {
         type: 'string',
-        label: '占位符',
+        label: '占位提示',
         defaultValue: '请选择',
         placeholder: '请输入占位符文本'
       },
@@ -229,7 +229,7 @@ const defaultConfigs: Record<string, ComponentConfig> = {
           { label: '标签', value: 'tags' }
         ]
       },
-      allowClear: {
+      clearable: {
         type: 'boolean',
         label: '允许清空',
         defaultValue: true
@@ -309,7 +309,7 @@ const defaultConfigs: Record<string, ComponentConfig> = {
     propsConfig: {
       placeholder: {
         type: 'string',
-        label: '占位符',
+        label: '占位提示',
         defaultValue: '请选择日期',
         placeholder: '请输入占位符文本'
       },

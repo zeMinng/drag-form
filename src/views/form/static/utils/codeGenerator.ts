@@ -41,6 +41,9 @@ export const generateVueTemplate = (items: CenterItem[]): string => {
         if (typeof value === 'string') {
           return `${key}="${value}"`
         }
+        if (typeof value === 'number') {
+          return `:${key}="${value}"`
+        }
         return `${key}="${value}"`
       })
       .filter(Boolean)
@@ -264,7 +267,7 @@ export const generateVueComponent = (items: CenterItem[]): string => {
       ref="formRef"
       :model="form"
       :rules="formRules"
-      label-width="120px"
+      label-width="auto"
       @submit.prevent="onSubmit"
     >
 ${template.split('\n').map(line => `      ${line}`).join('\n')}
