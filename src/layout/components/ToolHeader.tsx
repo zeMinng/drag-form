@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom"
 import { Popover } from 'antd'
 import { QuestionCircleOutlined, GithubOutlined } from '@ant-design/icons'
 import MenuWrap from './Menu'
@@ -6,6 +7,8 @@ const GITHUB_URL = 'https://github.com/zeMinng/drag-vue-form'
 const APP_NAME = 'DragVueForm'
 
 const ToolHeader: React.FC = () => {
+  const navigate = useNavigate()
+
   return (
     <div style={{
       display: 'flex',
@@ -16,7 +19,7 @@ const ToolHeader: React.FC = () => {
     }}>
       {/* 左侧Logo和App名 */}
       <div style={{ display: 'flex', alignItems: 'center' }}>
-        <img src={LOGO_URL} alt="logo" style={{ width: 32, height: 32, marginRight: 8 }} />
+        <img src={LOGO_URL} alt="logo" style={{ width: 32, height: 32, marginRight: 8, cursor: 'pointer' }} onClick={() => navigate('/', { replace: true })} />
         <span style={{ fontWeight: 'bold', fontSize: 20, letterSpacing: 1 }}>
           {APP_NAME}
         </span>

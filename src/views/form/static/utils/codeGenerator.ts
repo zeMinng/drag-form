@@ -52,9 +52,9 @@ export const generateVueTemplate = (items: CenterItem[]): string => {
     // 为特殊组件添加额外属性
     let additionalProps = ''
     if (item.type === 'password') {
-      additionalProps = ' type="password"'
+      additionalProps = 'type="password"'
     } else if (item.type === 'textarea') {
-      additionalProps = ' type="textarea"'
+      additionalProps = 'type="textarea"'
     }
 
     // 生成v-model

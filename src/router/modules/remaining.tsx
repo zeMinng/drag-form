@@ -13,12 +13,12 @@ const routes: RouteObject[] = [
         index: true, // 默认子路由
         element: <Form />,
       },
-      {
-        path: '*',
-        element: <NotFound />,
-      },
     ],
-  }
+  },
+  {
+    path: '*',
+    element: <NotFound />,
+  },
 ]
 
 export default routes

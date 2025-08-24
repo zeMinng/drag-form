@@ -1,0 +1,70 @@
+$primary: #00bcd4;       // 蓝绿色主色
+$primary-dark: #0097a7;  // 按钮渐变深色
+$primary-hover: #00796b; // 按钮 hover
+$text: #333;              // 主文字
+$text-light: #666;        // 副文字
+$bg-start: #e0f7fa;       // 背景渐变起点
+$bg-end: #fff;         // 背景渐变终点
+
+.notfound-container {
+  display: flex;
+  height: 100vh;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: $text;
+  text-align: center;
+  background: linear-gradient(135deg, $bg-start, $bg-end);
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  .notfound-title {
+    margin: 0;
+    font-size: 120px;
+    font-weight: 800;
+    color: $primary;
+    text-shadow:
+      0 0 4px $primary,
+      0 0 8px rgba($primary, 0.5);
+    animation: flicker 2s infinite, float 3s infinite ease-in-out;
+  }
+
+  .notfound-subtitle {
+    margin: 16px 0 32px;
+    font-size: 20px;
+    color: $text-light;
+  }
+
+  .notfound-button {
+    padding: 12px 28px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+    cursor: pointer;
+    background: linear-gradient(135deg, $primary, $primary-dark);
+    border: none;
+    border-radius: 30px;
+    box-shadow: 0 4px 14px rgba($primary, 0.3);
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: linear-gradient(135deg, $primary-dark, $primary-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba($primary, 0.5);
+    }
+  }
+
+  @keyframes flicker {
+    0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+      opacity: 100%;
+    }
+
+    20%, 24%, 55% {
+      opacity: 70%; // 保持清晰度
+    }
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+}
