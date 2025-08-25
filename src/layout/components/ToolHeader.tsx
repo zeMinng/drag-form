@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom"
 import { Popover } from 'antd'
 import { QuestionCircleOutlined, GithubOutlined } from '@ant-design/icons'
 import MenuWrap from './Menu'
-import LOGO_URL from '@/assets/logo.svg'
+import LOGO_URL from '@/assets/logo_512.svg'
 const GITHUB_URL = 'https://github.com/zeMinng/drag-vue-form'
 const APP_NAME = 'DragVueForm'
 
