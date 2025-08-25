@@ -162,6 +162,7 @@
       "speak"
     ],
     "scss/dollar-variable-pattern": null,
-    "alpha-value-notation": "percentage"
+    "alpha-value-notation": "percentage",
+    "declaration-block-single-line-max-declarations": 5
   }
 }
