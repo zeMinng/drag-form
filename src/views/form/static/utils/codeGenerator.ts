@@ -19,7 +19,7 @@ const generateCacheKey = (items: CenterItem[], formConfig: FormConfig): string =
 }
 
 // 生成Vue模板代码
-export const generateVueTemplate = (items: CenterItem[], formConfig: FormConfig): string => {
+export const generateVueTemplate = (items: CenterItem[], _formConfig: FormConfig): string => {
   if (items.length === 0) {
     return '<div>暂无组件</div>'
   }
