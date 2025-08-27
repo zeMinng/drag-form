@@ -248,6 +248,20 @@ const FormConfig: React.FC = () => {
       <div className="config-section">
         <Divider size="small" dashed plain variant="dashed" style={{ borderColor: '#e9ecf0' }}>表单信息</Divider>
         <Form layout="vertical">
+          <Form.Item label="表单字段名称">
+            <Input 
+              placeholder="请输入表单字段名称" 
+              value={formConfig.modelName}
+              onChange={(e) => updateFormConfig({ modelName: e.target.value })}
+            />
+          </Form.Item>
+          <Form.Item label="标签宽度">
+            <Input 
+              placeholder="请输入标签宽度，如：120px 或 120" 
+              value={formConfig.labelWidth}
+              onChange={(e) => updateFormConfig({ labelWidth: e.target.value })}
+            />
+          </Form.Item>
           <Form.Item label="表单尺寸">
             <Select 
               value={formConfig.size} 
@@ -258,20 +272,6 @@ const FormConfig: React.FC = () => {
               <Option value="default">默认尺寸</Option>
               <Option value="small">小尺寸</Option>
             </Select>
-          </Form.Item>
-          <Form.Item label="表单名称">
-            <Input 
-              placeholder="请输入表单名称" 
-              value={formConfig.name}
-              onChange={(e) => updateFormConfig({ name: e.target.value })}
-            />
-          </Form.Item>
-          <Form.Item label="标签宽度">
-            <Input 
-              placeholder="请输入标签宽度，如：120px 或 120" 
-              value={formConfig.labelWidth}
-              onChange={(e) => updateFormConfig({ labelWidth: e.target.value })}
-            />
           </Form.Item>
           <Form.Item label="禁用表单">
             <Switch 

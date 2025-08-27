@@ -19,7 +19,7 @@ const generateCacheKey = (items: CenterItem[], formConfig: FormConfig): string =
 }
 
 // 生成Vue模板代码
-export const generateVueTemplate = (items: CenterItem[], _formConfig: FormConfig): string => {
+export const generateVueTemplate = (items: CenterItem[], formConfig: FormConfig): string => {
   if (items.length === 0) {
     return '<div>暂无组件</div>'
   }
@@ -61,7 +61,7 @@ export const generateVueTemplate = (items: CenterItem[], _formConfig: FormConfig
     }
 
     // 生成v-model
-    const vmodelStr = `v-model="form.${vmodel}"`
+    const vmodelStr = `v-model="${formConfig.modelName}.${vmodel}"`
     
     // 构建完整的标签
     const attributes = [vmodelStr, propsStr, additionalProps].filter(Boolean).join(' ')
@@ -192,19 +192,19 @@ const getTypeScriptTypeByComponentType = (type: string): string => {
 }
 
 // 生成Vue 3 Composition API script代码
-export const generateVueScript = (items: CenterItem[]): string => {
+export const generateVueScript = (items: CenterItem[], formConfig: FormConfig): string => {
   if (items.length === 0) {
     return `import { reactive } from 'vue'
 
-const form = reactive({})
+const ${formConfig.modelName} = reactive({})
 
 const onSubmit = () => {
-  console.log('表单数据:', form)
+  console.log('表单数据:', ${formConfig.modelName})
 }
 
 const onReset = () => {
-  Object.keys(form).forEach(key => {
-    form[key] = getDefaultValueByType('input')
+  Object.keys(${formConfig.modelName}).forEach(key => {
+    ${formConfig.modelName}[key] = getDefaultValueByType('input')
   })
 }`
   }
@@ -237,7 +237,7 @@ import type { FormInstance, FormRules } from 'element-plus'
 
 const formRef = ref<FormInstance>()
 
-const form = reactive({
+const ${formConfig.modelName} = reactive({
 ${formDataStr}
 })
 
@@ -250,7 +250,7 @@ const onSubmit = async () => {
   
   try {
     await formRef.value.validate()
-    console.log('表单数据:', form)
+    console.log('表单数据:', ${formConfig.modelName})
     // 这里可以发送到服务器
   } catch (error) {
     console.error('表单验证失败:', error)
@@ -296,7 +296,7 @@ export const generateVueComponent = (items: CenterItem[], formConfig: FormConfig
   }
 
   const template = generateVueTemplate(items, formConfig)
-  const script = generateVueScript(items)
+  const script = generateVueScript(items, formConfig)
   
   // 根据表单配置生成表单属性
   const formProps = []
@@ -305,14 +305,9 @@ export const generateVueComponent = (items: CenterItem[], formConfig: FormConfig
   if (formConfig.size && formConfig.size !== 'default') {
     formProps.push(`      size="${formConfig.size}"`)
   }
-  
-  // 表单名称
-  if (formConfig.name && formConfig.name !== 'form') {
-    formProps.push(`      name="${formConfig.name}"`)
-  }
-  
+
   // 标签宽度
-  if (formConfig.labelWidth && formConfig.labelWidth !== 'auto') {
+  if (formConfig.labelWidth) {
     if (typeof formConfig.labelWidth === 'number') {
       formProps.push(`      :label-width="${formConfig.labelWidth}"`)
     } else {
@@ -361,7 +356,7 @@ export const generateVueComponent = (items: CenterItem[], formConfig: FormConfig
   <div class="form-container">
     <el-form
       ref="formRef"
-      :model="form"
+      :model="${formConfig.modelName}"
       :rules="formRules"
       @submit.prevent="onSubmit"
 ${formPropsStr}

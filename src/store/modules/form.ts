@@ -15,7 +15,7 @@ export interface CenterItem extends FormComponent {
 // 表单级别配置
 export interface FormConfig {
   size: 'large' | 'default' | 'small'
-  name: string
+  modelName: string
   labelWidth: string | number
   disabled: boolean
   layout: 'vertical' | 'horizontal' | 'inline'
@@ -44,7 +44,7 @@ export const useFormStore = createPersistedStore<FormState>(
     selectedItemId: null,
     formConfig: {
       size: 'default',
-      name: 'form',
+      modelName: 'form',
       labelWidth: 'auto',
       disabled: false,
       layout: 'horizontal',
@@ -96,7 +96,7 @@ export const useFormStore = createPersistedStore<FormState>(
       set(() => ({
         formConfig: {
           size: 'default',
-          name: 'form',
+          modelName: 'form',
           labelWidth: 'auto',
           disabled: false,
           layout: 'horizontal',
