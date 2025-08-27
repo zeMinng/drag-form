@@ -30,6 +30,70 @@
       color: #bbb;
       text-align: center;
     }
+
+    // 表单配置样式
+    .ant-form {
+      // 取消每个form-item的下边距
+      .ant-form-item {
+        margin-bottom: 0;
+      }
+
+      // 标签宽度配置
+      &[style*="--form-label-width"] {
+        .ant-form-item-label {
+          width: var(--form-label-width);
+          max-width: var(--form-label-width);
+          min-width: var(--form-label-width);
+        }
+      }
+
+      // 禁用状态样式
+      &.ant-form-disabled {
+        .ant-form-item-label {
+          color: #bfbfbf;
+        }
+        
+        .ant-input,
+        .ant-select,
+        .ant-input-number,
+        .ant-switch,
+        .ant-checkbox,
+        .ant-radio {
+          color: #bfbfbf;
+          cursor: not-allowed;
+          background-color: #f5f5f5;
+        }
+      }
+
+      // 尺寸配置样式
+      &.ant-form-large {
+        .ant-form-item-label {
+          font-size: 16px;
+          line-height: 40px;
+        }
+        
+        .ant-input,
+        .ant-select,
+        .ant-input-number {
+          height: 40px;
+          font-size: 16px;
+        }
+      }
+
+      &.ant-form-small {
+        .ant-form-item-label {
+          font-size: 12px;
+          line-height: 24px;
+        }
+        
+        .ant-input,
+        .ant-select,
+        .ant-input-number {
+          height: 24px;
+          font-size: 12px;
+        }
+      }
+    }
   }
 
   .center-item {

@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useCallback } from 'react'
-import { Tabs, Form, Input, InputNumber, Select, Switch, Divider, Empty, ColorPicker, Slider, Radio, Checkbox } from 'antd'
+import { Tabs, Form, Input, InputNumber, Select, Switch, Divider, Empty, ColorPicker, Slider, Radio, Checkbox, Button } from 'antd'
 import { useFormStore } from '@/store/modules/form'
 import { getComponentConfig } from '@/views/form/static/utils/componentRegistry'
 import type { PropConfig } from '@/views/form/static/type/component'
@@ -235,7 +235,7 @@ const ComponentConfig: React.FC = () => {
 
 // 表单配置
 const FormConfig: React.FC = () => {
-  const { centerItems, getSelectedItem } = useFormStore()
+  const { centerItems, getSelectedItem, formConfig, updateFormConfig, resetFormConfig } = useFormStore()
 
   const stats = useMemo(() => ({
     total: centerItems.length,
@@ -248,32 +248,80 @@ const FormConfig: React.FC = () => {
       <div className="config-section">
         <Divider size="small" dashed plain variant="dashed" style={{ borderColor: '#e9ecf0' }}>表单信息</Divider>
         <Form layout="vertical">
-          <Form.Item label="表单标题">
-            <Input placeholder="请输入表单标题" />
+          <Form.Item label="表单尺寸">
+            <Select 
+              value={formConfig.size} 
+              style={{ width: '100%' }}
+              onChange={(value) => updateFormConfig({ size: value })}
+            >
+              <Option value="large">大尺寸</Option>
+              <Option value="default">默认尺寸</Option>
+              <Option value="small">小尺寸</Option>
+            </Select>
           </Form.Item>
-          <Form.Item label="表单描述">
-            <TextArea placeholder="请输入表单描述" rows={3} />
+          <Form.Item label="表单名称">
+            <Input 
+              placeholder="请输入表单名称" 
+              value={formConfig.name}
+              onChange={(e) => updateFormConfig({ name: e.target.value })}
+            />
+          </Form.Item>
+          <Form.Item label="标签宽度">
+            <Input 
+              placeholder="请输入标签宽度，如：120px 或 120" 
+              value={formConfig.labelWidth}
+              onChange={(e) => updateFormConfig({ labelWidth: e.target.value })}
+            />
+          </Form.Item>
+          <Form.Item label="禁用表单">
+            <Switch 
+              checked={formConfig.disabled}
+              onChange={(checked) => updateFormConfig({ disabled: checked })}
+            />
           </Form.Item>
         </Form>
 
         <Divider size="small" dashed plain variant="dashed" style={{ borderColor: '#e9ecf0' }}>表单设置</Divider>
         <Form layout="vertical">
           <Form.Item label="布局方式">
-            <Select defaultValue="vertical" style={{ width: '100%' }}>
+            <Select 
+              value={formConfig.layout} 
+              style={{ width: '100%' }}
+              onChange={(value) => updateFormConfig({ layout: value })}
+            >
               <Option value="vertical">垂直布局</Option>
               <Option value="horizontal">水平布局</Option>
               <Option value="inline">行内布局</Option>
             </Select>
           </Form.Item>
           <Form.Item label="标签对齐">
-            <Select defaultValue="right" style={{ width: '100%' }}>
+            <Select 
+              value={formConfig.labelAlign} 
+              style={{ width: '100%' }}
+              onChange={(value) => updateFormConfig({ labelAlign: value })}
+            >
               <Option value="left">左对齐</Option>
               <Option value="right">右对齐</Option>
-              <Option value="top">顶部对齐</Option>
             </Select>
           </Form.Item>
           <Form.Item label="显示验证信息">
-            <Switch defaultChecked />
+            <Switch 
+              checked={formConfig.showValidation}
+              onChange={(checked) => updateFormConfig({ showValidation: checked })}
+            />
+          </Form.Item>
+        </Form>
+
+        <Divider size="small" dashed plain variant="dashed" style={{ borderColor: '#e9ecf0' }}>恢复默认</Divider>
+        <Form layout="vertical">
+          <Form.Item>
+            <Button 
+              type="default" 
+              onClick={resetFormConfig}
+              style={{ width: '100%' }}
+            >
+              恢复默认配置
+            </Button>
           </Form.Item>
         </Form>
 

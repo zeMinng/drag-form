@@ -12,15 +12,29 @@ export interface CenterItem extends FormComponent {
   props?: Record<string, any> // 组件属性
 }
 
+// 表单级别配置
+export interface FormConfig {
+  size: 'large' | 'default' | 'small'
+  name: string
+  labelWidth: string | number
+  disabled: boolean
+  layout: 'vertical' | 'horizontal' | 'inline'
+  labelAlign: 'left' | 'right'
+  showValidation: boolean
+}
+
 interface FormState {
   centerItems: CenterItem[]
   selectedItemId: string | null // 当前选中的组件ID
+  formConfig: FormConfig // 表单级别配置
   addCenterItem: (item: Omit<CenterItem, 'id'>) => void
   updateCenterItem: (id: string, updates: Partial<CenterItem>) => void
-  updateCenterItems: (items: CenterItem[]) => void
+  updateItems: (items: CenterItem[]) => void
   removeCenterItem: (id: string) => void
   setSelectedItemId: (id: string | null) => void
   getSelectedItem: () => CenterItem | null
+  updateFormConfig: (config: Partial<FormConfig>) => void
+  resetFormConfig: () => void
 }
 
 export const useFormStore = createPersistedStore<FormState>(
@@ -28,6 +42,15 @@ export const useFormStore = createPersistedStore<FormState>(
   (set, get, _api) => ({
     centerItems: [],
     selectedItemId: null,
+    formConfig: {
+      size: 'default',
+      name: 'form',
+      labelWidth: 'auto',
+      disabled: false,
+      layout: 'horizontal',
+      labelAlign: 'right',
+      showValidation: true
+    },
     
     addCenterItem: (item) =>
       set((state) => ({
@@ -43,7 +66,7 @@ export const useFormStore = createPersistedStore<FormState>(
       }
     )),
     
-    updateCenterItems: (items) =>
+    updateItems: (items: CenterItem[]) =>
       set((_state) => ({
         centerItems: items
       }
@@ -62,5 +85,25 @@ export const useFormStore = createPersistedStore<FormState>(
       const state = get()
       return state.centerItems.find(item => item.id === state.selectedItemId) || null
     },
+
+    updateFormConfig: (config) =>
+      set((state) => ({
+        formConfig: { ...state.formConfig, ...config }
+      }
+    )),
+
+    resetFormConfig: () =>
+      set(() => ({
+        formConfig: {
+          size: 'default',
+          name: 'form',
+          labelWidth: 'auto',
+          disabled: false,
+          layout: 'horizontal',
+          labelAlign: 'right',
+          showValidation: true
+        }
+      }
+    )),
   })
 )

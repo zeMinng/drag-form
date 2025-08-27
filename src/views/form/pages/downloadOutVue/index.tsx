@@ -15,7 +15,7 @@ type FieldType = {
 
 const DownloadOutVue: React.FC<Props> = ({ open, onClose }) => {
   const [form] = Form.useForm<FieldType>()
-  const { centerItems } = useFormStore()
+  const { centerItems, formConfig } = useFormStore()
 
   const onOk = async () => {
     try {
@@ -23,7 +23,7 @@ const DownloadOutVue: React.FC<Props> = ({ open, onClose }) => {
       const { filename } = values
 
       // 使用新的代码生成器生成Vue 3 + TypeScript + Element Plus代码
-      const vueContent = generateVueComponent(centerItems)
+      const vueContent = generateVueComponent(centerItems, formConfig)
 
       const blob = new Blob([vueContent], { type: 'text/plain;charset=utf-8' })
       const url = window.URL.createObjectURL(blob)

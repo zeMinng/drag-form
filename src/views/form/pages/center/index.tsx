@@ -1,5 +1,5 @@
-import React, { useState, useRef, useMemo, useCallback } from 'react'
-import { Modal, Flex, Button, message, Radio, Checkbox, Drawer, Space } from 'antd'
+import React, { useState, useRef, useMemo, useCallback, useEffect } from 'react'
+import { Modal, Flex, Button, message, Radio, Checkbox, Drawer, Space, Form } from 'antd'
 import { DeleteOutlined, EyeOutlined, DownloadOutlined, CopyOutlined, FormOutlined } from '@ant-design/icons'
 import { useDroppable } from '@dnd-kit/core'
 import { useSortable } from '@dnd-kit/sortable'
@@ -10,7 +10,7 @@ import 'prismjs/components/prism-typescript'
 import 'prismjs/components/prism-css'
 import IconFont from '@/components/Icon'
 import DownloadOutVue from '../downloadOutVue/index'
-import { useFormStore, type CenterItem } from '@/store/modules/form'
+import { useFormStore, type CenterItem, type FormConfig } from '@/store/modules/form'
 import { getComponentConfig } from '@/views/form/static/utils/componentRegistry'
 import { ComponentWrapper } from '@/views/form/static/utils/componentRenderer'
 import { generateVueComponent } from '@/views/form/static/utils/codeGenerator'
@@ -36,7 +36,7 @@ const CenterTop: React.FC = () => {
   const [jsonModalVisible, setJsonModalVisible] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
   const [editedJson, setEditedJson] = useState('')
-  const { centerItems, updateCenterItems } = useFormStore()
+  const { centerItems, updateItems, formConfig } = useFormStore()
   const codeRef = useRef<HTMLPreElement>(null)
   const jsonTextareaRef = useRef<HTMLTextAreaElement>(null)
   const jsonPreRef = useRef<HTMLPreElement>(null)
@@ -47,7 +47,7 @@ const CenterTop: React.FC = () => {
 
   const handleCopyCode = useCallback(async () => {
     try {
-      const generatedCode = generateVueComponent(centerItems)
+      const generatedCode = generateVueComponent(centerItems, formConfig)
       await navigator.clipboard.writeText(generatedCode)
       message.success('代码已复制到剪贴板')
     } catch {
@@ -65,7 +65,7 @@ const CenterTop: React.FC = () => {
         }
       }
     }
-  }, [centerItems])
+  }, [centerItems, formConfig])
 
   const handleViewJSON = useCallback(() => {
     setJsonModalVisible(true)
@@ -112,7 +112,7 @@ const CenterTop: React.FC = () => {
         )
         
         if (isValidData) {
-          updateCenterItems(parsedData)
+          updateItems(parsedData)
           message.success('JSON数据已成功更新')
           setIsEditing(false)
         } else {
@@ -124,14 +124,14 @@ const CenterTop: React.FC = () => {
     } catch {
       message.error('JSON格式错误，请检查语法')
     }
-  }, [editedJson, updateCenterItems])
+  }, [editedJson, updateItems])
 
   const handleCancelEdit = useCallback(() => {
     setIsEditing(false)
     setEditedJson(JSON.stringify(centerItems, null, 2))
   }, [centerItems])
 
-  const generatedCode = useMemo(() => generateVueComponent(centerItems), [centerItems])
+  const generatedCode = useMemo(() => generateVueComponent(centerItems, formConfig), [centerItems, formConfig])
   const jsonData = useMemo(() => JSON.stringify(centerItems, null, 2), [centerItems])
 
   useEffect(() => {
@@ -289,8 +289,48 @@ const CenterTop: React.FC = () => {
   )
 }
 
+// 创建表单包装器，应用表单级别的配置
+const FormWrapper: React.FC<{ children: React.ReactNode; formConfig: FormConfig }> = ({ children, formConfig }) => {
+  // 构建表单属性
+  const formProps: any = {
+    layout: formConfig.layout,
+    labelAlign: formConfig.labelAlign,
+    style: { width: '100%' },
+    colon: false
+  }
+
+  // 应用表单尺寸
+  if (formConfig.size && formConfig.size !== 'default') {
+    formProps.size = formConfig.size
+  }
+
+  // 应用标签宽度
+  if (formConfig.labelWidth && formConfig.labelWidth !== 'auto') {
+    formProps.labelCol = { span: 6 }
+    formProps.wrapperCol = { span: 18 }
+    // 添加自定义样式来控制标签宽度
+    formProps.style = { 
+      ...formProps.style,
+      '--form-label-width': typeof formConfig.labelWidth === 'number' 
+        ? `${formConfig.labelWidth}px` 
+        : formConfig.labelWidth,
+    }
+  }
+
+  // 应用禁用状态
+  if (formConfig.disabled) {
+    formProps.disabled = true
+  }
+
+  return (
+    <Form {...formProps}>
+      {children}
+    </Form>
+  )
+}
+
 // 根据类型渲染对应的组件
-const renderComponentByType = (item: CenterItem) => {
+const renderComponentByType = (item: CenterItem, formConfig: FormConfig) => {
   const config = getComponentConfig(item.type)
   if (!config) {
     return (
@@ -310,6 +350,11 @@ const renderComponentByType = (item: CenterItem) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { clearable, ...rest } = props
     return rest
+  }
+  
+  // 应用表单级别的禁用状态
+  if (formConfig.disabled) {
+    mergedProps.disabled = true
   }
   
   // 处理 radio 和 checkbox 的选项配置
@@ -342,27 +387,37 @@ const renderComponentByType = (item: CenterItem) => {
     }
     
     return (
-      <ComponentWrapper title={item.title}>
+      <Form.Item label={item.title}>
         <Component {...componentProps}>
           {children}
         </Component>
-      </ComponentWrapper>
+      </Form.Item>
     )
   }
   
-  return (
-    <ComponentWrapper title={item.title}>
+  // 对于布局组件，不显示标签
+  if (item.type === 'row' || item.type === 'col' || item.type === 'card' || item.type === 'group') {
+    return (
       <Component {...filterIncompatibleProps(mergedProps)}>
         {config.children}
       </Component>
-    </ComponentWrapper>
+    )
+  }
+  
+  // 对于普通表单组件，显示标签
+  return (
+    <Form.Item label={item.title}>
+      <Component {...filterIncompatibleProps(mergedProps)}>
+        {config.children}
+      </Component>
+    </Form.Item>
   )
 }
 
 // SortableItem 组件
 const SortableItem: React.FC<{ item: CenterItem; index?: number }> = ({ item }) => {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: item.id })
-  const { selectedItemId, setSelectedItemId, removeCenterItem } = useFormStore()
+  const { selectedItemId, setSelectedItemId, removeCenterItem, formConfig } = useFormStore()
   
   const isSelected = selectedItemId === item.id
   
@@ -405,7 +460,7 @@ const SortableItem: React.FC<{ item: CenterItem; index?: number }> = ({ item }) 
         <IconFont type="icon-shanchu" />
       </div>
       <div className="componentWrap">
-        {renderComponentByType(item)}
+        {renderComponentByType(item, formConfig)}
       </div>
     </div>
   )
@@ -417,7 +472,7 @@ interface CenterProps {
 }
 
 const Center: React.FC<CenterProps> = ({ insertIndex, isDraggingOver = false }) => {
-  const { centerItems } = useFormStore()
+  const { centerItems, formConfig } = useFormStore()
   const { setNodeRef, isOver } = useDroppable({ id: 'center-drop-area' })
 
   // 点击空白区域取消选中
@@ -440,18 +495,20 @@ const Center: React.FC<CenterProps> = ({ insertIndex, isDraggingOver = false }) 
         {centerItems.length === 0 ? (
           <div className="center-placeholder">请从左侧拖拽组件到这里</div>
         ) : (
-          centerItems.map((item: CenterItem, index: number) => (
-            <React.Fragment key={item.id}>
-              {/* 在指定位置显示插入指示器 */}
-              {insertIndex === index && (
-                <div className="insert-indicator insert-top">
-                  <div className="insert-line"></div>
-                  <div className="insert-dot">拖到这里</div>
-                </div>
-              )}
-              <SortableItem item={item} index={index} />
-            </React.Fragment>
-          ))
+          <FormWrapper formConfig={formConfig}>
+            {centerItems.map((item: CenterItem, index: number) => (
+              <React.Fragment key={item.id}>
+                {/* 在指定位置显示插入指示器 */}
+                {insertIndex === index && (
+                  <div className="insert-indicator insert-top">
+                    <div className="insert-line"></div>
+                    <div className="insert-dot">拖到这里</div>
+                  </div>
+                )}
+                <SortableItem item={item} index={index} />
+              </React.Fragment>
+            ))}
+          </FormWrapper>
         )}
         {/* 在末尾显示插入指示器 */}
         {insertIndex === centerItems.length && centerItems.length > 0 && (
