@@ -304,6 +304,12 @@ const FormConfig: React.FC = () => {
               <Option value="right">右对齐</Option>
             </Select>
           </Form.Item>
+          <Form.Item label="是否添加后缀">
+            <Switch 
+              checked={formConfig.colon}
+              onChange={(checked) => updateFormConfig({ colon: checked })}
+            />
+          </Form.Item>
           <Form.Item label="显示验证信息">
             <Switch 
               checked={formConfig.showValidation}

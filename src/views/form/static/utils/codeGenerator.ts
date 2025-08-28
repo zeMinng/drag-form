@@ -319,6 +319,11 @@ export const generateVueComponent = (items: CenterItem[], formConfig: FormConfig
   if (formConfig.disabled) {
     formProps.push(`      :disabled="true"`)
   }
+
+  // 是否加入冒号
+  if (formConfig.colon) {
+    formProps.push(`      label-suffix=":"`)
+  }
   
   // 布局方式转换：Ant Design -> Element Plus
   if (formConfig.layout) {
