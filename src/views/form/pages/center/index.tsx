@@ -1,6 +1,6 @@
 import React, { useState, useRef, useMemo, useCallback, useEffect } from 'react'
-import { Modal, Flex, Button, message, Radio, Checkbox, Drawer, Space, Form } from 'antd'
-import { DeleteOutlined, EyeOutlined, DownloadOutlined, CopyOutlined, FormOutlined } from '@ant-design/icons'
+import { Modal, message, Radio, Checkbox, Drawer, Space, Form } from 'antd'
+import { CopyOutlined, FormOutlined } from '@ant-design/icons'
 import { useDroppable } from '@dnd-kit/core'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
@@ -12,6 +12,10 @@ import IconFont from '@/components/Icon'
 import DownloadOutVue from '../downloadOutVue/index'
 import { useFormStore, type CenterItem, type FormConfig } from '@/store/modules/form'
 import { getComponentConfig, ComponentWrapper, generateVueComponent } from '@/views/form/static'
+import { ToolbarConfig } from '../../components/ToolbarConfig'
+import { InsertIndicator } from '../../components/InsertIndicator'
+import { useClipboard } from '@/hooks/useClipboard'
+import { COMPONENT_TYPES, utils } from '../../static/utils/commonUtils'
 import './index.scss'
 
 const clearTheCanvas = () => {
@@ -38,32 +42,23 @@ const CenterTop: React.FC = () => {
   const codeRef = useRef<HTMLPreElement>(null)
   const jsonTextareaRef = useRef<HTMLTextAreaElement>(null)
   const jsonPreRef = useRef<HTMLPreElement>(null)
+  
+  // 使用剪贴板 hook
+  const { copyText } = useClipboard()
 
   const handleViewCode = useCallback(() => {
     setCodeModalVisible(true)
   }, [])
 
   const handleCopyCode = useCallback(async () => {
-    try {
-      const generatedCode = generateVueComponent(centerItems, formConfig)
-      await navigator.clipboard.writeText(generatedCode)
-      message.success('代码已复制到剪贴板')
-    } catch {
-      // 如果 clipboard API 不可用，使用传统方法
-      if (codeRef.current) {
-        const range = document.createRange()
-        range.selectNodeContents(codeRef.current)
-        const selection = window.getSelection()
-        if (selection) {
-          selection.removeAllRanges()
-          selection.addRange(range)
-          document.execCommand('copy')
-          selection.removeAllRanges()
-          message.success('代码已复制到剪贴板')
-        }
-      }
-    }
-  }, [centerItems, formConfig])
+    const generatedCode = generateVueComponent(centerItems, formConfig)
+    await copyText(
+      generatedCode, 
+      codeRef.current || undefined,
+      '代码已复制到剪贴板',
+      '复制失败，请手动选择复制'
+    )
+  }, [centerItems, formConfig, copyText])
 
   const handleViewJSON = useCallback(() => {
     setJsonModalVisible(true)
@@ -101,23 +96,14 @@ const CenterTop: React.FC = () => {
   const handleSaveJSON = useCallback(() => {
     try {
       const parsedData = JSON.parse(editedJson)
-      // 验证数据结构
-      if (Array.isArray(parsedData)) {
-        // 验证每个项目都有必要的字段
-        const isValidData = parsedData.every((item: any) => 
-          item && typeof item === 'object' && 
-          item.id && item.type && item.title
-        )
-        
-        if (isValidData) {
-          updateItems(parsedData)
-          message.success('JSON数据已成功更新')
-          setIsEditing(false)
-        } else {
-          message.error('JSON数据格式不正确，每个项目必须包含id、type、title字段')
-        }
+      const validation = utils.validateJSONData(parsedData)
+      
+      if (validation.isValid) {
+        updateItems(parsedData)
+        message.success('JSON数据已成功更新')
+        setIsEditing(false)
       } else {
-        message.error('JSON数据必须是数组格式')
+        message.error(validation.error || 'JSON数据验证失败')
       }
     } catch {
       message.error('JSON格式错误，请检查语法')
@@ -140,20 +126,12 @@ const CenterTop: React.FC = () => {
 
   return (
     <div className="centerTop">
-      <Flex gap="small" wrap>
-        <Button icon={<DeleteOutlined />} color="danger" variant="filled" onClick={() => clearTheCanvas()}>
-          清空画布
-        </Button>
-        <Button icon={<FormOutlined />} color="primary" variant="filled" onClick={handleViewJSON}>
-          编辑JSON
-        </Button>
-        <Button icon={<DownloadOutlined />} color="primary" variant="filled" onClick={() => setModalVisible(true)}>
-          导出vue文件
-        </Button>
-        <Button icon={<EyeOutlined />} color="primary" variant="filled" onClick={handleViewCode}>
-          预览代码
-        </Button>
-      </Flex>
+      <ToolbarConfig
+        onClear={clearTheCanvas}
+        onEditJSON={handleViewJSON}
+        onExport={() => setModalVisible(true)}
+        onPreview={handleViewCode}
+      />
 
       <DownloadOutVue
         open={modalVisible}
@@ -342,25 +320,15 @@ const renderComponentByType = (item: CenterItem, formConfig: FormConfig) => {
   // 合并默认属性和自定义属性
   const mergedProps = { ...config.props, ...item.props }
   
-  // 过滤掉不兼容的属性，避免 React 警告
-  const filterIncompatibleProps = (props: any) => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { clearable, ...rest } = props
-    return rest
-  }
-  
   // 应用表单级别的禁用状态
   if (formConfig.disabled) {
     mergedProps.disabled = true
   }
   
-  // 处理 radio 和 checkbox 的选项配置
-  if (item.type === 'radio' || item.type === 'checkbox') {
+  // 处理选项组件（radio 和 checkbox）
+  if (COMPONENT_TYPES.OPTION.includes(item.type as any)) {
     const optionsText = item.props?.options || '选项1,选项2,选项3'
-    const optionsArray = optionsText.split(',').map((option: string, index: number) => ({
-      label: option.trim(),
-      value: `option${index + 1}`
-    }))
+    const optionsArray = utils.parseOptionsText(optionsText)
     
     // 为 Radio.Group 和 Checkbox.Group 提供正确的选项格式
     const children = optionsArray.map((option: { label: string; value: string }) => {
@@ -379,8 +347,8 @@ const renderComponentByType = (item: CenterItem, formConfig: FormConfig) => {
     
     // 使用 Ant Design 组件，但传递转换后的选项
     const componentProps = {
-      ...filterIncompatibleProps(mergedProps),
-      options: optionsArray // 传递转换后的选项数组
+      ...utils.filterIncompatibleProps(mergedProps),
+      options: optionsArray
     }
     
     return (
@@ -393,9 +361,9 @@ const renderComponentByType = (item: CenterItem, formConfig: FormConfig) => {
   }
   
   // 对于布局组件，不显示标签
-  if (item.type === 'row' || item.type === 'col' || item.type === 'card' || item.type === 'group') {
+  if (COMPONENT_TYPES.LAYOUT.includes(item.type as any)) {
     return (
-      <Component {...filterIncompatibleProps(mergedProps)}>
+      <Component {...utils.filterIncompatibleProps(mergedProps)}>
         {config.children}
       </Component>
     )
@@ -404,7 +372,7 @@ const renderComponentByType = (item: CenterItem, formConfig: FormConfig) => {
   // 对于普通表单组件，显示标签
   return (
     <Form.Item label={item.title}>
-      <Component {...filterIncompatibleProps(mergedProps)}>
+      <Component {...utils.filterIncompatibleProps(mergedProps)}>
         {config.children}
       </Component>
     </Form.Item>
@@ -495,13 +463,8 @@ const Center: React.FC<CenterProps> = ({ insertIndex, isDraggingOver = false }) 
           <FormWrapper formConfig={formConfig}>
             {centerItems.map((item: CenterItem, index: number) => (
               <React.Fragment key={item.id}>
-                {/* 在指定位置显示插入指示器 */}
-                {insertIndex === index && (
-                  <div className="insert-indicator insert-top">
-                    <div className="insert-line"></div>
-                    <div className="insert-dot">拖到这里</div>
-                  </div>
-                )}
+                  {/* 在指定位置显示插入指示器 */}
+                  {insertIndex === index && <InsertIndicator position="top" />}
                 <SortableItem item={item} index={index} />
               </React.Fragment>
             ))}
@@ -509,10 +472,7 @@ const Center: React.FC<CenterProps> = ({ insertIndex, isDraggingOver = false }) 
         )}
         {/* 在末尾显示插入指示器 */}
         {insertIndex === centerItems.length && centerItems.length > 0 && (
-          <div className="insert-indicator insert-bottom">
-            <div className="insert-line"></div>
-            <div className="insert-dot">拖到这里</div>
-          </div>
+          <InsertIndicator position="bottom" />
         )}
       </div>
     </div>
