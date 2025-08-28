@@ -15,40 +15,61 @@ export const useFormStore = createPersistedStore<FormStore>(
     selectedItemId: null,
     formConfig: defaultFormConfig,
     
-    // 操作方法
-    addCenterItem: (item) => set((state) => ({
-      centerItems: [...state.centerItems, { ...item, id: uuidv4().substring(0, 8) }]
-    })),
+    // 操作方法 - 优化后的写法
+    addCenterItem: (item) => {
+      if (!item || !item.type) {
+        console.warn('添加组件项失败：无效的组件数据')
+        return
+      }
+      set((state) => ({
+        centerItems: [...state.centerItems, { ...item, id: uuidv4().substring(0, 8) }]
+      }))
+    },
     
-    updateCenterItem: (id, updates) => set((state) => ({
-      centerItems: state.centerItems.map(item => 
-        item.id === id ? { ...item, ...updates } : item
-      )
-    })),
+    updateCenterItem: (id, updates) => {
+      if (!id || !updates) {
+        console.warn('更新组件项失败：无效的参数')
+        return
+      }
+      set((state) => ({
+        centerItems: state.centerItems.map(item => 
+          item.id === id ? { ...item, ...updates } : item
+        )
+      }))
+    },
     
-    updateItems: (items) => set(() => ({
-      centerItems: items
-    })),
+    updateItems: (items) => set({ centerItems: items }),
     
-    removeCenterItem: (id) => set((state) => ({
-      centerItems: state.centerItems.filter(item => item.id !== id),
-      selectedItemId: state.selectedItemId === id ? null : state.selectedItemId
-    })),
+    removeCenterItem: (id) => {
+      if (!id) {
+        console.warn('删除组件项失败：无效的ID')
+        return
+      }
+      set((state) => ({
+        centerItems: state.centerItems.filter(item => item.id !== id),
+        selectedItemId: state.selectedItemId === id ? null : state.selectedItemId
+      }))
+    },
     
-    setSelectedItemId: (id) => set(() => ({ selectedItemId: id })),
+    setSelectedItemId: (id) => set({ selectedItemId: id }),
     
     getSelectedItem: () => {
       const state = get()
+      if (!state.selectedItemId) return null
       return state.centerItems.find(item => item.id === state.selectedItemId) || null
     },
     
-    updateFormConfig: (config) => set((state) => ({
-      formConfig: { ...state.formConfig, ...config }
-    })),
+    updateFormConfig: (config) => {
+      if (!config || typeof config !== 'object') {
+        console.warn('更新表单配置失败：无效的配置数据')
+        return
+      }
+      set((state) => ({
+        formConfig: { ...state.formConfig, ...config }
+      }))
+    },
     
-    resetFormConfig: () => set(() => ({
-      formConfig: defaultFormConfig
-    })),
+    resetFormConfig: () => set({ formConfig: defaultFormConfig }),
   })
 )
 
