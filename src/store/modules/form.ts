@@ -50,7 +50,8 @@ export const useFormStore = createPersistedStore<FormState>(
       disabled: false,
       layout: 'horizontal',
       labelAlign: 'right',
-      showValidation: true
+      showValidation: true,
+      colon: false,
     },
     
     addCenterItem: (item) =>
@@ -102,7 +103,8 @@ export const useFormStore = createPersistedStore<FormState>(
           disabled: false,
           layout: 'horizontal',
           labelAlign: 'right',
-          showValidation: true
+          showValidation: true,
+          colon: false,
         }
       }
     )),
