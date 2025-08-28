@@ -1,112 +1,78 @@
 import { createPersistedStore } from '@/store'
 import { v4 as uuidv4 } from 'uuid'
-import type { FormComponent } from '@/views/form/static/type/component'
+import { defaultFormConfig } from '@/store/constants'
+import type { FormStore } from '@/store/type'
 
-export interface CenterItem extends FormComponent {
-  id: string
-  type: string
-  title: string
-  description?: string
-  icon?: string
-  vmodel?: string // v-model字段名
-  props?: Record<string, any> // 组件属性
-}
-
-// 表单级别配置
-export interface FormConfig {
-  size: 'large' | 'default' | 'small'
-  modelName: string
-  labelWidth: string | number
-  disabled: boolean
-  layout: 'vertical' | 'horizontal' | 'inline'
-  labelAlign: 'left' | 'right'
-  showValidation: boolean
-  colon?: boolean // 是否显示冒号
-}
-
-interface FormState {
-  centerItems: CenterItem[]
-  selectedItemId: string | null // 当前选中的组件ID
-  formConfig: FormConfig // 表单级别配置
-  addCenterItem: (item: Omit<CenterItem, 'id'>) => void
-  updateCenterItem: (id: string, updates: Partial<CenterItem>) => void
-  updateItems: (items: CenterItem[]) => void
-  removeCenterItem: (id: string) => void
-  setSelectedItemId: (id: string | null) => void
-  getSelectedItem: () => CenterItem | null
-  updateFormConfig: (config: Partial<FormConfig>) => void
-  resetFormConfig: () => void
-}
-
-export const useFormStore = createPersistedStore<FormState>(
+/**
+ * 表单状态管理
+ * 使用模块化设计，类型和常量分离到独立文件夹
+ */
+export const useFormStore = createPersistedStore<FormStore>(
   'form',
   (set, get, _api) => ({
+    // 初始状态
     centerItems: [],
     selectedItemId: null,
-    formConfig: {
-      size: 'default',
-      modelName: 'form',
-      labelWidth: 'auto',
-      disabled: false,
-      layout: 'horizontal',
-      labelAlign: 'right',
-      showValidation: true,
-      colon: false,
-    },
+    formConfig: defaultFormConfig,
     
-    addCenterItem: (item) =>
+    // 操作方法 - 优化后的写法
+    addCenterItem: (item) => {
+      if (!item || !item.type) {
+        console.warn('添加组件项失败：无效的组件数据')
+        return
+      }
       set((state) => ({
         centerItems: [...state.centerItems, { ...item, id: uuidv4().substring(0, 8) }]
-      }
-    )),
+      }))
+    },
     
-    updateCenterItem: (id, updates) =>
+    updateCenterItem: (id, updates) => {
+      if (!id || !updates) {
+        console.warn('更新组件项失败：无效的参数')
+        return
+      }
       set((state) => ({
         centerItems: state.centerItems.map(item => 
           item.id === id ? { ...item, ...updates } : item
         )
-      }
-    )),
+      }))
+    },
     
-    updateItems: (items: CenterItem[]) =>
-      set((_state) => ({
-        centerItems: items
-      }
-    )),
+    updateItems: (items) => set({ centerItems: items }),
     
-    removeCenterItem: (id) =>
+    removeCenterItem: (id) => {
+      if (!id) {
+        console.warn('删除组件项失败：无效的ID')
+        return
+      }
       set((state) => ({
         centerItems: state.centerItems.filter(item => item.id !== id),
         selectedItemId: state.selectedItemId === id ? null : state.selectedItemId
-      }
-    )),
+      }))
+    },
     
     setSelectedItemId: (id) => set({ selectedItemId: id }),
     
     getSelectedItem: () => {
       const state = get()
+      if (!state.selectedItemId) return null
       return state.centerItems.find(item => item.id === state.selectedItemId) || null
     },
-
-    updateFormConfig: (config) =>
+    
+    updateFormConfig: (config) => {
+      if (!config || typeof config !== 'object') {
+        console.warn('更新表单配置失败：无效的配置数据')
+        return
+      }
       set((state) => ({
         formConfig: { ...state.formConfig, ...config }
-      }
-    )),
-
-    resetFormConfig: () =>
-      set(() => ({
-        formConfig: {
-          size: 'default',
-          modelName: 'form',
-          labelWidth: 'auto',
-          disabled: false,
-          layout: 'horizontal',
-          labelAlign: 'right',
-          showValidation: true,
-          colon: false,
-        }
-      }
-    )),
+      }))
+    },
+    
+    resetFormConfig: () => set({ formConfig: defaultFormConfig }),
   })
 )
+
+// 重新导出类型，保持向后兼容
+export type { CenterItem, FormConfig, FormState, FormActions } from '@/store/type'
+export { defaultFormConfig } from '@/store/constants'
