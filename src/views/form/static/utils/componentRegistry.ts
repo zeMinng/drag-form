@@ -6,7 +6,7 @@ import type { ComponentConfig, ComponentMeta, ComponentCategory, ComponentRegist
 const defaultConfigs: Record<string, ComponentConfig> = {
   input: {
     component: Input,
-    props: { placeholder: '请输入内容' },
+    props: { placeholder: '请输入内容', autoComplete: 'off' },
     label: '输入框',
     description: '单行文本输入',
     icon: 'icon-shurukuang',
@@ -41,7 +41,7 @@ const defaultConfigs: Record<string, ComponentConfig> = {
   },
   number: {
     component: InputNumber,
-    props: { placeholder: '请输入数字' },
+    props: { placeholder: '请输入数字', autoComplete: 'off' },
     label: '数字输入',
     description: '只允许输入数字的输入框',
     icon: 'icon-shuzishurukuang',
@@ -88,7 +88,7 @@ const defaultConfigs: Record<string, ComponentConfig> = {
   },
   password: {
     component: Input.Password,
-    props: { placeholder: '请输入密码' },
+    props: { placeholder: '请输入密码', autoComplete: 'new-password' },
     label: '密码输入',
     description: '密码输入框',
     icon: 'icon-mimakuang',
