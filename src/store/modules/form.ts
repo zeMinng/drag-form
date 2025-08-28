@@ -21,6 +21,7 @@ export interface FormConfig {
   layout: 'vertical' | 'horizontal' | 'inline'
   labelAlign: 'left' | 'right'
   showValidation: boolean
+  colon?: boolean // 是否显示冒号
 }
 
 interface FormState {

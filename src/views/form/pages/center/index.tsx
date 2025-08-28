@@ -293,7 +293,7 @@ const FormWrapper: React.FC<{ children: React.ReactNode; formConfig: FormConfig 
     layout: formConfig.layout,
     labelAlign: formConfig.labelAlign,
     style: { width: '100%' },
-    colon: false,
+    colon: formConfig?.colon,
     labelCol: { span: 3 },
     wrapperCol: { span: 24 },
   }
