@@ -15,7 +15,7 @@ import { buildPropsString, mergeProps, getSpecialProps, getLayoutClass } from '.
  */
 export const generateVueTemplate = (items: CenterItem[], formConfig: FormConfig): string => {
   if (items.length === 0) {
-    return '<div>暂无组件</div>'
+    return '<!-- 暂无组件 -->'
   }
 
   const generateItemCode = (item: CenterItem): string => {
