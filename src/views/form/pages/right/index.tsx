@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useCallback } from 'react'
 import { Tabs, Form, Input, InputNumber, Select, Switch, Divider, Empty, ColorPicker, Slider, Radio, Checkbox, Button } from 'antd'
 import { useFormStore } from '@/store/modules/form'
-import { getComponentConfig } from '@/views/form/static/utils/componentRegistry'
+import { getComponentConfig } from '@/views/form/static'
 import type { PropConfig } from '@/views/form/static/type/component'
 import './index.scss'
 
@@ -214,12 +214,13 @@ const ComponentConfig: React.FC = () => {
           <Divider size="small" dashed plain variant="dashed" style={{ borderColor: '#e9ecf0' }}>组件属性</Divider>
           <Form layout="vertical">
             {Object.entries(config.propsConfig).map(([propName, propConfig]) => {
-              const value = currentProps[propName] ?? propConfig.defaultValue
+              const typedPropConfig = propConfig as PropConfig
+              const value = currentProps[propName] ?? typedPropConfig.defaultValue
               return (
-                <Form.Item key={propName} label={propConfig.label}>
+                <Form.Item key={propName} label={typedPropConfig.label}>
                   <PropEditor
                     propName={propName}
-                    propConfig={propConfig}
+                    propConfig={typedPropConfig}
                     value={value}
                     onChange={handlePropChange}
                   />

@@ -1,5 +1,5 @@
 import React from 'react'
-import { getComponentConfig } from './componentRegistry'
+import { getComponentConfig } from '../registry/componentRegistry'
 import type { FormComponent } from '@/views/form/static/type/component'
 
 // 根据组件类型渲染组件
