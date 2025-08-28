@@ -1,7 +1,7 @@
 import React from 'react'
 import { Modal, Radio, Form, Input, message } from 'antd'
 import { useFormStore } from '@/store/modules/form'
-import { generateVueComponent } from '@/views/form/static/utils/codeGenerator'
+import { generateVueComponent } from '@/views/form/static'
 
 interface Props {
   open: boolean

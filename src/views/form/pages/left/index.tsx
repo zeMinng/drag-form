@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react'
 import { Segmented, List } from 'antd'
 import { useDraggable } from '@dnd-kit/core'
 import IconFont from '@/components/Icon'
-import { getComponentMetasByCategory } from '@/views/form/static/utils/componentRegistry'
+import { getComponentMetasByCategory } from '@/views/form/static'
 import type { ComponentCategory, ComponentMeta } from '@/views/form/static/type/component'
 import './index.scss'
 
@@ -58,7 +58,7 @@ const Left: React.FC = () => {
           split={false}
           dataSource={data}
           itemLayout="horizontal"
-          renderItem={(item) => <DraggableListItem item={item} />}
+          renderItem={(item: ComponentMeta) => <DraggableListItem item={item} />}
         />
       </div>
     </div>

@@ -11,9 +11,7 @@ import 'prismjs/components/prism-css'
 import IconFont from '@/components/Icon'
 import DownloadOutVue from '../downloadOutVue/index'
 import { useFormStore, type CenterItem, type FormConfig } from '@/store/modules/form'
-import { getComponentConfig } from '@/views/form/static/utils/componentRegistry'
-import { ComponentWrapper } from '@/views/form/static/utils/componentRenderer'
-import { generateVueComponent } from '@/views/form/static/utils/codeGenerator'
+import { getComponentConfig, ComponentWrapper, generateVueComponent } from '@/views/form/static'
 import './index.scss'
 
 const clearTheCanvas = () => {
