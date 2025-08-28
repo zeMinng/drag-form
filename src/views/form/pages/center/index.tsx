@@ -297,6 +297,7 @@ const FormWrapper: React.FC<{ children: React.ReactNode; formConfig: FormConfig 
     labelCol: { span: 3 },
     wrapperCol: { span: 24 },
   }
+  console.log('%c [ formConfig ]-297', 'font-size:13px; background:pink; color:#bf2c9f;', formProps)
 
   // 应用表单尺寸
   if (formConfig.size && formConfig.size !== 'default') {
