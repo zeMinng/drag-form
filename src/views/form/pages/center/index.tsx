@@ -155,9 +155,6 @@ const CenterTop: React.FC = () => {
         <Button icon={<EyeOutlined />} color="primary" variant="filled" onClick={handleViewCode}>
           预览代码
         </Button>
-        {/* <Button icon={<PlayCircleOutlined />} color="primary" variant="filled">
-          运行
-        </Button> */}
       </Flex>
 
       <DownloadOutVue

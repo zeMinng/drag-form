@@ -47,6 +47,10 @@
         }
       }
 
+      .ant-input-number{
+        width: 100%;
+      }
+
       // 禁用状态样式
       &.ant-form-disabled {
         .ant-form-item-label {
@@ -140,10 +144,6 @@
         
         .itemContent {
           flex: 1;
-        }
-
-        .ant-input-number{
-          width: 50%;
         }
       }
     }
