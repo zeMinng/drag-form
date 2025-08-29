@@ -1,5 +1,5 @@
 import React, { useState, useRef, useMemo, useCallback, useEffect } from 'react'
-import { Modal, message, Radio, Checkbox, Drawer, Space, Form } from 'antd'
+import { Modal, message, Radio, Checkbox, Drawer, Space, Form, Button } from 'antd'
 import { CopyOutlined, FormOutlined } from '@ant-design/icons'
 import { useDroppable } from '@dnd-kit/core'
 import { useSortable } from '@dnd-kit/sortable'
@@ -9,12 +9,14 @@ import 'prismjs/themes/prism-tomorrow.css'
 import 'prismjs/components/prism-typescript'
 import 'prismjs/components/prism-css'
 import IconFont from '@/components/Icon'
+import { ErrorBoundary } from '@/components/ErrorBoundary'
 import DownloadOutVue from '../downloadOutVue/index'
 import { useFormStore, type CenterItem, type FormConfig } from '@/store/modules/form'
 import { getComponentConfig, ComponentWrapper, generateVueComponent } from '@/views/form/static'
 import { ToolbarConfig } from '../../components/ToolbarConfig'
 import { InsertIndicator } from '../../components/InsertIndicator'
 import { useClipboard } from '@/hooks/useClipboard'
+import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts'
 import { COMPONENT_TYPES, utils } from '../../static/utils/commonUtils'
 import './index.scss'
 
@@ -439,6 +441,9 @@ interface CenterProps {
 const Center: React.FC<CenterProps> = ({ insertIndex, isDraggingOver = false }) => {
   const { centerItems, formConfig } = useFormStore()
   const { setNodeRef, isOver } = useDroppable({ id: 'center-drop-area' })
+  
+  // 启用键盘快捷键
+  useKeyboardShortcuts()
 
   // 点击空白区域取消选中
   const handleContainerClick = useCallback(() => {
@@ -448,33 +453,35 @@ const Center: React.FC<CenterProps> = ({ insertIndex, isDraggingOver = false }) 
   return (
     <div className='centerWrap'>
       <CenterTop />
-      <div
-        ref={setNodeRef}
-        className="center-container"
-        style={{
-          border: (isOver || isDraggingOver) ? '2px dashed #1890ff' : '2px dashed #eee',
-          minHeight: 120,
-        }}
-        onClick={handleContainerClick}
-      >
-        {centerItems.length === 0 ? (
-          <div className="center-placeholder">请从左侧拖拽组件到这里</div>
-        ) : (
-          <FormWrapper formConfig={formConfig}>
-            {centerItems.map((item: CenterItem, index: number) => (
-              <React.Fragment key={item.id}>
-                  {/* 在指定位置显示插入指示器 */}
-                  {insertIndex === index && <InsertIndicator position="top" />}
-                <SortableItem item={item} index={index} />
-              </React.Fragment>
-            ))}
-          </FormWrapper>
-        )}
-        {/* 在末尾显示插入指示器 */}
-        {insertIndex === centerItems.length && centerItems.length > 0 && (
-          <InsertIndicator position="bottom" />
-        )}
-      </div>
+      <ErrorBoundary>
+        <div
+          ref={setNodeRef}
+          className="center-container"
+          style={{
+            border: (isOver || isDraggingOver) ? '2px dashed #1890ff' : '2px dashed #eee',
+            minHeight: 120,
+          }}
+          onClick={handleContainerClick}
+        >
+          {centerItems.length === 0 ? (
+            <div className="center-placeholder">请从左侧拖拽组件到这里</div>
+          ) : (
+            <FormWrapper formConfig={formConfig}>
+              {centerItems.map((item: CenterItem, index: number) => (
+                <React.Fragment key={item.id}>
+                    {/* 在指定位置显示插入指示器 */}
+                    {insertIndex === index && <InsertIndicator position="top" />}
+                  <SortableItem item={item} index={index} />
+                </React.Fragment>
+              ))}
+            </FormWrapper>
+          )}
+          {/* 在末尾显示插入指示器 */}
+          {insertIndex === centerItems.length && centerItems.length > 0 && (
+            <InsertIndicator position="bottom" />
+          )}
+        </div>
+      </ErrorBoundary>
     </div>
   )
 }
