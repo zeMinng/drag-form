@@ -73,11 +73,33 @@ export const utils = {
     }))
   },
   
+  // 将小写属性名转换为 React 驼峰命名
+  convertToReactPropName: (key: string): string => {
+    const propNameMap: Record<string, string> = {
+      maxlength: 'maxLength',
+      autocomplete: 'autoComplete',
+      'show-search': 'showSearch',
+      'allow-clear': 'allowClear',
+      'show-text': 'showText'
+    }
+    
+    return propNameMap[key] || key
+  },
+  
   // 过滤不兼容的属性
   filterIncompatibleProps: (props: any) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { clearable, ...rest } = props
-    return rest
+    
+    // 转换属性名，确保 React 使用正确的命名
+    const convertedProps: any = {}
+    Object.entries(rest).forEach(([key, value]) => {
+      // 将小写属性名转换为驼峰命名
+      const reactKey = utils.convertToReactPropName(key)
+      convertedProps[reactKey] = value
+    })
+    
+    return convertedProps
   },
   
   // 复制文本到剪贴板（带降级方案）
