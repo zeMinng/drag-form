@@ -9,7 +9,7 @@ export interface DragState<T = any> {
 }
 
 // 拖拽事件处理器接口
-export interface DragHandlers<T = any> {
+export interface DragHandlers {
   onDragStart?: (event: DragStartEvent) => void
   onDragOver?: (event: DragOverEvent) => void
   onDragEnd?: (event: DragEndEvent) => void
