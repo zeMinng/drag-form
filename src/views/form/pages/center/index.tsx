@@ -1,5 +1,5 @@
 import React, { useState, useRef, useMemo, useCallback, useEffect } from 'react'
-import { Modal, Flex, Button, message, Radio, Checkbox, Drawer, Space, Form } from 'antd'
+import { Modal, Flex, Button, message, Drawer, Space, Form } from 'antd'
 import { DeleteOutlined, EyeOutlined, DownloadOutlined, CopyOutlined, FormOutlined } from '@ant-design/icons'
 import { useDroppable } from '@dnd-kit/core'
 import { useSortable } from '@dnd-kit/sortable'
@@ -11,7 +11,8 @@ import 'prismjs/components/prism-css'
 import IconFont from '@/components/Icon'
 import DownloadOutVue from '../downloadOutVue/index'
 import { useFormStore, type CenterItem, type FormConfig } from '@/store/modules/form'
-import { getComponentConfig, ComponentWrapper, generateVueComponent } from '@/views/form/static'
+import { generateVueComponent } from '@/views/form/static'
+import { renderComponentByType } from '@/views/form/static/core/renderer/componentUtils'
 import './index.scss'
 
 const clearTheCanvas = () => {
@@ -326,90 +327,7 @@ const FormWrapper: React.FC<{ children: React.ReactNode; formConfig: FormConfig 
   )
 }
 
-// 根据类型渲染对应的组件
-const renderComponentByType = (item: CenterItem, formConfig: FormConfig) => {
-  const config = getComponentConfig(item.type)
-  if (!config) {
-    return (
-      <ComponentWrapper title={item.title}>
-        <div>未知组件类型: {item.type}</div>
-      </ComponentWrapper>
-    )
-  }
-  
-  const Component = config.component
-  
-  // 合并默认属性和自定义属性
-  const mergedProps = { ...config.props, ...item.props }
-  
-  // 过滤掉不兼容的属性，避免 React 警告
-  const filterIncompatibleProps = (props: any) => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { clearable, ...rest } = props
-    return rest
-  }
-  
-  // 应用表单级别的禁用状态
-  if (formConfig.disabled) {
-    mergedProps.disabled = true
-  }
-  
-  // 处理 radio 和 checkbox 的选项配置
-  if (item.type === 'radio' || item.type === 'checkbox') {
-    const optionsText = item.props?.options || '选项1,选项2,选项3'
-    const optionsArray = optionsText.split(',').map((option: string, index: number) => ({
-      label: option.trim(),
-      value: `option${index + 1}`
-    }))
-    
-    // 为 Radio.Group 和 Checkbox.Group 提供正确的选项格式
-    const children = optionsArray.map((option: { label: string; value: string }) => {
-      if (item.type === 'radio') {
-        return React.createElement(Radio, { 
-          key: option.value, 
-          value: option.value 
-        }, option.label)
-      } else {
-        return React.createElement(Checkbox, { 
-          key: option.value, 
-          value: option.value 
-        }, option.label)
-      }
-    })
-    
-    // 使用 Ant Design 组件，但传递转换后的选项
-    const componentProps = {
-      ...filterIncompatibleProps(mergedProps),
-      options: optionsArray // 传递转换后的选项数组
-    }
-    
-    return (
-      <Form.Item label={item.title}>
-        <Component {...componentProps}>
-          {children}
-        </Component>
-      </Form.Item>
-    )
-  }
-  
-  // 对于布局组件，不显示标签
-  if (item.type === 'row' || item.type === 'col' || item.type === 'card' || item.type === 'group') {
-    return (
-      <Component {...filterIncompatibleProps(mergedProps)}>
-        {config.children}
-      </Component>
-    )
-  }
-  
-  // 对于普通表单组件，显示标签
-  return (
-    <Form.Item label={item.title}>
-      <Component {...filterIncompatibleProps(mergedProps)}>
-        {config.children}
-      </Component>
-    </Form.Item>
-  )
-}
+// 渲染函数已抽取到 core/renderer/componentUtils.ts 中
 
 // SortableItem 组件
 const SortableItem: React.FC<{ item: CenterItem; index?: number }> = ({ item }) => {

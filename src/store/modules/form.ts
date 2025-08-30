@@ -21,8 +21,9 @@ export const useFormStore = createPersistedStore<FormStore>(
         console.warn('添加组件项失败：无效的组件数据')
         return
       }
+      const id = uuidv4().substring(0, 8)
       set((state) => ({
-        centerItems: [...state.centerItems, { ...item, id: uuidv4().substring(0, 8) }]
+        centerItems: [...state.centerItems, { ...item, id }]
       }))
     },
     
@@ -55,8 +56,10 @@ export const useFormStore = createPersistedStore<FormStore>(
     
     getSelectedItem: () => {
       const state = get()
-      if (!state.selectedItemId) return null
-      return state.centerItems.find(item => item.id === state.selectedItemId) || null
+      const selectedId = state.selectedItemId
+      if (!selectedId) return null
+      // 优化：在数组较大时，使用一次 Map 缓存可以进一步优化，这里保持简单
+      return state.centerItems.find(item => item.id === selectedId) || null
     },
     
     updateFormConfig: (config) => {

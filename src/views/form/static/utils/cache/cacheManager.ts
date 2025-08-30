@@ -14,6 +14,29 @@ export class CodeCacheManager {
     this.maxSize = maxSize
   }
 
+  private stableStringify(value: any): string {
+    if (value === null || typeof value !== 'object') {
+      return JSON.stringify(value)
+    }
+    if (Array.isArray(value)) {
+      return '[' + value.map(v => this.stableStringify(v)).join(',') + ']'
+    }
+    const keys = Object.keys(value).sort()
+    const entries = keys.map(k => `${JSON.stringify(k)}:${this.stableStringify(value[k])}`)
+    return '{' + entries.join(',') + '}'
+  }
+
+  private stringHash(str: string): string {
+    let hash = 5381
+    for (let i = 0; i < str.length; i++) {
+      // hash * 33 + char
+      hash = ((hash << 5) + hash) + str.charCodeAt(i)
+      hash |= 0
+    }
+    // 转成无符号并输出为16进制，缩短长度
+    return (hash >>> 0).toString(16)
+  }
+
   /**
    * 生成缓存键
    * @param items 组件项数组
@@ -21,16 +44,18 @@ export class CodeCacheManager {
    * @returns 缓存键
    */
   generateCacheKey(items: any[], formConfig: any): string {
-    return JSON.stringify({
+    const compact = {
       items: items.map(item => ({
         id: item.id,
         type: item.type,
         title: item.title,
         vmodel: item.vmodel,
-        props: item.props
+        props: item.props,
       })),
       formConfig
-    })
+    }
+    const stable = this.stableStringify(compact)
+    return this.stringHash(stable)
   }
 
   /**
@@ -39,7 +64,13 @@ export class CodeCacheManager {
    * @returns 缓存值或undefined
    */
   get(key: string): string | undefined {
-    return this.cache.get(key)
+    const value = this.cache.get(key)
+    if (value !== undefined) {
+      // 触发LRU：刷新为最近使用
+      this.cache.delete(key)
+      this.cache.set(key, value)
+    }
+    return value
   }
 
   /**
@@ -48,11 +79,18 @@ export class CodeCacheManager {
    * @param value 缓存值
    */
   set(key: string, value: string): void {
-    // 检查缓存大小，如果超过限制则清理
+    if (this.cache.has(key)) {
+      // 覆盖并刷新顺序
+      this.cache.delete(key)
+      this.cache.set(key, value)
+      return
+    }
+
+    // LRU：如果超出容量，删除最早/最久未使用的键
     if (this.cache.size >= this.maxSize) {
       this.cleanup()
     }
-    
+
     this.cache.set(key, value)
   }
 
@@ -69,7 +107,7 @@ export class CodeCacheManager {
    * 清理缓存
    */
   private cleanup(): void {
-    // 删除第一个缓存项（FIFO策略）
+    // 删除第一个缓存项（Map的插入顺序 => LRU删除）
     const firstKey = this.cache.keys().next().value
     if (firstKey) {
       this.cache.delete(firstKey)

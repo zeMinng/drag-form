@@ -3,9 +3,12 @@ import React from 'react'
 // 组件分类
 export type ComponentCategory = 'input' | 'select' | 'layout' | 'advanced'
 
+// 支持的属性值类型
+export type PropValueType = string | number | boolean | string[] | number[] | undefined
+
 // 组件元信息
 export interface ComponentMeta {
-  key: string
+  readonly key: string
   title: string
   description?: string
   icon?: string
@@ -16,9 +19,9 @@ export interface ComponentMeta {
 export interface PropConfig {
   type: 'string' | 'number' | 'boolean' | 'select' | 'textarea' | 'slider' | 'radio' | 'checkbox' | 'color'
   label: string
-  defaultValue?: any
+  defaultValue?: PropValueType
   placeholder?: string
-  options?: Array<{ label: string; value: any }>
+  options?: Array<{ label: string; value: string | number }>
   min?: number
   max?: number
   step?: number
@@ -30,7 +33,7 @@ export interface PropConfig {
 // 组件配置
 export interface ComponentConfig {
   component: React.ComponentType<any>
-  props?: Record<string, any>
+  props?: Record<string, PropValueType>
   children?: React.ReactNode
   label?: string
   description?: string
@@ -48,7 +51,7 @@ export interface FormComponent {
   title: string
   description?: string
   icon?: string
-  props?: Record<string, any>
+  props?: Record<string, PropValueType>
 }
 
 // 组件注册器接口
