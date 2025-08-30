@@ -21,7 +21,7 @@ export interface PropConfig {
   label: string
   defaultValue?: PropValueType
   placeholder?: string
-  options?: Array<{ label: string; value: string | number }>
+  options?: Array<{ label: string; value: string | number | undefined }>
   min?: number
   max?: number
   step?: number
@@ -33,7 +33,7 @@ export interface PropConfig {
 // 组件配置
 export interface ComponentConfig {
   component: React.ComponentType<any>
-  props?: Record<string, PropValueType>
+  props?: Record<string, any>
   children?: React.ReactNode
   label?: string
   description?: string
