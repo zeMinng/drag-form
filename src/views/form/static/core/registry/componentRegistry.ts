@@ -20,7 +20,7 @@ const defaultConfigs: Record<string, ComponentConfig> = {
         defaultValue: '请输入内容',
         placeholder: '请输入占位符文本'
       },
-      maxlength: {
+      maxLength: {
         type: 'number',
         label: '最大长度',
         defaultValue: undefined,
@@ -102,7 +102,7 @@ const defaultConfigs: Record<string, ComponentConfig> = {
         defaultValue: '请输入密码',
         placeholder: '请输入占位符文本'
       },
-      maxlength: {
+      maxLength: {
         type: 'number',
         label: '最大长度',
         defaultValue: undefined,
@@ -144,7 +144,7 @@ const defaultConfigs: Record<string, ComponentConfig> = {
         min: 1,
         max: 20
       },
-      maxlength: {
+      maxLength: {
         type: 'number',
         label: '最大长度',
         defaultValue: undefined,
