@@ -3,7 +3,7 @@ import Router from './router'
 import { ConfigProvider } from 'antd'
 import zhCN from 'antd/es/locale/zh_CN'
 import './App.css'
-// const LazyComponent = React.lazy(() => new Promise(() => {})); // 永远不resolve
+// const LazyComponent = React.lazy(() => new Promise(() => {})) // 永远不resolve
 
 const App: React.FC = () => (
   <ConfigProvider locale={zhCN}>
