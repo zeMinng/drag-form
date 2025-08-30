@@ -3,3 +3,4 @@
  */
 
 export * from './propsBuilder'
+export * from './propMapper'

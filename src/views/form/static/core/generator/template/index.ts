@@ -5,7 +5,7 @@
 
 import { getComponentConfig } from '../../registry/componentRegistry'
 import type { CenterItem, FormConfig } from '@/store/modules/form'
-import { buildPropsString, mergeProps, getSpecialProps, getLayoutClass } from '../../../utils/props'
+import { buildPropsString, mergeProps, getSpecialProps, getLayoutClass, mapPropsToVue } from '../../../utils/props'
 
 /**
  * 生成Vue模板代码
@@ -26,7 +26,8 @@ export const generateVueTemplate = (items: CenterItem[], formConfig: FormConfig)
 
     const tag = config.tag || 'div'
     const vmodel = item.vmodel || config.vmodel || 'value'
-    const props = item.props || {}
+    // 将编辑端(React/Antd)属性映射为 Vue/Element Plus 属性
+    const props = mapPropsToVue(item.type as unknown as string, item.props || {})
     
     // 构建属性字符串
     const propsStr = buildPropsString(props)
@@ -53,8 +54,7 @@ export const generateVueTemplate = (items: CenterItem[], formConfig: FormConfig)
       // 如果是布局组件，需要处理子组件
       if (config.category === 'layout') {
         const tag = config.tag || 'div'
-        const props = item.props || {}
-        
+        const props = mapPropsToVue(item.type as unknown as string, item.props || {})
         const propsStr = buildPropsString(props)
         
         // 为布局组件添加适当的样式类
