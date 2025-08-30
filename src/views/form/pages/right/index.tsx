@@ -202,15 +202,15 @@ const ComponentConfig: React.FC = () => {
       <div className="componentConfig">
         <div className="config-section">
           <Divider size="small" dashed plain variant="dashed" style={{ borderColor: '#e9ecf0' }}>基础信息</Divider>
-          <Form layout="vertical">
-            <Form.Item label="标题">
+          <Form layout="vertical" name='componentConfig'>
+            <Form.Item label="标题" name="title">
               <Input
                 value={selectedItem.title}
                 placeholder="请输入标题"
                 onChange={(e) => handleTitleChange(e.target.value)}
               />
             </Form.Item>
-            <Form.Item label="字段名">
+            <Form.Item label="字段名" name="vmodel">
               <Input
                 value={selectedItem.vmodel || config.vmodel || ''}
                 placeholder="请输入字段名"
@@ -295,22 +295,22 @@ const FormConfig: React.FC = () => {
       <div className="formConfig">
         <div className="config-section">
           <Divider size="small" dashed plain variant="dashed" style={{ borderColor: '#e9ecf0' }}>表单信息</Divider>
-          <Form layout="vertical">
-            <Form.Item label="表单字段名称">
+          <Form layout="vertical" name='formConfig'>
+            <Form.Item label="表单字段名称" name="modelName">
               <Input 
                 placeholder="请输入表单字段名称" 
                 value={formConfig.modelName}
                 onChange={handleModelNameChange}
               />
             </Form.Item>
-            <Form.Item label="标签宽度">
+            <Form.Item label="标签宽度" name="labelWidth">
               <Input 
                 placeholder="请输入标签宽度，如：120px 或 120" 
                 value={formConfig.labelWidth}
                 onChange={handleLabelWidthChange}
               />
             </Form.Item>
-            <Form.Item label="表单尺寸">
+            <Form.Item label="表单尺寸" name="size">
               <Select 
                 value={formConfig.size} 
                 style={{ width: '100%' }}
@@ -321,7 +321,7 @@ const FormConfig: React.FC = () => {
                 <Option value="small">小尺寸</Option>
               </Select>
             </Form.Item>
-            <Form.Item label="禁用表单">
+            <Form.Item label="禁用表单" name="disabled">
               <Switch 
                 checked={formConfig.disabled}
                 onChange={handleDisabledChange}
@@ -330,8 +330,8 @@ const FormConfig: React.FC = () => {
           </Form>
 
           <Divider size="small" dashed plain variant="dashed" style={{ borderColor: '#e9ecf0' }}>表单设置</Divider>
-          <Form layout="vertical">
-            <Form.Item label="布局方式">
+          <Form layout="vertical" name='formConfig'>
+            <Form.Item label="布局方式" name="layout">
               <Select 
                 value={formConfig.layout} 
                 style={{ width: '100%' }}
@@ -342,7 +342,7 @@ const FormConfig: React.FC = () => {
                 <Option value="inline">行内布局</Option>
               </Select>
             </Form.Item>
-            <Form.Item label="标签对齐">
+            <Form.Item label="标签对齐" name="labelAlign">
               <Select 
                 value={formConfig.labelAlign} 
                 style={{ width: '100%' }}
@@ -352,13 +352,13 @@ const FormConfig: React.FC = () => {
                 <Option value="right">右对齐</Option>
               </Select>
             </Form.Item>
-            <Form.Item label="是否添加后缀">
+            <Form.Item label="是否添加后缀" name="colon">
               <Switch 
                 checked={formConfig.colon}
                 onChange={handleColonChange}
               />
             </Form.Item>
-            <Form.Item label="显示验证信息">
+            <Form.Item label="显示验证信息" name="showValidation">
               <Switch 
                 checked={formConfig.showValidation}
                 onChange={handleShowValidationChange}
