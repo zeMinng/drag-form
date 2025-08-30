@@ -300,7 +300,7 @@ const FormWrapper: React.FC<{ children: React.ReactNode; formConfig: FormConfig 
   }
 
   return (
-    <Form {...formProps}>
+    <Form {...formProps} id="form-builder-form">
       {children}
     </Form>
   )
@@ -327,6 +327,13 @@ const renderComponentByType = (item: CenterItem, formConfig: FormConfig) => {
     mergedProps.disabled = true
   }
   
+  // 为所有表单组件添加必要的 id 和 name 属性
+  const formFieldProps = {
+    ...mergedProps,
+    id: item.id,
+    name: item.vmodel || `${item.type}-${item.id}` // 确保 name 唯一
+  }
+  
   // 处理选项组件（radio 和 checkbox）
   if (COMPONENT_TYPES.OPTION.includes(item.type as any)) {
     const optionsText = item.props?.options || '选项1,选项2,选项3'
@@ -337,24 +344,30 @@ const renderComponentByType = (item: CenterItem, formConfig: FormConfig) => {
       if (item.type === 'radio') {
         return React.createElement(Radio, { 
           key: option.value, 
-          value: option.value 
+          value: option.value,
+          id: `${item.id}-${option.value}`
         }, option.label)
       } else {
         return React.createElement(Checkbox, { 
           key: option.value, 
-          value: option.value 
+          value: option.value,
+          id: `${item.id}-${option.value}`
         }, option.label)
       }
     })
     
     // 使用 Ant Design 组件，但传递转换后的选项
     const componentProps = {
-      ...utils.filterIncompatibleProps(mergedProps),
+      ...utils.filterIncompatibleProps(formFieldProps),
       options: optionsArray
     }
     
     return (
-      <Form.Item label={item.title}>
+      <Form.Item 
+        label={item.title} 
+        name={item.vmodel || `${item.type}-${item.id}`}
+        htmlFor={item.id}
+      >
         <Component {...componentProps}>
           {children}
         </Component>
@@ -362,7 +375,7 @@ const renderComponentByType = (item: CenterItem, formConfig: FormConfig) => {
     )
   }
   
-  // 对于布局组件，不显示标签
+  // 对于布局组件，不显示标签，也不包装在 Form.Item 中
   if (COMPONENT_TYPES.LAYOUT.includes(item.type as any)) {
     return (
       <Component {...utils.filterIncompatibleProps(mergedProps)}>
@@ -371,10 +384,14 @@ const renderComponentByType = (item: CenterItem, formConfig: FormConfig) => {
     )
   }
   
-  // 对于普通表单组件，显示标签
+  // 对于普通表单组件，显示标签并添加必要的属性
   return (
-    <Form.Item label={item.title}>
-      <Component {...utils.filterIncompatibleProps(mergedProps)}>
+    <Form.Item 
+      label={item.title} 
+      name={item.vmodel || `${item.type}-${item.id}`}
+      htmlFor={item.id}
+    >
+      <Component {...utils.filterIncompatibleProps(formFieldProps)}>
         {config.children}
       </Component>
     </Form.Item>
