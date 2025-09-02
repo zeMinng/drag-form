@@ -41,8 +41,78 @@ export const generateVueTemplate = (items: CenterItem[], formConfig: FormConfig)
     // 构建完整的标签
     const attributes = mergeProps(vmodelStr, propsStr, additionalProps)
     
+    // 处理选择型组件的选项
+    const generateSelectOptions = (type: string, props: Record<string, any>): string => {
+      if (type === 'select') {
+        // 如果options有值，生成动态遍历代码
+        if (props.options && props.options.trim()) {
+          return `    <el-option
+      v-for="item in ${props.options}"
+      :key="item.value"
+      :label="item.label"
+      :value="item.value"
+    />`
+        } else {
+          // 否则生成静态选项
+          const optionsText = '选项1,选项2'
+          const options = optionsText.split(',').map((opt: string) => opt.trim()).filter(Boolean)
+          
+          return options.map((option: string, index: number) => 
+            `    <el-option key="${index}" label="${option}" value="${option}"></el-option>`
+          ).join('\n')
+        }
+      } else if (type === 'radio') {
+        // 如果options有值，生成动态遍历代码
+        if (props.options && props.options.trim()) {
+          return `    <el-radio
+      v-for="item in ${props.options}"
+      :value="item.value"
+      :label="item.value"
+    >{{ item.label }}</el-radio>`
+        } else {
+          // 否则生成静态选项
+          const optionsText = '选项1,选项2'
+          const options = optionsText.split(',').map((opt: string) => opt.trim()).filter(Boolean)
+          
+          return options.map((option: string, index: number) => 
+            `    <el-radio value="${index}" label="${option}">${option}</el-radio>`
+          ).join('\n')
+        }
+      } else if (type === 'checkbox') {
+        // 如果options有值，生成动态遍历代码
+        if (props.options && props.options.trim()) {
+          return `    <el-checkbox
+      v-for="item in ${props.options}"
+      :value="item.value"
+      :label="item.value"
+    >{{ item.label }}</el-checkbox>`
+        } else {
+          // 否则生成静态选项
+          const optionsText = '选项1,选项2'
+          const options = optionsText.split(',').map((opt: string) => opt.trim()).filter(Boolean)
+          
+          return options.map((option: string, index: number) => 
+            `    <el-checkbox value="${index}" label="${option}">${option}</el-checkbox>`
+          ).join('\n')
+        }
+      }
+      return ''
+    }
+
+    const optionsContent = generateSelectOptions(item.type, item.props || {})
+    
     // 用el-form-item包裹
-    return `<el-form-item label="${item.title || ''}" prop="${vmodel}">\n  <${tag} ${attributes}></${tag}>\n</el-form-item>`
+    if (optionsContent) {
+      // 对于选择型组件，需要从属性中移除options
+      const finalProps = { ...props }
+      delete finalProps.options
+      const finalPropsStr = buildPropsString(finalProps)
+      const finalAttributes = mergeProps(vmodelStr, finalPropsStr, additionalProps)
+      
+      return `<el-form-item label="${item.title || ''}" prop="${vmodel}">\n  <${tag} ${finalAttributes}>\n${optionsContent}\n  </${tag}>\n</el-form-item>`
+    } else {
+      return `<el-form-item label="${item.title || ''}" prop="${vmodel}">\n  <${tag} ${attributes}></${tag}>\n</el-form-item>`
+    }
   }
 
   // 递归处理布局组件

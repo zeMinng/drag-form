@@ -39,7 +39,7 @@ export const getDefaultValueByType = (type: string): string => {
     number: '0',
     slider: '0',
     switch: 'false',
-    checkbox: 'false',
+    checkbox: '[]',
     radio: "''",
     select: "''",
     date: "''",

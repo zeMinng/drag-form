@@ -208,6 +208,12 @@ export const defaultConfigs: Record<string, ComponentConfig> = {
     tag: 'el-select',
     vmodel: 'select',
     propsConfig: {
+      options: {
+        type: 'string',
+        label: '选项配置',
+        defaultValue: '',
+        placeholder: '请输入el-option的遍历数据对象字段',
+      },
       placeholder: {
         type: 'string',
         label: '占位提示',
@@ -256,10 +262,10 @@ export const defaultConfigs: Record<string, ComponentConfig> = {
     vmodel: 'radio',
     propsConfig: {
       options: {
-        type: 'textarea',
+        type: 'string',
         label: '选项配置',
-        defaultValue: '选项1,选项2,选项3',
-        placeholder: '请输入选项，用逗号分隔',
+        defaultValue: '',
+        placeholder: '请输入el-radio的遍历数据对象字段',
         rows: 3
       },
       disabled: {
@@ -284,10 +290,10 @@ export const defaultConfigs: Record<string, ComponentConfig> = {
     vmodel: 'checkbox',
     propsConfig: {
       options: {
-        type: 'textarea',
+        type: 'string',
         label: '选项配置',
-        defaultValue: '选项1,选项2,选项3',
-        placeholder: '请输入选项，用逗号分隔',
+        defaultValue: '',
+        placeholder: '请输入el-checkbox的遍历数据对象字段',
         rows: 3
       },
       disabled: {
