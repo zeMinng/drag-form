@@ -50,10 +50,6 @@ const MyLayout: React.FC = () => {
             <Paragraph>
               🎉 恭喜，现已支持导出 Vue3 + Element-Plus + TS 代码！
             </Paragraph>
-            <Paragraph>
-              {/* 目前主要支持的功能有：拖拽、配置、预览、导出等。还有很多功能正在开发中，敬请期待！ */}
-              已知问题：导出的代码中有一些不完美的地方，后续会进行完善！
-            </Paragraph>
           </Modal>
         </Content>
       </Layout>
