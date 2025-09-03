@@ -1,5 +1,5 @@
 import React from 'react'
-import { Input, InputNumber, Select, Radio, Checkbox, DatePicker, Switch, Slider } from 'antd'
+import { Input, InputNumber, Select, Radio, Checkbox, DatePicker, Switch, Slider, Row, Col, Card } from 'antd'
 import type { ComponentConfig } from '@/views/form/static/type/component'
 
 // 默认组件配置，按类型集中管理，便于日后拆分到更细的文件
@@ -387,8 +387,8 @@ export const defaultConfigs: Record<string, ComponentConfig> = {
     }
   },
   row: {
-    component: ({ children, ...props }: any) => React.createElement('div', { ...props, style: { display: 'flex', gap: '8px', ...props.style } }, children),
-    props: { style: { display: 'flex', gap: '8px' } },
+    component: Row,
+    props: { gutter: 16 },
     label: '行布局',
     description: '水平排列组件容器',
     icon: 'icon-hangbuju',
@@ -396,29 +396,41 @@ export const defaultConfigs: Record<string, ComponentConfig> = {
     tag: 'el-row',
     vmodel: 'row',
     propsConfig: {
-      gap: {
+      gutter: {
         type: 'number',
-        label: '间距',
-        defaultValue: 8,
+        label: '栅格间隔',
+        defaultValue: 16,
         min: 0,
         max: 50
       },
       justify: {
         type: 'select',
-        label: '对齐方式',
-        defaultValue: 'flex-start',
+        label: '水平排列方式',
+        defaultValue: 'start',
         options: [
-          { label: '左对齐', value: 'flex-start' },
+          { label: '左对齐', value: 'start' },
           { label: '居中', value: 'center' },
-          { label: '右对齐', value: 'flex-end' },
-          { label: '两端对齐', value: 'space-between' }
+          { label: '右对齐', value: 'end' },
+          { label: '两端对齐', value: 'space-between' },
+          { label: '每个元素两侧的间隔相等', value: 'space-around' },
+          { label: '每个元素之间的间隔相等', value: 'space-evenly' }
+        ]
+      },
+      align: {
+        type: 'select',
+        label: '垂直对齐方式',
+        defaultValue: 'top',
+        options: [
+          { label: '顶部对齐', value: 'top' },
+          { label: '中间对齐', value: 'middle' },
+          { label: '底部对齐', value: 'bottom' }
         ]
       }
     }
   },
   col: {
-    component: ({ children, ...props }: any) => React.createElement('div', { ...props, style: { flex: 1, ...props.style } }, children),
-    props: { style: { flex: 1 } },
+    component: Col,
+    props: { span: 12 },
     label: '列布局',
     description: '在行中纵向排列内容',
     icon: 'icon-liebuju',
@@ -426,34 +438,46 @@ export const defaultConfigs: Record<string, ComponentConfig> = {
     tag: 'el-col',
     vmodel: 'col',
     propsConfig: {
-      flex: {
+      span: {
         type: 'number',
-        label: '弹性比例',
-        defaultValue: 1,
+        label: '栅格占位格数',
+        defaultValue: 12,
+        min: 1,
+        max: 24
+      },
+      offset: {
+        type: 'number',
+        label: '栅格左侧的间隔格数',
+        defaultValue: 0,
         min: 0,
-        max: 10
+        max: 23
+      },
+      push: {
+        type: 'number',
+        label: '栅格向右移动格数',
+        defaultValue: 0,
+        min: 0,
+        max: 23
+      },
+      pull: {
+        type: 'number',
+        label: '栅格向左移动格数',
+        defaultValue: 0,
+        min: 0,
+        max: 23
+      },
+      order: {
+        type: 'number',
+        label: '栅格顺序',
+        defaultValue: 0,
+        min: 0,
+        max: 100
       }
     }
   },
   card: {
-    component: ({ children, ...props }: any) => React.createElement('div', { 
-      ...props, 
-      style: { 
-        border: '1px solid #d9d9d9', 
-        borderRadius: '6px', 
-        padding: '16px',
-        backgroundColor: '#fff',
-        ...props.style 
-      } 
-    }, children),
-    props: { 
-      style: { 
-        border: '1px solid #d9d9d9', 
-        borderRadius: '6px', 
-        padding: '16px',
-        backgroundColor: '#fff'
-      } 
-    },
+    component: Card,
+    props: { title: '卡片标题' },
     label: '卡片布局',
     description: '用于包裹内容的卡片容器',
     icon: 'icon-kapianbuju',
@@ -461,55 +485,36 @@ export const defaultConfigs: Record<string, ComponentConfig> = {
     tag: 'el-card',
     vmodel: 'card',
     propsConfig: {
-      padding: {
-        type: 'number',
-        label: '内边距',
-        defaultValue: 16,
-        min: 0,
-        max: 50
+      title: {
+        type: 'string',
+        label: '卡片标题',
+        defaultValue: '卡片标题',
+        placeholder: '请输入卡片标题'
       },
-      borderRadius: {
-        type: 'number',
-        label: '圆角',
-        defaultValue: 6,
-        min: 0,
-        max: 20
+      size: {
+        type: 'select',
+        label: '卡片尺寸',
+        defaultValue: 'default',
+        options: [
+          { label: '默认', value: 'default' },
+          { label: '小', value: 'small' }
+        ]
+      },
+      bordered: {
+        type: 'boolean',
+        label: '是否有边框',
+        defaultValue: true
+      },
+      hoverable: {
+        type: 'boolean',
+        label: '鼠标移过时可浮起',
+        defaultValue: false
+      },
+      loading: {
+        type: 'boolean',
+        label: '当卡片内容还在加载中时，可以用 loading 展示一个占位',
+        defaultValue: false
       }
     }
   },
-  group: {
-    component: ({ children, ...props }: any) => React.createElement('div', { 
-      ...props, 
-      style: { 
-        border: '1px dashed #d9d9d9', 
-        padding: '8px', 
-        borderRadius: '4px',
-        ...props.style 
-      } 
-    }, children),
-    props: { style: { border: '1px dashed #d9d9d9', padding: '8px', borderRadius: '4px' } },
-    label: '分组布局',
-    description: '将一组组件归类显示',
-    icon: 'icon-a-09-fenzubuju',
-    category: 'layout',
-    tag: 'el-form-item-group',
-    vmodel: 'group',
-    propsConfig: {
-      title: {
-        type: 'string',
-        label: '分组标题',
-        defaultValue: '分组',
-        placeholder: '请输入分组标题'
-      },
-      padding: {
-        type: 'number',
-        label: '内边距',
-        defaultValue: 8,
-        min: 0,
-        max: 50
-      }
-    }
-  }
 }
-
-
