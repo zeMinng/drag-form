@@ -125,6 +125,8 @@ export const generateVueTemplate = (items: CenterItem[], formConfig: FormConfig)
       if (config.category === 'layout') {
         const tag = config.tag || 'div'
         const props = mapPropsToVue(item.type as unknown as string, item.props || {})
+        // 如果是 card 组件，需要删除 title 属性
+        if (item.type === 'card') { delete props.title }
         const propsStr = buildPropsString(props)
         
         // 为布局组件添加适当的样式类
@@ -133,20 +135,20 @@ export const generateVueTemplate = (items: CenterItem[], formConfig: FormConfig)
         const attributes = mergeProps(propsStr, layoutClass)
         
         // 生成布局组件的开始标签
-        let layoutStart = `<${tag}${attributes}>`
+        let layoutStart = `<${tag} ${attributes}>`
         
         // 为不同类型的布局组件添加标题或描述
         if (item.type === 'card' && item.title) {
-          layoutStart += `\n    <template #header>\n      <span>${item.title}</span>\n    </template>`
+          layoutStart += `\n  <template #header>\n    <span>${item?.props?.title || item.title}</span>\n  </template>`
         } else if (item.type === 'group' && item.title) {
-          layoutStart += `\n    <div class="group-title">${item.title}</div>`
+          layoutStart += `\n  <div class="group-title">${item.title}</div>`
         }
         
         // 布局组件的内容占位符
-        const layoutContent = `\n    <!-- ${item.title || '布局组件'} 内容 -->\n    <!-- 子组件将在这里渲染 -->`
+        const layoutContent = `\n  <!-- ${item.title || '布局组件'} 内容 -->\n  <!-- 子组件将在这里渲染 -->`
         
         // 生成布局组件的结束标签
-        const layoutEnd = `\n  </${tag}>`
+        const layoutEnd = `\n</${tag}>`
         
         return `${layoutStart}${layoutContent}${layoutEnd}`
       }

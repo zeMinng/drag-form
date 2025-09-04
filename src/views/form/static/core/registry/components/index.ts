@@ -491,30 +491,16 @@ export const defaultConfigs: Record<string, ComponentConfig> = {
         defaultValue: '卡片标题',
         placeholder: '请输入卡片标题'
       },
-      size: {
+      shadow: {
         type: 'select',
-        label: '卡片尺寸',
-        defaultValue: 'default',
+        label: '阴影效果',
+        defaultValue: 'always',
         options: [
-          { label: '默认', value: 'default' },
-          { label: '小', value: 'small' }
+          { label: '始终显示', value: 'always' },
+          { label: '鼠标悬浮时显示', value: 'hover' },
+          { label: '不显示', value: 'never' }
         ]
       },
-      bordered: {
-        type: 'boolean',
-        label: '是否有边框',
-        defaultValue: true
-      },
-      hoverable: {
-        type: 'boolean',
-        label: '鼠标移过时可浮起',
-        defaultValue: false
-      },
-      loading: {
-        type: 'boolean',
-        label: '当卡片内容还在加载中时，可以用 loading 展示一个占位',
-        defaultValue: false
-      }
     }
   },
 }
