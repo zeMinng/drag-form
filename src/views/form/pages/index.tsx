@@ -64,8 +64,10 @@ const Form: React.FC = () => {
   )
   
   // 移除调试代码，生产环境不需要
-  !import.meta.env.PROD && useEffect(() => {
-    console.log('%c [ 缓存的拖动数组 ]', 'font-size:12px; background:#42b983; color:#bada55;', centerItems)
+  useEffect(() => {
+    if (!import.meta.env.PROD) {
+      console.log('%c [ 缓存的拖动数组 ]', 'font-size:12px; background:red; color:#fff;', centerItems)
+    }
   }, [centerItems])
   
   // 处理拖拽开始

@@ -74,10 +74,10 @@ export const getSpecialProps = (type: string): string => {
  */
 export const getLayoutClass = (type: string): string => {
   const layoutClassMap: Record<string, string> = {
-    row: ' class="form-row"',
-    col: ' class="form-col"',
-    card: ' class="form-card"',
-    group: ' class="form-group"'
+    row: 'class="form-row"',
+    col: 'class="form-col"',
+    card: 'class="form-card"',
+    group: 'class="form-group"'
   }
   
   return layoutClassMap[type] || ''

@@ -56,28 +56,34 @@ const ComponentConfig: React.FC = () => {
   }
   
   const currentProps = selectedItem.props || {}
+  
+  // 布局型组件不需要基础信息配置
+  const isLayoutComponent = config.category === 'layout'
 
   return (
     <div className="componentConfig">
-      <div className="config-section">
-        <Divider size="small" dashed plain variant="dashed" style={{ borderColor: '#e9ecf0' }}>基础信息</Divider>
-        <Form layout="vertical">
-          <Form.Item label="标题">
-            <Input
-              value={selectedItem.title}
-              placeholder="请输入标题"
-              onChange={(e) => handleTitleChange(e.target.value)}
-            />
-          </Form.Item>
-          <Form.Item label="字段名">
-            <Input
-              value={selectedItem.vmodel || config.vmodel || ''}
-              placeholder="请输入字段名"
-              onChange={(e) => handleVmodelChange(e.target.value)}
-            />
-          </Form.Item>
-        </Form>
-      </div>
+      {/* 只有非布局型组件才显示基础信息 */}
+      {!isLayoutComponent && (
+        <div className="config-section">
+          <Divider size="small" dashed plain variant="dashed" style={{ borderColor: '#e9ecf0' }}>基础信息</Divider>
+          <Form layout="vertical">
+            <Form.Item label="标题">
+              <Input
+                value={selectedItem.title}
+                placeholder="请输入标题"
+                onChange={(e) => handleTitleChange(e.target.value)}
+              />
+            </Form.Item>
+            <Form.Item label="字段名">
+              <Input
+                value={selectedItem.vmodel || config.vmodel || ''}
+                placeholder="请输入字段名"
+                onChange={(e) => handleVmodelChange(e.target.value)}
+              />
+            </Form.Item>
+          </Form>
+        </div>
+      )}
 
       {/* 组件属性配置 */}
       {config.propsConfig && Object.keys(config.propsConfig).length > 0 && (
