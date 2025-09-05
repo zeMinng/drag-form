@@ -123,16 +123,41 @@ const Form: React.FC = () => {
 
   // 处理从左侧拖入新组件
   const handleNewComponentDrop = (newItem: Omit<CenterItem, 'id'>, overId: string | number) => {
+    const overKey = String(overId)
+
+    // 投放到某个容器（布局组件）内部：container-<parentId>
+    if (overKey.startsWith('container-')) {
+      const parentId = overKey.replace('container-', '')
+      const itemWithId = { ...newItem, id: `new-${Date.now()}` }
+
+      const addChildToTree = (items: CenterItem[]): CenterItem[] => {
+        return items.map((it) => {
+          if (it.id === parentId) {
+            const children = Array.isArray(it.children) ? it.children : []
+            return { ...it, children: [...children, itemWithId] }
+          }
+          if (Array.isArray(it.children) && it.children.length) {
+            return { ...it, children: addChildToTree(it.children) }
+          }
+          return it
+        })
+      }
+
+      const newItems = addChildToTree(centerItems)
+      setCenterItems(newItems)
+      return
+    }
+
     const targetIndex = centerItems.findIndex((item: CenterItem) => item.id === overId)
-    
+
     if (targetIndex !== -1) {
-      // 插入到指定位置
+      // 插入到指定位置（顶层）
       const newItems = [...centerItems]
       const itemWithId = { ...newItem, id: `new-${Date.now()}` }
       newItems.splice(targetIndex, 0, itemWithId)
       setCenterItems(newItems)
     } else if (overId === 'center-drop-area') {
-      // 添加到末尾
+      // 添加到末尾（顶层）
       addCenterItem(newItem)
     }
   }

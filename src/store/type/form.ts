@@ -8,6 +8,7 @@ export interface CenterItem extends FormComponent {
   icon?: string
   vmodel?: string // v-model字段名
   props?: Record<string, any> // 组件属性
+  children?: CenterItem[] // 子组件（用于布局型组件的嵌套）
 }
 
 // 表单级别配置

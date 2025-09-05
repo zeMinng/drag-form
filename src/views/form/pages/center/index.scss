@@ -130,6 +130,77 @@
 
     .componentWrap {
       width: 100%;
+
+      // 布局子容器可投放区
+      .layout-children {
+        min-height: 24px;
+        padding: 6px;
+        border: 1px dashed #e5e7eb;
+        border-radius: 4px;
+      }
+
+      .layout-children.drag-over {
+        background: rgb(24 144 255 / 6%);
+        border-color: #1890ff;
+      }
+
+      // 直接投放在 Row/Col 上的高亮
+      :where(.ant-row, .ant-col).drag-over {
+        background: rgb(24 144 255 / 6%);
+        outline: 1px dashed #1890ff;
+        outline-offset: 2px;
+      }
+
+      // 行/列默认虚线外观（不影响内容布局）
+      .layout-row,
+      .layout-col {
+        position: relative;
+        min-height: 34px;
+        transition: background-color .15s ease, outline-color .15s ease, box-shadow .15s ease;
+      }
+
+      // 画布中取消 antd Row 的负边距，避免视觉越界
+      .layout-row {
+        margin-right: 0 !important;
+        margin-left: 0 !important;
+      }
+
+      .layout-row::before,
+      .layout-col::before {
+        position: absolute;
+        pointer-events: none;
+        border: 1px dashed #e2e8f0;
+        border-radius: 4px;
+        content: '';
+        inset: 0;
+      }
+
+      // 空态更明显的提示
+      .layout-row.is-empty::before,
+      .layout-col.is-empty::before {
+        border-color: #cbd5e1;
+      }
+
+      // Hover 高亮（非拖拽态）
+      .layout-row:hover::before,
+      .layout-col:hover::before {
+        border-color: #94a3b8;
+      }
+
+      // 顶角标签（行/列）
+      .layout-row::after,
+      .layout-col::after {
+        position: absolute;
+        top: -10px;
+        left: 8px;
+        padding: 0 6px;
+        font-size: 12px;
+        color: #64748b;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        content: attr(data-layout-label);
+      }
     
       .componentItem {
         display: flex;

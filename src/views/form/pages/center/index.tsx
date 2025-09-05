@@ -13,6 +13,7 @@ import DownloadOutVue from '../downloadOutVue/index'
 import { useFormStore, type CenterItem, type FormConfig } from '@/store/modules/form'
 import { generateVueComponent } from '@/views/form/static'
 import { renderComponentByType } from '@/views/form/static/core/renderer/componentUtils'
+import { getComponentConfig } from '@/views/form/static/core/registry/componentRegistry'
 import './index.scss'
 
 const clearTheCanvas = () => {
@@ -329,6 +330,69 @@ const FormWrapper: React.FC<{ children: React.ReactNode; formConfig: FormConfig 
 
 // 渲染函数已抽取到 core/renderer/componentUtils.ts 中
 
+// 判断是否为布局型组件（通过注册中心元信息，便于扩展）
+const isLayoutType = (type: string) => {
+  const cfg = getComponentConfig(type)
+  return cfg?.category === 'layout'
+}
+
+// 递归渲染布局组件 children，并为布局组件提供内部可投放区域
+const NestedItem: React.FC<{ item: CenterItem; formConfig: FormConfig }> = ({ item, formConfig }) => {
+  // Hooks 必须无条件调用，避免早返回前后顺序改变
+  const { setNodeRef: setContainerRef, isOver: isContainerOver } = useDroppable({ id: `container-${item.id}` })
+
+  if (!isLayoutType(item.type)) {
+    return (
+      <div className="nested-item">
+        {renderComponentByType(item, formConfig)}
+      </div>
+    )
+  }
+  const config = getComponentConfig(item.type)
+  if (!config) return <div className="nested-item">未知组件类型: {item.type}</div>
+
+  const Component: any = config.component as any
+  const mergedProps = { ...(config.props || {}), ...(item.props || {}) }
+  console.log('%c [ mergedProps ]-356', 'font-size:13px; background:pink; color:#bf2c9f;', mergedProps)
+
+  const childNodes = (item.children || []).map((child) => (
+    <NestedItem key={child.id} item={child} formConfig={formConfig} />
+  ))
+
+  // Row/Col 直接作为容器投放区，避免额外包裹元素影响栅格宽度
+  if (item.type === 'row' || item.type === 'col') {
+    const baseClass = item.type === 'row' ? 'layout-row' : 'layout-col'
+    const isEmpty = childNodes.length === 0
+    const combinedClassName = [mergedProps.className, baseClass, isEmpty ? 'is-empty' : '', isContainerOver ? 'drag-over' : '']
+      .filter(Boolean)
+      .join(' ')
+    return (
+      <Component
+        {...mergedProps}
+        ref={setContainerRef}
+        className={combinedClassName}
+        data-layout-label={item.type === 'row' ? '行' : '列'}
+        style={{ width: '100%', ...(mergedProps.style || {}) }}
+      >
+        {childNodes.length ? childNodes : <div className="center-placeholder">拖到这里</div>}
+      </Component>
+    )
+  }
+
+  // 其他布局型（如 card/group）保留内部包裹以显示边框
+  return (
+    <Component {...mergedProps}>
+      <div
+        ref={setContainerRef}
+        className={`layout-children${isContainerOver ? ' drag-over' : ''}`}
+        style={{ minHeight: 24 }}
+      >
+        {childNodes.length ? childNodes : <div className="center-placeholder">拖到这里</div>}
+      </div>
+    </Component>
+  )
+}
+
 // SortableItem 组件
 const SortableItem: React.FC<{ item: CenterItem; index?: number }> = ({ item }) => {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: item.id })
@@ -375,7 +439,9 @@ const SortableItem: React.FC<{ item: CenterItem; index?: number }> = ({ item }) 
         <IconFont type="icon-shanchu" />
       </div>
       <div className="componentWrap">
-        {renderComponentByType(item, formConfig)}
+        {isLayoutType(item.type)
+          ? <NestedItem item={item} formConfig={formConfig} />
+          : renderComponentByType(item, formConfig)}
       </div>
     </div>
   )
