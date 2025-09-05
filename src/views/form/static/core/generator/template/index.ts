@@ -144,8 +144,11 @@ export const generateVueTemplate = (items: CenterItem[], formConfig: FormConfig)
           layoutStart += `\n  <div class="group-title">${item.title}</div>`
         }
         
-        // 布局组件的内容占位符
-        const layoutContent = `\n  <!-- ${item.title || '布局组件'} 内容 -->\n  <!-- 子组件将在这里渲染 -->`
+        // 递归渲染子组件内容
+        const children = Array.isArray((item as any).children) ? (item as any).children as CenterItem[] : []
+        const layoutContent = children.length
+          ? `\n${processLayoutItems(children).split('\n').map(line => `  ${line}`).join('\n')}`
+          : `\n  <!-- ${item.title || '布局组件'}（空） -->`
         
         // 生成布局组件的结束标签
         const layoutEnd = `\n</${tag}>`

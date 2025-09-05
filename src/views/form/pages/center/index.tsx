@@ -340,20 +340,25 @@ const isLayoutType = (type: string) => {
 const NestedItem: React.FC<{ item: CenterItem; formConfig: FormConfig }> = ({ item, formConfig }) => {
   // Hooks 必须无条件调用，避免早返回前后顺序改变
   const { setNodeRef: setContainerRef, isOver: isContainerOver } = useDroppable({ id: `container-${item.id}` })
+  const { selectedItemId, setSelectedItemId } = useFormStore()
+  const isSelected = selectedItemId === item.id
 
   if (!isLayoutType(item.type)) {
     return (
-      <div className="nested-item">
+      <div
+        className={`nested-item nested-clickable${isSelected ? ' selected' : ''}`}
+        onClick={(e) => { e.stopPropagation(); setSelectedItemId(item.id) }}
+      >
         {renderComponentByType(item, formConfig)}
       </div>
     )
   }
+
   const config = getComponentConfig(item.type)
   if (!config) return <div className="nested-item">未知组件类型: {item.type}</div>
 
   const Component: any = config.component as any
   const mergedProps = { ...(config.props || {}), ...(item.props || {}) }
-  console.log('%c [ mergedProps ]-356', 'font-size:13px; background:pink; color:#bf2c9f;', mergedProps)
 
   const childNodes = (item.children || []).map((child) => (
     <NestedItem key={child.id} item={child} formConfig={formConfig} />
@@ -363,18 +368,31 @@ const NestedItem: React.FC<{ item: CenterItem; formConfig: FormConfig }> = ({ it
   if (item.type === 'row' || item.type === 'col') {
     const baseClass = item.type === 'row' ? 'layout-row' : 'layout-col'
     const isEmpty = childNodes.length === 0
-    const combinedClassName = [mergedProps.className, baseClass, isEmpty ? 'is-empty' : '', isContainerOver ? 'drag-over' : '']
-      .filter(Boolean)
-      .join(' ')
+    const combinedClassName = [
+      (mergedProps as any).className,
+      baseClass,
+      isEmpty ? 'is-empty' : '',
+      isContainerOver ? 'drag-over' : '',
+      isSelected ? 'is-selected' : ''
+    ].filter(Boolean).join(' ')
+
+    const meta = item.type === 'row'
+      ? (typeof (mergedProps as any).gutter === 'number' ? `(gutter:${(mergedProps as any).gutter})` : '')
+      : (typeof (mergedProps as any).span === 'number' ? `(span:${(mergedProps as any).span})` : '')
+
     return (
       <Component
         {...mergedProps}
         ref={setContainerRef}
         className={combinedClassName}
         data-layout-label={item.type === 'row' ? '行' : '列'}
-        style={{ width: '100%', ...(mergedProps.style || {}) }}
+        data-meta={meta}
+        onClick={(e: React.MouseEvent) => { e.stopPropagation(); setSelectedItemId(item.id) }}
+        style={{ width: '100%', ...(mergedProps as any).style || {} }}
       >
-        {childNodes.length ? childNodes : <div className="center-placeholder">拖到这里</div>}
+        {childNodes.length
+          ? (item.type === 'col' ? <div className="col-inner">{childNodes}</div> : childNodes)
+          : <div className="center-placeholder">拖到这里</div>}
       </Component>
     )
   }
@@ -386,6 +404,7 @@ const NestedItem: React.FC<{ item: CenterItem; formConfig: FormConfig }> = ({ it
         ref={setContainerRef}
         className={`layout-children${isContainerOver ? ' drag-over' : ''}`}
         style={{ minHeight: 24 }}
+        onClick={(e) => { e.stopPropagation(); setSelectedItemId(item.id) }}
       >
         {childNodes.length ? childNodes : <div className="center-placeholder">拖到这里</div>}
       </div>

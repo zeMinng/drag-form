@@ -44,14 +44,18 @@ export class CodeCacheManager {
    * @returns 缓存键
    */
   generateCacheKey(items: any[], formConfig: any): string {
+    const compactItem = (item: any): any => ({
+      id: item.id,
+      type: item.type,
+      title: item.title,
+      vmodel: item.vmodel,
+      props: item.props,
+      // 递归包含 children，确保布局嵌套变化会刷新缓存
+      children: Array.isArray(item?.children) ? item.children.map((child: any) => compactItem(child)) : undefined,
+    })
+
     const compact = {
-      items: items.map(item => ({
-        id: item.id,
-        type: item.type,
-        title: item.title,
-        vmodel: item.vmodel,
-        props: item.props,
-      })),
+      items: (items || []).map(compactItem),
       formConfig
     }
     const stable = this.stableStringify(compact)

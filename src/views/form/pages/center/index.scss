@@ -106,9 +106,6 @@
     padding: 12px 16px;
     margin-bottom: 8px;
     cursor: move;
-
-    // background: #f8f9fa;
-    // border: 1px solid #e9ecef;
     border-radius: 6px;
     transition: all 0.2s ease;
     align-items: center;
@@ -123,9 +120,6 @@
       border-color: #adb5bd;
       box-shadow: 0 0 0 1px rgb(173 181 189 / 20%);
 
-      // background: #17c4951a;
-      // border: 2px dashed #17c495;
-      // box-shadow: 0 0 0 2px rgb(23 196 149 / 20%);
     }
 
     .componentWrap {
@@ -155,7 +149,7 @@
       .layout-row,
       .layout-col {
         position: relative;
-        min-height: 34px;
+        padding: 12px;
         transition: background-color .15s ease, outline-color .15s ease, box-shadow .15s ease;
       }
 
@@ -163,6 +157,16 @@
       .layout-row {
         margin-right: 0 !important;
         margin-left: 0 !important;
+        gap: 12px;
+        justify-content: space-between;
+      }
+
+      .layout-col {
+        .col-inner {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+        }
       }
 
       .layout-row::before,
@@ -175,10 +179,37 @@
         inset: 0;
       }
 
+      // 选中态高亮
+      .layout-row.is-selected::before,
+      .layout-col.is-selected::before,
+      .nested-clickable.selected {
+        border-color: #1890ff;
+        box-shadow: 0 0 0 1px rgb(24 144 255 / 20%) inset;
+      }
+
+      .nested-clickable {
+        position: relative;
+      }
+
       // 空态更明显的提示
       .layout-row.is-empty::before,
       .layout-col.is-empty::before {
         border-color: #cbd5e1;
+      }
+
+      // 空态：仅在没有子元素时提升命中范围，并居中提示
+      .layout-row.is-empty,
+      .layout-col.is-empty {
+        display: flex;
+        min-height: 72px;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .layout-row.is-empty > .center-placeholder,
+      .layout-col.is-empty > .center-placeholder {
+        font-size: 13px;
+        color: #94a3b8;
       }
 
       // Hover 高亮（非拖拽态）
@@ -199,7 +230,14 @@
         background: #f8fafc;
         border: 1px solid #e2e8f0;
         border-radius: 6px;
-        content: attr(data-layout-label);
+        content: attr(data-layout-label) ' ' attr(data-meta);
+      }
+
+      // Col 内部轻量轮廓，不改变整体高度
+      .layout-col > .col-inner {
+        padding: 6px 8px;
+        border: 1px dashed #edf2f7;
+        border-radius: 4px;
       }
     
       .componentItem {

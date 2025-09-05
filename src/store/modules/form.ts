@@ -32,10 +32,21 @@ export const useFormStore = createPersistedStore<FormStore>(
         console.warn('更新组件项失败：无效的参数')
         return
       }
+
+      const updateInTree = (items: any[]): any[] => {
+        return items.map((node) => {
+          if (node.id === id) {
+            return { ...node, ...updates }
+          }
+          if (Array.isArray(node.children) && node.children.length) {
+            return { ...node, children: updateInTree(node.children) }
+          }
+          return node
+        })
+      }
+
       set((state) => ({
-        centerItems: state.centerItems.map(item => 
-          item.id === id ? { ...item, ...updates } : item
-        )
+        centerItems: updateInTree(state.centerItems)
       }))
     },
     
@@ -46,8 +57,20 @@ export const useFormStore = createPersistedStore<FormStore>(
         console.warn('删除组件项失败：无效的ID')
         return
       }
+
+      const removeFromTree = (items: any[]): any[] => {
+        return items
+          .filter((node) => node.id !== id)
+          .map((node) => {
+            if (Array.isArray(node.children) && node.children.length) {
+              return { ...node, children: removeFromTree(node.children) }
+            }
+            return node
+          })
+      }
+
       set((state) => ({
-        centerItems: state.centerItems.filter(item => item.id !== id),
+        centerItems: removeFromTree(state.centerItems),
         selectedItemId: state.selectedItemId === id ? null : state.selectedItemId
       }))
     },
@@ -58,8 +81,19 @@ export const useFormStore = createPersistedStore<FormStore>(
       const state = get()
       const selectedId = state.selectedItemId
       if (!selectedId) return null
-      // 优化：在数组较大时，使用一次 Map 缓存可以进一步优化，这里保持简单
-      return state.centerItems.find(item => item.id === selectedId) || null
+
+      const findInTree = (items: any[]): any | null => {
+        for (const node of items) {
+          if (node.id === selectedId) return node
+          if (Array.isArray(node.children) && node.children.length) {
+            const found = findInTree(node.children)
+            if (found) return found
+          }
+        }
+        return null
+      }
+
+      return findInTree(state.centerItems)
     },
     
     updateFormConfig: (config) => {
