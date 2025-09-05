@@ -8,6 +8,8 @@ import type { DragStartEvent, DragEndEvent, DragOverEvent } from '@dnd-kit/core'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { useSensor, useSensors, PointerSensor } from '@dnd-kit/core'
 import { useFormStore, type CenterItem } from '@/store/modules/form'
+import { getComponentConfig } from '@/views/form/static/core/registry/componentRegistry'
+import { v4 as uuidv4 } from 'uuid'
 
 import './index.scss'
 
@@ -113,26 +115,77 @@ const Form: React.FC = () => {
     }
   }
 
-  // 创建新项目
-  const createNewItem = (data: DraggingItem): Omit<CenterItem, 'id'> => ({
-    type: data.key,
-    title: data.title,
-    description: data.description,
-    icon: data.icon,
-  })
+  // 创建新项目（row 默认包含一个 col 子节点）
+  const createNewItem = (data: DraggingItem): Omit<CenterItem, 'id'> => {
+    const base: Omit<CenterItem, 'id'> = {
+      type: data.key,
+      title: data.title,
+      description: data.description,
+      icon: data.icon,
+    }
+    if (data.key === 'row') {
+      const colCfg = getComponentConfig('col')
+      const defaultCol: Omit<CenterItem, 'id'> = {
+        type: 'col',
+        title: colCfg?.label || '列布局',
+        description: colCfg?.description,
+        icon: colCfg?.icon,
+      }
+      // children 在 Omit<CenterItem, 'id'> 中的类型仍是 CenterItem[]
+      // 这里先用无 id 的子节点，稍后通过 assignIdsRecursively 统一分配 id
+      return { ...base, children: [defaultCol] as unknown as CenterItem[] }
+    }
+    return base
+  }
+
+  // 递归为节点及其子节点分配 id（用于非 addCenterItem 的场景）
+  const assignIdsRecursively = (node: Omit<CenterItem, 'id'>): CenterItem => {
+    const id = uuidv4().substring(0, 8)
+    const children = (node as any).children as Omit<CenterItem, 'id'>[] | undefined
+    return {
+      ...(node as any),
+      id,
+      children: Array.isArray(children) ? children.map(assignIdsRecursively) : children,
+    }
+  }
 
   // 处理从左侧拖入新组件
   const handleNewComponentDrop = (newItem: Omit<CenterItem, 'id'>, overId: string | number) => {
+    const overKey = String(overId)
+
+    // 投放到某个容器（布局组件）内部：container-<parentId>
+    if (overKey.startsWith('container-')) {
+      const parentId = overKey.replace('container-', '')
+      const itemWithId = assignIdsRecursively(newItem)
+
+      const addChildToTree = (items: CenterItem[]): CenterItem[] => {
+        return items.map((it) => {
+          if (it.id === parentId) {
+            const children = Array.isArray(it.children) ? it.children : []
+            return { ...it, children: [...children, itemWithId] }
+          }
+          if (Array.isArray(it.children) && it.children.length) {
+            return { ...it, children: addChildToTree(it.children) }
+          }
+          return it
+        })
+      }
+
+      const newItems = addChildToTree(centerItems)
+      setCenterItems(newItems)
+      return
+    }
+
     const targetIndex = centerItems.findIndex((item: CenterItem) => item.id === overId)
-    
+
     if (targetIndex !== -1) {
-      // 插入到指定位置
+      // 插入到指定位置（顶层）
       const newItems = [...centerItems]
-      const itemWithId = { ...newItem, id: `new-${Date.now()}` }
+      const itemWithId = assignIdsRecursively(newItem)
       newItems.splice(targetIndex, 0, itemWithId)
       setCenterItems(newItems)
     } else if (overId === 'center-drop-area') {
-      // 添加到末尾
+      // 添加到末尾（顶层）
       addCenterItem(newItem)
     }
   }

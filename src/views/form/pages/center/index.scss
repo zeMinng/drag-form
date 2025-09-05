@@ -106,9 +106,6 @@
     padding: 12px 16px;
     margin-bottom: 8px;
     cursor: move;
-
-    // background: #f8f9fa;
-    // border: 1px solid #e9ecef;
     border-radius: 6px;
     transition: all 0.2s ease;
     align-items: center;
@@ -122,29 +119,93 @@
       background: #e9ecef;
       border-color: #adb5bd;
       box-shadow: 0 0 0 1px rgb(173 181 189 / 20%);
-
-      // background: #17c4951a;
-      // border: 2px dashed #17c495;
-      // box-shadow: 0 0 0 2px rgb(23 196 149 / 20%);
     }
 
     .componentWrap {
       width: 100%;
-    
-      .componentItem {
-        display: flex;
-        align-items: center;
-        gap: 12px;
 
-        .itemTitle {
-          width: 100px;
-          color: #333;
-          text-align: right;
+      // 投放、卡片布局相关的css
+      .layout-children {
+        min-height: 24px;
+        padding: 6px;
+        border: 1px dashed #e5e7eb;
+        border-radius: 4px;
+
+        &.drag-over {
+          background: rgb(24 144 255 / 6%);
+          border-color: #1890ff;
         }
-        
-        .itemContent {
-          flex: 1;
+      }
+
+      // 投放在 Row/Col 上的高亮
+      :where(.ant-row, .ant-col).drag-over {
+        background: rgb(24 144 255 / 6%);
+        border-color: #1890ff;
+      }
+
+      .layout-row, .layout-col {
+        position: relative;
+        padding: 16px;
+        border: 1px dashed #e2e8f0;
+        border-radius: 4px;
+
+        // 顶角标签（行/列）
+        &::after {
+          position: absolute;
+          top: -10px;
+          left: 8px;
+          padding: 0 6px;
+          font-size: 12px;
+          color: #64748b;
+          background: #f8fafc;
+          border: 1px solid #e2e8f0;
+          border-radius: 6px;
+          content: attr(data-layout-label) ' ' attr(data-meta);
         }
+      }
+
+      // 鼠标悬停效果（不影响布局，仅视觉）
+      .layout-col:hover {
+        cursor: pointer;
+        background: #f9fbfd;
+        border-color: #94a3b8;
+        box-shadow: 0 0 0 1px rgb(148 163 184 / 20%) inset;
+      }
+
+      // Row 仅在没有 hover 到内部 Col 时才高亮
+      .layout-row:hover:not(:has(.layout-col:hover)) {
+        cursor: pointer;
+        background: #f9fbfd;
+        border-color: #94a3b8;
+        box-shadow: 0 0 0 1px rgb(148 163 184 / 20%) inset;
+      }
+
+      // 拖拽经过高亮（与 JS 中的 drag-over 类配合）
+      .layout-row.drag-over,
+      .layout-col.drag-over {
+        background: rgb(24 144 255 / 6%);
+        border-color: #1890ff;
+        box-shadow: 0 0 0 1px rgb(24 144 255 / 20%) inset;
+      }
+
+      // 选中态：布局组件（Row/Col）
+      .layout-row.is-selected,
+      .layout-col.is-selected {
+        background: #f0f7ff;
+        border-color: #1890ff;
+        box-shadow: 0 0 0 2px rgb(24 144 255 / 15%) inset;
+      }
+
+      // 选中态：普通组件（非布局）
+      .nested-clickable.selected {
+        background: #f0f7ff;
+        border-radius: 4px;
+        outline: 1px dashed #1890ff;
+        outline-offset: 2px;
+      }
+
+      .nested-item {
+        margin-bottom: 8px;
       }
     }
 

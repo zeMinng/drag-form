@@ -125,6 +125,10 @@ export const generateVueTemplate = (items: CenterItem[], formConfig: FormConfig)
       if (config.category === 'layout') {
         const tag = config.tag || 'div'
         const props = mapPropsToVue(item.type as unknown as string, item.props || {})
+        // 与编辑端保持一致：Col 未设置 span -> 24（纵向排列）
+        if (item.type === 'col' && (props.span === undefined || props.span === null)) {
+          props.span = 24
+        }
         // 如果是 card 组件，需要删除 title 属性
         if (item.type === 'card') { delete props.title }
         const propsStr = buildPropsString(props)
@@ -144,8 +148,11 @@ export const generateVueTemplate = (items: CenterItem[], formConfig: FormConfig)
           layoutStart += `\n  <div class="group-title">${item.title}</div>`
         }
         
-        // 布局组件的内容占位符
-        const layoutContent = `\n  <!-- ${item.title || '布局组件'} 内容 -->\n  <!-- 子组件将在这里渲染 -->`
+        // 递归渲染子组件内容
+        const children = Array.isArray((item as any).children) ? (item as any).children as CenterItem[] : []
+        const layoutContent = children.length
+          ? `\n${processLayoutItems(children).split('\n').map(line => `  ${line}`).join('\n')}`
+          : `\n  <!-- ${item.title || '布局组件'}（空） -->`
         
         // 生成布局组件的结束标签
         const layoutEnd = `\n</${tag}>`

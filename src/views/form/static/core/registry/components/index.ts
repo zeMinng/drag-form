@@ -388,7 +388,7 @@ export const defaultConfigs: Record<string, ComponentConfig> = {
   },
   row: {
     component: Row,
-    props: { gutter: 16 },
+    props: { gutter: 0 },
     label: '行布局',
     description: '水平排列组件容器',
     icon: 'icon-hangbuju',
@@ -399,7 +399,7 @@ export const defaultConfigs: Record<string, ComponentConfig> = {
       gutter: {
         type: 'number',
         label: '栅格间隔',
-        defaultValue: 16,
+        defaultValue: 0,
         min: 0,
         max: 50
       },
@@ -430,7 +430,7 @@ export const defaultConfigs: Record<string, ComponentConfig> = {
   },
   col: {
     component: Col,
-    props: { span: 12 },
+    props: {},
     label: '列布局',
     description: '在行中纵向排列内容',
     icon: 'icon-liebuju',
@@ -441,7 +441,7 @@ export const defaultConfigs: Record<string, ComponentConfig> = {
       span: {
         type: 'number',
         label: '栅格占位格数',
-        defaultValue: 12,
+        defaultValue: undefined,
         min: 1,
         max: 24
       },

@@ -14,16 +14,25 @@ import { getTypeScriptTypeByComponentType, getDefaultValueByType } from '../../.
  */
 export const generateTypeScriptInterfaces = (items: CenterItem[]): string => {
   const formFields: string[] = []
-  
-  items.forEach(item => {
-    const config = getComponentConfig(item.type)
-    if (!config) return
 
-    const vmodel = item.vmodel || config.vmodel || 'value'
-    const type = getTypeScriptTypeByComponentType(item.type)
-    
-    formFields.push(`  ${vmodel}: ${type}`)
-  })
+  const collectFields = (nodes: CenterItem[]) => {
+    nodes.forEach((item) => {
+      const config = getComponentConfig(item.type)
+      if (!config) return
+
+      // 布局型递归其子节点；非布局型收集字段
+      if ((config as any).category === 'layout') {
+        if (Array.isArray((item as any).children)) collectFields((item as any).children as CenterItem[])
+        return
+      }
+
+      const vmodel = item.vmodel || config.vmodel || 'value'
+      const type = getTypeScriptTypeByComponentType(item.type)
+      formFields.push(`  ${vmodel}: ${type}`)
+    })
+  }
+
+  collectFields(items)
 
   if (formFields.length === 0) {
     return `interface FormData {
@@ -61,23 +70,30 @@ const onReset = () => {
 
   const formFields: string[] = []
   const formRules: string[] = []
-  
-  items.forEach(item => {
-    const config = getComponentConfig(item.type)
-    if (!config) return
 
-    const vmodel = item.vmodel || config.vmodel || 'value'
-    const defaultValue = getDefaultValueByType(item.type)
-    
-    formFields.push(`  ${vmodel}: ${defaultValue},`)
-    
-    // 生成验证规则
-    if (item.props?.required) {
-      formRules.push(`  ${vmodel}: [
+  const collectNodes = (nodes: CenterItem[]) => {
+    nodes.forEach((item) => {
+      const config = getComponentConfig(item.type)
+      if (!config) return
+
+      if ((config as any).category === 'layout') {
+        if (Array.isArray((item as any).children)) collectNodes((item as any).children as CenterItem[])
+        return
+      }
+
+      const vmodel = item.vmodel || config.vmodel || 'value'
+      const defaultValue = getDefaultValueByType(item.type)
+      formFields.push(`  ${vmodel}: ${defaultValue},`)
+
+      if (item.props?.required) {
+        formRules.push(`  ${vmodel}: [
     { required: true, message: '请输入${item.title || vmodel}', trigger: 'blur' }
   ]`)
-    }
-  })
+      }
+    })
+  }
+
+  collectNodes(items)
 
   const formDataStr = formFields.length > 0 ? formFields.join('\n') : '  // 暂无字段'
   const formRulesStr = formRules.length > 0 ? formRules.join(',\n') : '  // 暂无验证规则'
