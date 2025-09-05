@@ -131,7 +131,9 @@ const Form: React.FC = () => {
         description: colCfg?.description,
         icon: colCfg?.icon,
       }
-      return { ...base, children: [defaultCol] }
+      // children 在 Omit<CenterItem, 'id'> 中的类型仍是 CenterItem[]
+      // 这里先用无 id 的子节点，稍后通过 assignIdsRecursively 统一分配 id
+      return { ...base, children: [defaultCol] as unknown as CenterItem[] }
     }
     return base
   }
