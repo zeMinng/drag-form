@@ -21,9 +21,18 @@ export const useFormStore = createPersistedStore<FormStore>(
         console.warn('添加组件项失败：无效的组件数据')
         return
       }
-      const id = uuidv4().substring(0, 8)
+      const assignIdsRecursively = (node: any): any => {
+        const newId = uuidv4().substring(0, 8)
+        const hasChildren = Array.isArray(node.children) && node.children.length > 0
+        return {
+          ...node,
+          id: newId,
+          children: hasChildren ? node.children.map((child: any) => assignIdsRecursively(child)) : node.children
+        }
+      }
+      const itemWithIds = assignIdsRecursively(item)
       set((state) => ({
-        centerItems: [...state.centerItems, { ...item, id }]
+        centerItems: [...state.centerItems, itemWithIds]
       }))
     },
     

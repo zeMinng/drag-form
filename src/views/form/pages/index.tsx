@@ -8,6 +8,8 @@ import type { DragStartEvent, DragEndEvent, DragOverEvent } from '@dnd-kit/core'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { useSensor, useSensors, PointerSensor } from '@dnd-kit/core'
 import { useFormStore, type CenterItem } from '@/store/modules/form'
+import { getComponentConfig } from '@/views/form/static/core/registry/componentRegistry'
+import { v4 as uuidv4 } from 'uuid'
 
 import './index.scss'
 
@@ -113,13 +115,37 @@ const Form: React.FC = () => {
     }
   }
 
-  // 创建新项目
-  const createNewItem = (data: DraggingItem): Omit<CenterItem, 'id'> => ({
-    type: data.key,
-    title: data.title,
-    description: data.description,
-    icon: data.icon,
-  })
+  // 创建新项目（row 默认包含一个 col 子节点）
+  const createNewItem = (data: DraggingItem): Omit<CenterItem, 'id'> => {
+    const base: Omit<CenterItem, 'id'> = {
+      type: data.key,
+      title: data.title,
+      description: data.description,
+      icon: data.icon,
+    }
+    if (data.key === 'row') {
+      const colCfg = getComponentConfig('col')
+      const defaultCol: Omit<CenterItem, 'id'> = {
+        type: 'col',
+        title: colCfg?.label || '列布局',
+        description: colCfg?.description,
+        icon: colCfg?.icon,
+      }
+      return { ...base, children: [defaultCol] }
+    }
+    return base
+  }
+
+  // 递归为节点及其子节点分配 id（用于非 addCenterItem 的场景）
+  const assignIdsRecursively = (node: Omit<CenterItem, 'id'>): CenterItem => {
+    const id = uuidv4().substring(0, 8)
+    const children = (node as any).children as Omit<CenterItem, 'id'>[] | undefined
+    return {
+      ...(node as any),
+      id,
+      children: Array.isArray(children) ? children.map(assignIdsRecursively) : children,
+    }
+  }
 
   // 处理从左侧拖入新组件
   const handleNewComponentDrop = (newItem: Omit<CenterItem, 'id'>, overId: string | number) => {
@@ -128,7 +154,7 @@ const Form: React.FC = () => {
     // 投放到某个容器（布局组件）内部：container-<parentId>
     if (overKey.startsWith('container-')) {
       const parentId = overKey.replace('container-', '')
-      const itemWithId = { ...newItem, id: `new-${Date.now()}` }
+      const itemWithId = assignIdsRecursively(newItem)
 
       const addChildToTree = (items: CenterItem[]): CenterItem[] => {
         return items.map((it) => {
@@ -153,7 +179,7 @@ const Form: React.FC = () => {
     if (targetIndex !== -1) {
       // 插入到指定位置（顶层）
       const newItems = [...centerItems]
-      const itemWithId = { ...newItem, id: `new-${Date.now()}` }
+      const itemWithId = assignIdsRecursively(newItem)
       newItems.splice(targetIndex, 0, itemWithId)
       setCenterItems(newItems)
     } else if (overId === 'center-drop-area') {

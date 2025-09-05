@@ -119,141 +119,93 @@
       background: #e9ecef;
       border-color: #adb5bd;
       box-shadow: 0 0 0 1px rgb(173 181 189 / 20%);
-
     }
 
     .componentWrap {
       width: 100%;
 
-      // 布局子容器可投放区
+      // 投放、卡片布局相关的css
       .layout-children {
         min-height: 24px;
         padding: 6px;
         border: 1px dashed #e5e7eb;
         border-radius: 4px;
+
+        &.drag-over {
+          background: rgb(24 144 255 / 6%);
+          border-color: #1890ff;
+        }
       }
 
-      .layout-children.drag-over {
+      // 投放在 Row/Col 上的高亮
+      :where(.ant-row, .ant-col).drag-over {
         background: rgb(24 144 255 / 6%);
         border-color: #1890ff;
       }
 
-      // 直接投放在 Row/Col 上的高亮
-      :where(.ant-row, .ant-col).drag-over {
-        background: rgb(24 144 255 / 6%);
-        outline: 1px dashed #1890ff;
-        outline-offset: 2px;
-      }
-
-      // 行/列默认虚线外观（不影响内容布局）
-      .layout-row,
-      .layout-col {
+      .layout-row, .layout-col {
         position: relative;
-        padding: 12px;
-        transition: background-color .15s ease, outline-color .15s ease, box-shadow .15s ease;
-      }
+        padding: 16px;
+        border: 1px dashed #e2e8f0;
+        border-radius: 4px;
 
-      // 画布中取消 antd Row 的负边距，避免视觉越界
-      .layout-row {
-        margin-right: 0 !important;
-        margin-left: 0 !important;
-        gap: 12px;
-        justify-content: space-between;
-      }
-
-      .layout-col {
-        .col-inner {
-          display: flex;
-          flex-direction: column;
-          gap: 12px;
+        // 顶角标签（行/列）
+        &::after {
+          position: absolute;
+          top: -10px;
+          left: 8px;
+          padding: 0 6px;
+          font-size: 12px;
+          color: #64748b;
+          background: #f8fafc;
+          border: 1px solid #e2e8f0;
+          border-radius: 6px;
+          content: attr(data-layout-label) ' ' attr(data-meta);
         }
       }
 
-      .layout-row::before,
-      .layout-col::before {
-        position: absolute;
-        pointer-events: none;
-        border: 1px dashed #e2e8f0;
-        border-radius: 4px;
-        content: '';
-        inset: 0;
+      // 鼠标悬停效果（不影响布局，仅视觉）
+      .layout-col:hover {
+        cursor: pointer;
+        background: #f9fbfd;
+        border-color: #94a3b8;
+        box-shadow: 0 0 0 1px rgb(148 163 184 / 20%) inset;
       }
 
-      // 选中态高亮
-      .layout-row.is-selected::before,
-      .layout-col.is-selected::before,
-      .nested-clickable.selected {
+      // Row 仅在没有 hover 到内部 Col 时才高亮
+      .layout-row:hover:not(:has(.layout-col:hover)) {
+        cursor: pointer;
+        background: #f9fbfd;
+        border-color: #94a3b8;
+        box-shadow: 0 0 0 1px rgb(148 163 184 / 20%) inset;
+      }
+
+      // 拖拽经过高亮（与 JS 中的 drag-over 类配合）
+      .layout-row.drag-over,
+      .layout-col.drag-over {
+        background: rgb(24 144 255 / 6%);
         border-color: #1890ff;
         box-shadow: 0 0 0 1px rgb(24 144 255 / 20%) inset;
       }
 
-      .nested-clickable {
-        position: relative;
+      // 选中态：布局组件（Row/Col）
+      .layout-row.is-selected,
+      .layout-col.is-selected {
+        background: #f0f7ff;
+        border-color: #1890ff;
+        box-shadow: 0 0 0 2px rgb(24 144 255 / 15%) inset;
       }
 
-      // 空态更明显的提示
-      .layout-row.is-empty::before,
-      .layout-col.is-empty::before {
-        border-color: #cbd5e1;
-      }
-
-      // 空态：仅在没有子元素时提升命中范围，并居中提示
-      .layout-row.is-empty,
-      .layout-col.is-empty {
-        display: flex;
-        min-height: 72px;
-        align-items: center;
-        justify-content: center;
-      }
-
-      .layout-row.is-empty > .center-placeholder,
-      .layout-col.is-empty > .center-placeholder {
-        font-size: 13px;
-        color: #94a3b8;
-      }
-
-      // Hover 高亮（非拖拽态）
-      .layout-row:hover::before,
-      .layout-col:hover::before {
-        border-color: #94a3b8;
-      }
-
-      // 顶角标签（行/列）
-      .layout-row::after,
-      .layout-col::after {
-        position: absolute;
-        top: -10px;
-        left: 8px;
-        padding: 0 6px;
-        font-size: 12px;
-        color: #64748b;
-        background: #f8fafc;
-        border: 1px solid #e2e8f0;
-        border-radius: 6px;
-        content: attr(data-layout-label) ' ' attr(data-meta);
-      }
-
-      // Col 内部轻量轮廓，不改变整体高度
-      .layout-col > .col-inner {
-        padding: 6px 8px;
-        border: 1px dashed #edf2f7;
+      // 选中态：普通组件（非布局）
+      .nested-clickable.selected {
+        background: #f0f7ff;
         border-radius: 4px;
+        outline: 1px dashed #1890ff;
+        outline-offset: 2px;
       }
-    
-      .componentItem {
-        display: flex;
-        align-items: center;
-        gap: 12px;
 
-        .itemTitle {
-          width: 100px;
-          color: #333;
-          text-align: right;
-        }
-        
-        .itemContent {
-          flex: 1;
-        }
+      .nested-item {
+        margin-bottom: 8px;
       }
     }
 

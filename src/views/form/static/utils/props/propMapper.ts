@@ -49,6 +49,18 @@ const mapByType = (type: ComponentType, props: Record<string, any>): Record<stri
 
   // 组件特定映射
   switch (type) {
+    case 'row': {
+      // Antd Row: gutter/justify/align 映射到 el-row
+      // gutter: number -> :gutter
+      // justify: 'start'|'center'|'end'|'space-between'|'space-around'|'space-evenly' -> 同名
+      // align: 'top'|'middle'|'bottom' -> 'top'|'middle'|'bottom'
+      break
+    }
+    case 'col': {
+      // Antd Col: span/offset/push/pull/order 映射到 el-col
+      // 无 span 时不输出，让渲染端默认 24；生成端若无 span 则默认 24 保证一致
+      break
+    }
     case 'select': {
       // Antd: showSearch -> Element Plus: filterable
       if ('showSearch' in result) {

@@ -359,6 +359,11 @@ const NestedItem: React.FC<{ item: CenterItem; formConfig: FormConfig }> = ({ it
 
   const Component: any = config.component as any
   const mergedProps = { ...(config.props || {}), ...(item.props || {}) }
+  // Col 未设置 span 时，默认按 24 占满一行，实现“无参数纵向排列”
+  const appliedProps: any = { ...mergedProps }
+  if (item.type === 'col' && (appliedProps.span === undefined || appliedProps.span === null)) {
+    appliedProps.span = 24
+  }
 
   const childNodes = (item.children || []).map((child) => (
     <NestedItem key={child.id} item={child} formConfig={formConfig} />
@@ -377,18 +382,22 @@ const NestedItem: React.FC<{ item: CenterItem; formConfig: FormConfig }> = ({ it
     ].filter(Boolean).join(' ')
 
     const meta = item.type === 'row'
-      ? (typeof (mergedProps as any).gutter === 'number' ? `(gutter:${(mergedProps as any).gutter})` : '')
-      : (typeof (mergedProps as any).span === 'number' ? `(span:${(mergedProps as any).span})` : '')
+      ? (typeof (appliedProps as any).gutter === 'number' ? `(gutter:${(appliedProps as any).gutter})` : '')
+      : (typeof (appliedProps as any).span === 'number' ? `(span:${(appliedProps as any).span})` : '')
+
+    const layoutStyle = item.type === 'row'
+      ? { width: '100%', ...(mergedProps as any).style || {} }
+      : (mergedProps as any).style || {}
 
     return (
       <Component
-        {...mergedProps}
+        {...appliedProps}
         ref={setContainerRef}
         className={combinedClassName}
         data-layout-label={item.type === 'row' ? '行' : '列'}
         data-meta={meta}
         onClick={(e: React.MouseEvent) => { e.stopPropagation(); setSelectedItemId(item.id) }}
-        style={{ width: '100%', ...(mergedProps as any).style || {} }}
+        style={layoutStyle}
       >
         {childNodes.length
           ? (item.type === 'col' ? <div className="col-inner">{childNodes}</div> : childNodes)
