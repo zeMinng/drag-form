@@ -5,6 +5,7 @@ import { getComponentConfig } from '@/views/form/static'
 import type { PropConfig } from '@/views/form/static/type/component'
 import './index.scss'
 import PropEditor from './components/PropEditor'
+import ValidationEditor from './components/ValidationEditor'
 
 const { Option } = Select
 
@@ -30,6 +31,11 @@ const ComponentConfig: React.FC = () => {
   const handleVmodelChange = useCallback((vmodel: string) => {
     if (!selectedItem) return
     updateCenterItem(selectedItem.id, { vmodel })
+  }, [selectedItem, updateCenterItem])
+
+  const handleValidationChange = useCallback((validation: any) => {
+    if (!selectedItem) return
+    updateCenterItem(selectedItem.id, { validation })
   }, [selectedItem, updateCenterItem])
 
   if (!selectedItem) {
@@ -105,6 +111,17 @@ const ComponentConfig: React.FC = () => {
               )
             })}
           </Form>
+        </div>
+      )}
+
+      {/* 校验规则配置 - 只有非布局型组件才显示 */}
+      {!isLayoutComponent && (
+        <div className="config-section">
+          <Divider size="small" dashed plain variant="dashed" style={{ borderColor: '#e9ecf0' }}>校验规则</Divider>
+          <ValidationEditor
+            value={selectedItem.validation}
+            onChange={handleValidationChange}
+          />
         </div>
       )}
     </div>
