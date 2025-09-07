@@ -1,4 +1,4 @@
-import type { FormComponent } from '@/views/form/static/type/component'
+import type { FormComponent, ValidationConfig } from '@/views/form/static/type/component'
 
 export interface CenterItem extends FormComponent {
   id: string
@@ -8,6 +8,7 @@ export interface CenterItem extends FormComponent {
   icon?: string
   vmodel?: string // v-model字段名
   props?: Record<string, any> // 组件属性
+  validation?: ValidationConfig // 校验规则
   children?: CenterItem[] // 子组件（用于布局型组件的嵌套）
 }
 

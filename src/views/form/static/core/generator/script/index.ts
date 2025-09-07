@@ -85,7 +85,63 @@ const onReset = () => {
       const defaultValue = getDefaultValueByType(item.type)
       formFields.push(`  ${vmodel}: ${defaultValue},`)
 
-      if (item.props?.required) {
+      // 处理校验规则
+      if (item.validation?.rules && item.validation.rules.length > 0) {
+        const rules = item.validation.rules.map(rule => {
+          let ruleStr = ''
+          switch (rule.type) {
+            case 'required':
+              ruleStr = `{ required: true, message: '${rule.message}', trigger: '${rule.trigger || 'blur'}' }`
+              break
+            case 'minLength':
+              ruleStr = `{ required: true, min: ${rule.value}, message: '${rule.message.replace('{value}', rule.value)}', trigger: '${rule.trigger || 'blur'}' }`
+              break
+            case 'maxLength':
+              ruleStr = `{ required: true, max: ${rule.value}, message: '${rule.message.replace('{value}', rule.value)}', trigger: '${rule.trigger || 'blur'}' }`
+              break
+            case 'min':
+              // 对于数值类型组件，使用 min 属性
+              if (item.type === 'input-number' || item.type === 'slider') {
+                ruleStr = `{ required: true, min: ${rule.value}, message: '${rule.message.replace('{value}', rule.value)}', trigger: '${rule.trigger || 'blur'}' }`
+              } else {
+                // 对于字符串类型组件，转换为 minLength
+                ruleStr = `{ required: true, min: ${rule.value}, message: '${rule.message.replace('{value}', rule.value)}', trigger: '${rule.trigger || 'blur'}' }`
+              }
+              break
+            case 'max':
+              // 对于数值类型组件，使用 max 属性
+              if (item.type === 'input-number' || item.type === 'slider') {
+                ruleStr = `{ required: true, max: ${rule.value}, message: '${rule.message.replace('{value}', rule.value)}', trigger: '${rule.trigger || 'blur'}' }`
+              } else {
+                // 对于字符串类型组件，转换为 maxLength
+                ruleStr = `{ required: true, max: ${rule.value}, message: '${rule.message.replace('{value}', rule.value)}', trigger: '${rule.trigger || 'blur'}' }`
+              }
+              break
+            case 'email':
+              ruleStr = `{ required: true, type: 'email', message: '${rule.message}', trigger: '${rule.trigger || 'blur'}' }`
+              break
+            case 'phone':
+              ruleStr = `{ required: true, pattern: /^1[3-9]\\d{9}$/, message: '${rule.message}', trigger: '${rule.trigger || 'blur'}' }`
+              break
+            case 'pattern':
+              ruleStr = `{ required: true, pattern: ${rule.value}, message: '${rule.message}', trigger: '${rule.trigger || 'blur'}' }`
+              break
+            case 'custom':
+              ruleStr = `{ required: true, validator: (rule, value, callback) => { /* 自定义校验逻辑 */ callback() }, trigger: '${rule.trigger || 'blur'}' }`
+              break
+            default:
+              ruleStr = `{ required: true, message: '${rule.message}', trigger: '${rule.trigger || 'blur'}' }`
+          }
+          return ruleStr
+        }).join(',\n    ')
+        
+        if (rules.trim()) {
+          formRules.push(`  ${vmodel}: [
+    ${rules}
+  ]`)
+        }
+      } else if (item.props?.required) {
+        // 兼容旧的 required 属性
         formRules.push(`  ${vmodel}: [
     { required: true, message: '请输入${item.title || vmodel}', trigger: 'blur' }
   ]`)

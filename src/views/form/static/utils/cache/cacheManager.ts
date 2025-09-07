@@ -50,6 +50,7 @@ export class CodeCacheManager {
       title: item.title,
       vmodel: item.vmodel,
       props: item.props,
+      validation: item.validation, // 包含校验规则，确保校验规则变化会刷新缓存
       // 递归包含 children，确保布局嵌套变化会刷新缓存
       children: Array.isArray(item?.children) ? item.children.map((child: any) => compactItem(child)) : undefined,
     })

@@ -6,6 +6,19 @@ export type ComponentCategory = 'input' | 'select' | 'layout' | 'advanced'
 // 支持的属性值类型
 export type PropValueType = string | number | boolean | string[] | number[] | Record<string, any> | undefined
 
+// 校验规则类型
+export interface ValidationRule {
+  type: 'required' | 'min' | 'max' | 'minLength' | 'maxLength' | 'pattern' | 'email' | 'phone' | 'custom'
+  message: string
+  value?: any // 校验值，如最小长度、正则表达式等
+  trigger?: 'blur' | 'change' | 'submit'
+}
+
+// 校验规则配置
+export interface ValidationConfig {
+  rules: ValidationRule[]
+}
+
 // 组件元信息
 export interface ComponentMeta {
   readonly key: string
@@ -52,6 +65,7 @@ export interface FormComponent {
   description?: string
   icon?: string
   props?: Record<string, PropValueType>
+  validation?: ValidationConfig
 }
 
 // 组件注册器接口
