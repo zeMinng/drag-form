@@ -14,6 +14,7 @@ import { useFormStore, type CenterItem, type FormConfig } from '@/store/modules/
 import { generateVueComponent } from '@/views/form/static'
 import { renderComponentByType } from '@/views/form/static/core/renderer/componentUtils'
 import { getComponentConfig } from '@/views/form/static/core/registry/componentRegistry'
+import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts'
 import './index.scss'
 
 const clearTheCanvas = () => {
@@ -340,15 +341,27 @@ const isLayoutType = (type: string) => {
 const NestedItem: React.FC<{ item: CenterItem; formConfig: FormConfig }> = ({ item, formConfig }) => {
   // Hooks 必须无条件调用，避免早返回前后顺序改变
   const { setNodeRef: setContainerRef, isOver: isContainerOver } = useDroppable({ id: `container-${item.id}` })
-  const { selectedItemId, setSelectedItemId } = useFormStore()
+  const { selectedItemId, setSelectedItemId, removeCenterItem } = useFormStore()
   const isSelected = selectedItemId === item.id
+  const handleDelete = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation()
+    removeCenterItem(item.id)
+  }, [item.id, removeCenterItem])
 
   if (!isLayoutType(item.type)) {
     return (
       <div
         className={`nested-item nested-clickable${isSelected ? ' selected' : ''}`}
         onClick={(e) => { e.stopPropagation(); setSelectedItemId(item.id) }}
+        style={{ position: 'relative' }}
       >
+        <div 
+          className="delete-btn"
+          onClick={handleDelete}
+          style={{ display: isSelected ? 'flex' : 'none' }}
+        >
+          <IconFont type="icon-shanchu" />
+        </div>
         {renderComponentByType(item, formConfig)}
       </div>
     )
@@ -399,6 +412,13 @@ const NestedItem: React.FC<{ item: CenterItem; formConfig: FormConfig }> = ({ it
         onClick={(e: React.MouseEvent) => { e.stopPropagation(); setSelectedItemId(item.id) }}
         style={layoutStyle}
       >
+        <div 
+          className="delete-btn"
+          onClick={handleDelete}
+          style={{ display: isSelected ? 'flex' : 'none' }}
+        >
+          <IconFont type="icon-shanchu" />
+        </div>
         {childNodes.length
           ? (item.type === 'col' ? <div className="col-inner">{childNodes}</div> : childNodes)
           : <div className="center-placeholder">拖到这里</div>}
@@ -412,9 +432,16 @@ const NestedItem: React.FC<{ item: CenterItem; formConfig: FormConfig }> = ({ it
       <div
         ref={setContainerRef}
         className={`layout-children${isContainerOver ? ' drag-over' : ''}`}
-        style={{ minHeight: 24 }}
+        style={{ minHeight: 24, position: 'relative' }}
         onClick={(e) => { e.stopPropagation(); setSelectedItemId(item.id) }}
       >
+        <div 
+          className="delete-btn"
+          onClick={handleDelete}
+          style={{ display: isSelected ? 'flex' : 'none' }}
+        >
+          <IconFont type="icon-shanchu" />
+        </div>
         {childNodes.length ? childNodes : <div className="center-placeholder">拖到这里</div>}
       </div>
     </Component>
@@ -481,12 +508,57 @@ interface CenterProps {
 }
 
 const Center: React.FC<CenterProps> = ({ insertIndex, isDraggingOver = false }) => {
-  const { centerItems, formConfig } = useFormStore()
+  const { centerItems, formConfig, updateItems, removeCenterItem, getSelectedItem, setSelectedItemId } = useFormStore()
   const { setNodeRef, isOver } = useDroppable({ id: 'center-drop-area' })
+
+  /** 键盘快捷键处理 */
+  // 在树中将 newNode 插入到 targetId 的后面（作为同级）
+  const insertSiblingAfter = useCallback((items: CenterItem[], targetId: string, newNode: CenterItem): CenterItem[] => {
+    const rootIndex = items.findIndex((it) => it.id === targetId)
+    if (rootIndex !== -1) {
+      const newItems = [...items]
+      newItems.splice(rootIndex + 1, 0, newNode)
+      return newItems
+    }
+
+    return items.map((node) => {
+      if (Array.isArray(node.children) && node.children.length) {
+        const idx = node.children.findIndex((c) => c.id === targetId)
+        if (idx !== -1) {
+          const newChildren = [...node.children]
+          newChildren.splice(idx + 1, 0, newNode)
+          return { ...node, children: newChildren }
+        }
+        return { ...node, children: insertSiblingAfter(node.children as any, targetId, newNode) }
+      }
+      return node
+    })
+  }, [])
+  // 键盘快捷键处理
+  useKeyboardShortcuts({
+    onDelete: (item) => {
+      removeCenterItem(item.id)
+    },
+    onCopy: () => {
+      // 复制逻辑已在 hook 内部处理
+    },
+    onPaste: (clonedItem, targetItem) => {
+      if (!clonedItem) return
+      
+      if (targetItem) {
+        const newItems = insertSiblingAfter(centerItems, targetItem.id, clonedItem)
+        updateItems(newItems)
+      } else {
+        updateItems([...centerItems, clonedItem])
+      }
+      setSelectedItemId(clonedItem.id)
+    },
+    getSelectedItem
+  })
 
   // 点击空白区域取消选中
   const handleContainerClick = useCallback(() => {
-    // setSelectedItemId(null)
+    setSelectedItemId(null)
   }, [])
 
   return (

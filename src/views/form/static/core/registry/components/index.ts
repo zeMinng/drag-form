@@ -397,11 +397,13 @@ export const defaultConfigs: Record<string, ComponentConfig> = {
     vmodel: 'row',
     propsConfig: {
       gutter: {
-        type: 'number',
+        type: 'slider-input',
         label: '栅格间隔',
         defaultValue: 0,
         min: 0,
-        max: 50
+        max: 50,
+        step: 1,
+        marks: true
       },
       justify: {
         type: 'select',
@@ -439,39 +441,50 @@ export const defaultConfigs: Record<string, ComponentConfig> = {
     vmodel: 'col',
     propsConfig: {
       span: {
-        type: 'number',
+        type: 'slider-input',
         label: '栅格占位格数',
-        defaultValue: undefined,
+        defaultValue: 24,
         min: 1,
-        max: 24
+        max: 24,
+        step: 1,
+        marks: true
+      },
+      responsive: {
+        type: 'responsive-span',
+        label: '响应式栅格',
+        defaultValue: {}
       },
       offset: {
-        type: 'number',
+        type: 'slider-input',
         label: '栅格左侧的间隔格数',
         defaultValue: 0,
         min: 0,
-        max: 23
+        max: 23,
+        step: 1
       },
       push: {
-        type: 'number',
+        type: 'slider-input',
         label: '栅格向右移动格数',
         defaultValue: 0,
         min: 0,
-        max: 23
+        max: 23,
+        step: 1
       },
       pull: {
-        type: 'number',
+        type: 'slider-input',
         label: '栅格向左移动格数',
         defaultValue: 0,
         min: 0,
-        max: 23
+        max: 23,
+        step: 1
       },
       order: {
-        type: 'number',
+        type: 'slider-input',
         label: '栅格顺序',
         defaultValue: 0,
         min: 0,
-        max: 100
+        max: 100,
+        step: 1
       }
     }
   },

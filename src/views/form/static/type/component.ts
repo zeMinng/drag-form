@@ -4,7 +4,7 @@ import React from 'react'
 export type ComponentCategory = 'input' | 'select' | 'layout' | 'advanced'
 
 // 支持的属性值类型
-export type PropValueType = string | number | boolean | string[] | number[] | undefined
+export type PropValueType = string | number | boolean | string[] | number[] | Record<string, any> | undefined
 
 // 组件元信息
 export interface ComponentMeta {
@@ -17,7 +17,7 @@ export interface ComponentMeta {
 
 // 属性配置类型
 export interface PropConfig {
-  type: 'string' | 'number' | 'boolean' | 'select' | 'textarea' | 'slider' | 'radio' | 'checkbox' | 'color'
+  type: 'string' | 'number' | 'boolean' | 'select' | 'textarea' | 'slider' | 'radio' | 'checkbox' | 'color' | 'slider-input' | 'responsive-span'
   label: string
   defaultValue?: PropValueType
   placeholder?: string
