@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react'
-import { Input, InputNumber, Select, Switch, Slider, Radio, Checkbox, ColorPicker } from 'antd'
+import { Input, InputNumber, Select, Switch, Slider, Radio, Checkbox, ColorPicker, Row, Col } from 'antd'
 import type { PropConfig } from '@/views/form/static/type/component'
 
 const { TextArea } = Input
@@ -122,6 +122,56 @@ const PropEditor: React.FC<PropEditorProps> = React.memo(({ propName, propConfig
           onChange={(color) => handleChange(color?.toHexString())}
           showText
         />
+      )
+
+    case 'slider-input':
+      return (
+        <div>
+          <Slider
+            value={value}
+            onChange={handleChange}
+            min={propConfig.min || 0}
+            max={propConfig.max || 100}
+            step={propConfig.step || 1}
+            marks={propConfig.marks ? { 
+              [propConfig.min || 0]: propConfig.min, 
+              [propConfig.max || 100]: propConfig.max 
+            } : undefined}
+            style={{ marginBottom: 8 }}
+          />
+          {/* <InputNumber
+            value={value}
+            onChange={handleChange}
+            min={propConfig.min || 0}
+            max={propConfig.max || 100}
+            step={propConfig.step || 1}
+            style={{ width: '100%' }}
+          /> */}
+        </div>
+      )
+
+    case 'responsive-span':
+      return (
+        <div>
+          <Row gutter={[8, 8]}>
+            {['xs', 'sm', 'md', 'lg', 'xl', 'xxl'].map(breakpoint => (
+              <Col span={8} key={breakpoint}>
+                <div style={{ fontSize: 12, marginBottom: 4 }}>{breakpoint.toUpperCase()}</div>
+                <InputNumber
+                  value={value?.[breakpoint]}
+                  onChange={(val) => {
+                    const newValue = { ...value, [breakpoint]: val }
+                    handleChange(newValue)
+                  }}
+                  min={1}
+                  max={24}
+                  placeholder="span"
+                  style={{ width: '100%' }}
+                />
+              </Col>
+            ))}
+          </Row>
+        </div>
       )
 
     default:

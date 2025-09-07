@@ -41,6 +41,19 @@ export const formatProp = (key: string, value: any): string => {
   if (typeof value === 'number') {
     return `:${key}="${value}"`
   }
+  if (typeof value === 'object' && value !== null) {
+    // 处理对象类型属性，如 responsive
+    if (key === 'responsive') {
+      // 将响应式对象转换为 Vue 模板格式
+      const responsiveProps = Object.entries(value)
+        .filter(([_, val]) => val !== undefined && val !== null && val !== '')
+        .map(([breakpoint, val]) => `:${breakpoint}="${val}"`)
+        .join(' ')
+      return responsiveProps
+    }
+    // 其他对象类型使用 JSON 格式
+    return `:${key}='${JSON.stringify(value)}'`
+  }
   return `${key}="${value}"`
 }
 

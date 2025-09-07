@@ -43,8 +43,14 @@ const mapByType = (type: ComponentType, props: Record<string, any>): Record<stri
       return
     }
 
-    // 默认直接透传（后续再统一转 kebab）
-    result[key] = value
+    // 处理对象类型属性（如 responsive）
+    if (typeof value === 'object' && !Array.isArray(value)) {
+      // 将对象转换为 Vue 模板中可用的格式
+      result[key] = value
+    } else {
+      // 默认直接透传（后续再统一转 kebab）
+      result[key] = value
+    }
   })
 
   // 组件特定映射
