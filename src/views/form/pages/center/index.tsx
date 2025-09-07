@@ -340,15 +340,27 @@ const isLayoutType = (type: string) => {
 const NestedItem: React.FC<{ item: CenterItem; formConfig: FormConfig }> = ({ item, formConfig }) => {
   // Hooks 必须无条件调用，避免早返回前后顺序改变
   const { setNodeRef: setContainerRef, isOver: isContainerOver } = useDroppable({ id: `container-${item.id}` })
-  const { selectedItemId, setSelectedItemId } = useFormStore()
+  const { selectedItemId, setSelectedItemId, removeCenterItem } = useFormStore()
   const isSelected = selectedItemId === item.id
+  const handleDelete = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation()
+    removeCenterItem(item.id)
+  }, [item.id, removeCenterItem])
 
   if (!isLayoutType(item.type)) {
     return (
       <div
         className={`nested-item nested-clickable${isSelected ? ' selected' : ''}`}
         onClick={(e) => { e.stopPropagation(); setSelectedItemId(item.id) }}
+        style={{ position: 'relative' }}
       >
+        <div 
+          className="delete-btn"
+          onClick={handleDelete}
+          style={{ display: isSelected ? 'flex' : 'none' }}
+        >
+          <IconFont type="icon-shanchu" />
+        </div>
         {renderComponentByType(item, formConfig)}
       </div>
     )
@@ -399,6 +411,13 @@ const NestedItem: React.FC<{ item: CenterItem; formConfig: FormConfig }> = ({ it
         onClick={(e: React.MouseEvent) => { e.stopPropagation(); setSelectedItemId(item.id) }}
         style={layoutStyle}
       >
+        <div 
+          className="delete-btn"
+          onClick={handleDelete}
+          style={{ display: isSelected ? 'flex' : 'none' }}
+        >
+          <IconFont type="icon-shanchu" />
+        </div>
         {childNodes.length
           ? (item.type === 'col' ? <div className="col-inner">{childNodes}</div> : childNodes)
           : <div className="center-placeholder">拖到这里</div>}
@@ -412,9 +431,16 @@ const NestedItem: React.FC<{ item: CenterItem; formConfig: FormConfig }> = ({ it
       <div
         ref={setContainerRef}
         className={`layout-children${isContainerOver ? ' drag-over' : ''}`}
-        style={{ minHeight: 24 }}
+        style={{ minHeight: 24, position: 'relative' }}
         onClick={(e) => { e.stopPropagation(); setSelectedItemId(item.id) }}
       >
+        <div 
+          className="delete-btn"
+          onClick={handleDelete}
+          style={{ display: isSelected ? 'flex' : 'none' }}
+        >
+          <IconFont type="icon-shanchu" />
+        </div>
         {childNodes.length ? childNodes : <div className="center-placeholder">拖到这里</div>}
       </div>
     </Component>
