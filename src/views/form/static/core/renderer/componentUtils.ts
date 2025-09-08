@@ -37,6 +37,15 @@ export const renderLayoutComponent = (item: FormComponent, children?: React.Reac
   return React.createElement(Component, mergedProps, children || config.children)
 } 
 
+// 检查是否有必填校验规则
+const hasRequiredRule = (validation?: { rules: any[] }) => {
+  if (!validation || !validation.rules || validation.rules.length === 0) {
+    return false
+  }
+  
+  return validation.rules.some(rule => rule.type === 'required')
+}
+
 // 统一的渲染方法：根据中心区的 item 和表单配置渲染（带 Form.Item 包裹、禁用态、选项转换等）
 export const renderComponentByType = (item: CenterItem, formConfig: FormConfig) => {
   const config = getComponentConfig(item.type)
@@ -86,9 +95,12 @@ export const renderComponentByType = (item: CenterItem, formConfig: FormConfig) 
       options: optionsArray
     }
 
+    // 检查是否有必填规则，用于显示红色星号
+    const isRequired = hasRequiredRule(item.validation)
+
     return React.createElement(
       Form.Item,
-      { label: item.title, name: fieldName },
+      { label: item.title, name: fieldName, required: isRequired },
       React.createElement(Component as any, componentProps, ...children)
     )
   }
@@ -102,10 +114,12 @@ export const renderComponentByType = (item: CenterItem, formConfig: FormConfig) 
     )
   }
 
+  // 检查是否有必填规则，用于显示红色星号
+  const isRequired = hasRequiredRule(item.validation)
   // 普通表单组件显示标签
   return React.createElement(
     Form.Item,
-    { label: item.title, name: fieldName },
+    { label: item.title, name: fieldName, required: isRequired },
     React.createElement(Component as any, filterIncompatibleProps(mergedProps), config.children)
   )
 }
