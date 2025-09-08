@@ -399,9 +399,10 @@ const NestedItem: React.FC<{ item: CenterItem; formConfig: FormConfig }> = ({ it
       : (typeof (appliedProps as any).span === 'number' ? `(span:${(appliedProps as any).span})` : '')
 
     const layoutStyle = item.type === 'row'
-      ? { width: '100%', ...(mergedProps as any).style || {} }
-      : (mergedProps as any).style || {}
-
+    ? { width: '100%', ...(mergedProps as any).style || {} }
+    : (mergedProps as any).style || {}
+    
+    const isDisplay = item.type === 'row' && item?.children?.length
     return (
       <Component
         {...appliedProps}
@@ -415,7 +416,7 @@ const NestedItem: React.FC<{ item: CenterItem; formConfig: FormConfig }> = ({ it
         <div 
           className="delete-btn"
           onClick={handleDelete}
-          style={{ display: isSelected ? 'flex' : 'none' }}
+          style={{ display: isSelected && !isDisplay ? 'flex' : 'none' }}
         >
           <IconFont type="icon-shanchu" />
         </div>
