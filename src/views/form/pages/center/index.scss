@@ -7,8 +7,8 @@
     display: flex;
     height: 50px;
     padding: 0 16px;
-    background-color: #fff;
-    border-bottom: 1px solid #e9ecf0;
+    background-color: var(--bg-primary);
+    border-bottom: 1px solid var(--border-primary);
     align-items: center;
     justify-content: flex-end;
   }
@@ -21,7 +21,7 @@
     margin: 8px;
     overflow: hidden;
     overflow-y: auto;
-    background: #fff;
+    background: var(--bg-primary);
     border-radius: 8px;
   
     .center-placeholder {

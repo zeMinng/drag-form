@@ -1,0 +1,75 @@
+/* CSS 变量定义 - 基于 theme.scss 中的 SCSS 变量 */
+
+@use './theme' as *;
+
+:root {
+  // ==================== 主色调 ====================
+  --primary: #{$primary};
+  --primary-light: #{$primary-light};
+
+  // ==================== 功能色 ====================
+  --success: #{$success};
+  --warning: #{$warning};
+  --error: #{$error};
+  --info: #{$info};
+
+  // ==================== 文字颜色 ====================
+  --text-black: #{$text-black};
+  --text-primary: #{$text-primary};
+  --text-secondary: #{$text-secondary};
+  --text-tertiary: #{$text-tertiary};
+  --text-quaternary: #{$text-quaternary};
+  --text-disabled: #{$text-disabled};
+  --text-white: #{$text-white};
+  --text-dark: #{$text-dark};
+  --text-light: #{$text-light};
+  --text-muted: #{$text-muted};
+  --text-border: #{$text-border};
+
+  // ==================== 背景颜色 ====================
+  --bg-primary: #{$bg-primary};
+  --bg-secondary: #{$bg-secondary};
+  --bg-tertiary: #{$bg-tertiary};
+  --bg-quaternary: #{$bg-quaternary};
+  --bg-hover: #{$bg-hover};
+  --bg-active: #{$bg-active};
+  --bg-selected: #{$bg-selected};
+  --bg-light: #{$bg-light};
+  --bg-code: #{$bg-code};
+  --bg-dark: #{$bg-dark};
+  --bg-dark-hover: #{$bg-dark-hover};
+
+  // ==================== 边框颜色 ====================
+  --border-primary: #{$border-primary};
+  --border-secondary: #{$border-secondary};
+  --border-tertiary: #{$border-tertiary};
+  --border-quaternary: #{$border-quaternary};
+  --border-disabled: #{$border-disabled};
+  --border-focus: #{$border-focus};
+  --border-dashed: #{$border-dashed};
+  --border-divider: #{$border-divider};
+
+  // ==================== 交互状态色 ====================
+  --hover-primary: #{$hover-primary};
+  --hover-secondary: #{$hover-secondary};
+  --hover-dark: #{$hover-dark};
+
+  // ==================== 选中状态 ====================
+  --selected-bg: #{$selected-bg};
+  --selected-border: #{$selected-border};
+
+  // ==================== 阴影效果 ====================
+  --shadow-primary: #{$shadow-primary};
+  --shadow-secondary: #{$shadow-secondary};
+  --shadow-glow: #{$shadow-glow};
+  --shadow-code: #{$shadow-code};
+
+  // ==================== 代码相关 ====================
+  --code-bg: #{$code-bg};
+  --code-text: #{$code-text};
+  --code-border: #{$code-border};
+
+  // ==================== 特殊效果 ====================
+  --transparent: #{$transparent};
+  --overlay: #{$overlay};
+}
