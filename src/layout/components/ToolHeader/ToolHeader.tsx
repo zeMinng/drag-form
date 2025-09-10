@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { Popover, Flex, Button, Tooltip } from 'antd'
 import { QuestionCircleOutlined, GithubOutlined, MoonOutlined, SunOutlined } from '@ant-design/icons'
-import { useThemeStore } from '@/store/modules/theme'
+import { useTheme } from '@/hooks/useTheme'
 import MenuWrap from '../Menu/Menu'
 import LOGO_URL from '@/assets/logo_w60.svg'
 import './ToolHeader.scss'
@@ -11,12 +11,7 @@ const APP_NAME = 'DragVueForm'
 
 const ToolHeader: React.FC = () => {
   const navigate = useNavigate()
-  const { theme, setTheme } = useThemeStore()
-  const isDarkMode = theme === 'dark'
-
-  const toggleDarkMode = () => {
-    setTheme(isDarkMode ? 'light' : 'dark')
-  }
+  const { isDark, toggleTheme } = useTheme()
 
   return (
     <div className="tool-header">
@@ -33,13 +28,13 @@ const ToolHeader: React.FC = () => {
       <Flex gap="small" align="center" className="action-buttons">
         <MenuWrap />
 
-        {/* 暗黑模式切换按钮 */}
-        <Tooltip title={isDarkMode ? '切换到亮色模式' : '切换到暗色模式'}>
+        {/* 主题切换按钮 */}
+        <Tooltip title={isDark ? '切换到亮色模式' : '切换到暗色模式'}>
           <Button
             type="text"
-            icon={isDarkMode ? <SunOutlined /> : <MoonOutlined />}
-            onClick={toggleDarkMode}
-            className={`theme-toggle-btn ${isDarkMode ? 'dark-mode' : ''}`}
+            icon={isDark ? <SunOutlined /> : <MoonOutlined />}
+            onClick={toggleTheme}
+            className={`theme-toggle-btn ${isDark ? 'dark-mode' : ''}`}
           />
         </Tooltip>
 

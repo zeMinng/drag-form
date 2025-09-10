@@ -38,6 +38,7 @@
   --bg-code: #{$bg-code};
   --bg-dark: #{$bg-dark};
   --bg-dark-hover: #{$bg-dark-hover};
+  --bg-layout-hover: #{$bg-layout-hover};
 
   // ==================== 边框颜色 ====================
   --border-primary: #{$border-primary};
@@ -48,6 +49,7 @@
   --border-focus: #{$border-focus};
   --border-dashed: #{$border-dashed};
   --border-divider: #{$border-divider};
+  --border-layout-hover: #{$border-layout-hover};
 
   // ==================== 交互状态色 ====================
   --hover-primary: #{$hover-primary};
@@ -111,6 +113,7 @@
   --bg-code: #1e1e1e;                      // 暗黑模式代码背景
   --bg-dark: #000;                      // 暗黑模式深色背景
   --bg-dark-hover: #0f0f0f;                // 暗黑模式深色悬停背景
+  --bg-layout-hover: #2a2a2a;              // 暗黑模式布局悬停背景
 
   // ==================== 边框颜色 ====================
   --border-primary: #434343;               // 暗黑模式主边框色
@@ -121,6 +124,7 @@
   --border-focus: #1890ff;                 // 暗黑模式聚焦边框
   --border-dashed: #303030;                // 暗黑模式虚线边框
   --border-divider: #303030;               // 暗黑模式分割线
+  --border-layout-hover: #434343;          // 暗黑模式布局悬停边框
 
   // ==================== 交互状态色 ====================
   --hover-primary: #111b26;                // 暗黑模式主色悬停背景
