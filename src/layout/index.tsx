@@ -1,5 +1,5 @@
 import { Outlet } from 'react-router-dom'
-import ToolHeader from './components/ToolHeader'
+import ToolHeader from './components/ToolHeader/ToolHeader'
 import { Flex, Layout, Modal, Typography  } from 'antd'
 const { Header, Content } = Layout
 const { Paragraph } = Typography

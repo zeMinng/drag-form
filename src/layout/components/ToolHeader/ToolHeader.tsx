@@ -1,0 +1,82 @@
+import { useNavigate } from 'react-router-dom'
+import { useState } from 'react'
+import { Popover, Flex, Button, Tooltip } from 'antd'
+import { QuestionCircleOutlined, GithubOutlined, MoonOutlined, SunOutlined } from '@ant-design/icons'
+import MenuWrap from '../Menu/Menu'
+import LOGO_URL from '@/assets/logo_w60.svg'
+import './ToolHeader.scss'
+
+const GITHUB_URL = 'https://github.com/zeMinng/drag-vue-form'
+const APP_NAME = 'DragVueForm'
+
+const ToolHeader: React.FC = () => {
+  const navigate = useNavigate()
+  const [isDarkMode, setIsDarkMode] = useState(false)
+
+  const toggleDarkMode = () => {
+    setIsDarkMode(!isDarkMode)
+    // TODO: 这里后续会添加实际的暗黑模式切换逻辑
+  }
+
+  return (
+    <div className="tool-header">
+      <div className="logo-section" onClick={() => navigate('/', { replace: true })}>
+        <img
+          src={LOGO_URL}
+          alt='logo'
+          className="logo-image"
+        />
+        <span className="app-name">{APP_NAME}</span>
+      </div>
+
+      {/* 右侧功能区 */}
+      <Flex gap="small" align="center" className="action-buttons">
+        <MenuWrap />
+
+        {/* 暗黑模式切换按钮 */}
+        <Tooltip title={isDarkMode ? '切换到亮色模式' : '切换到暗色模式'}>
+          <Button
+            type="text"
+            icon={isDarkMode ? <SunOutlined /> : <MoonOutlined />}
+            onClick={toggleDarkMode}
+            className={`theme-toggle-btn ${isDarkMode ? 'dark-mode' : ''}`}
+          />
+        </Tooltip>
+
+        {/* 帮助按钮 */}
+        <Tooltip title="帮助信息">
+          <Popover
+            trigger='click'
+            placement='bottomRight'
+            content={
+              <div className="help-popover">
+                <p className="help-title">表单可视化编辑器</p>
+                <p className="help-description">
+                  生成 Vue 3.x + Element Plus 代码，支持拖拽、配置、预览等功能。
+                </p>
+              </div>
+            }
+          >
+            <Button
+              type="text"
+              icon={<QuestionCircleOutlined />}
+              className="help-btn"
+            />
+          </Popover>
+        </Tooltip>
+
+        {/* GitHub 按钮 */}
+        <Tooltip title="查看 GitHub 仓库">
+          <Button
+            type="text"
+            icon={<GithubOutlined />}
+            onClick={() => window.open(GITHUB_URL, '_blank', 'noopener,noreferrer')}
+            className="github-btn"
+          />
+        </Tooltip>
+      </Flex>
+    </div>
+  )
+}
+
+export default ToolHeader
