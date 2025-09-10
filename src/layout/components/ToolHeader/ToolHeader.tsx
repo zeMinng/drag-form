@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom'
-import { useState } from 'react'
 import { Popover, Flex, Button, Tooltip } from 'antd'
 import { QuestionCircleOutlined, GithubOutlined, MoonOutlined, SunOutlined } from '@ant-design/icons'
+import { useThemeStore } from '@/store/modules/theme'
 import MenuWrap from '../Menu/Menu'
 import LOGO_URL from '@/assets/logo_w60.svg'
 import './ToolHeader.scss'
@@ -11,11 +11,11 @@ const APP_NAME = 'DragVueForm'
 
 const ToolHeader: React.FC = () => {
   const navigate = useNavigate()
-  const [isDarkMode, setIsDarkMode] = useState(false)
+  const { theme, setTheme } = useThemeStore()
+  const isDarkMode = theme === 'dark'
 
   const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode)
-    // TODO: 这里后续会添加实际的暗黑模式切换逻辑
+    setTheme(isDarkMode ? 'light' : 'dark')
   }
 
   return (
