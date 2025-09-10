@@ -5,3 +5,4 @@
 
 // 表单相关类型
 export * from './form'
+export * from './theme'

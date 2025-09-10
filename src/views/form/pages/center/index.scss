@@ -7,8 +7,8 @@
     display: flex;
     height: 50px;
     padding: 0 16px;
-    background-color: #fff;
-    border-bottom: 1px solid #e9ecf0;
+    background-color: var(--bg-primary);
+    border-bottom: 1px solid var(--border-primary);
     align-items: center;
     justify-content: flex-end;
   }
@@ -21,7 +21,7 @@
     margin: 8px;
     overflow: hidden;
     overflow-y: auto;
-    background: #fff;
+    background: var(--bg-primary);
     border-radius: 8px;
   
     .center-placeholder {
@@ -111,13 +111,13 @@
     align-items: center;
 
     &:hover {
-      background: #e9ecef;
-      border-color: #adb5bd;
+      background: var(--bg-selected);
+      border-color: var(--border-disabled);
     }
 
     &.selected {
-      background: #e9ecef;
-      border-color: #adb5bd;
+      background: var(--bg-selected);
+      border-color: var(--border-disabled);
       box-shadow: 0 0 0 1px rgb(173 181 189 / 20%);
     }
 
@@ -146,7 +146,7 @@
       .layout-row, .layout-col {
         position: relative;
         padding: 16px;
-        border: 1px dashed #e2e8f0;
+        border: 1px dashed var(--border-tertiary);
         border-radius: 4px;
 
         // 顶角标签（行/列）
@@ -156,9 +156,9 @@
           left: 8px;
           padding: 0 6px;
           font-size: 12px;
-          color: #64748b;
-          background: #f8fafc;
-          border: 1px solid #e2e8f0;
+          color: var(--text-light);
+          background: var(--bg-quaternary);
+          border: 1px solid var(--border-tertiary);
           border-radius: 6px;
           content: attr(data-layout-label) ' ' attr(data-meta);
         }
@@ -167,16 +167,16 @@
       // 鼠标悬停效果（不影响布局，仅视觉）
       .layout-col:hover {
         cursor: pointer;
-        background: #f9fbfd;
-        border-color: #94a3b8;
+        background: var(--bg-layout-hover);
+        border-color: var(--border-layout-hover);
         box-shadow: 0 0 0 1px rgb(148 163 184 / 20%) inset;
       }
 
       // Row 仅在没有 hover 到内部 Col 时才高亮
       .layout-row:hover:not(:has(.layout-col:hover)) {
         cursor: pointer;
-        background: #f9fbfd;
-        border-color: #94a3b8;
+        background: var(--bg-layout-hover);
+        border-color: var(--border-layout-hover);
         box-shadow: 0 0 0 1px rgb(148 163 184 / 20%) inset;
       }
 
@@ -191,14 +191,14 @@
       // 选中态：布局组件（Row/Col）
       .layout-row.is-selected,
       .layout-col.is-selected {
-        background: #f0f7ff;
+        background: var(--bg-active);
         border-color: #1890ff;
         box-shadow: 0 0 0 2px rgb(24 144 255 / 15%) inset;
       }
 
       // 选中态：普通组件（非布局）
       .nested-clickable.selected {
-        background: #f0f7ff;
+        background: var(--bg-active);
         border-radius: 4px;
         outline: 1px dashed #1890ff;
         outline-offset: 2px;

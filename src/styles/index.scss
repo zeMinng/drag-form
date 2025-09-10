@@ -1,3 +1,6 @@
+/* 导入主题变量 */
+@use './themes/variables';
+
 .flex {
   display: flex;
 }
@@ -41,4 +44,24 @@
 
 .flex-nowrap {
   flex-wrap: nowrap;
+}
+
+/* 暗色模式滚动条样式 */
+[data-theme="dark"] {
+  * {
+    scrollbar-color: #434343 #1f1f1f !important;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: #1f1f1f !important;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background: #434343 !important;
+    transition: background-color 0.2s ease !important;
+
+    &:hover {
+      background: #7c3aed !important;
+    }
+  }
 }

@@ -28,7 +28,7 @@ const DragOverlayItem: React.FC<{ item: DraggingItem }> = ({ item }) => (
     style={{
       opacity: 0.8,
       cursor: 'grab',
-      background: '#fff',
+      background: 'var(--bg-primary)',
       border: '1px solid #1890ff',
       boxShadow: '0 2px 8px rgba(24,144,255,0.3)',
       padding: '8px',
@@ -39,7 +39,7 @@ const DragOverlayItem: React.FC<{ item: DraggingItem }> = ({ item }) => (
       alignItems: 'center',
     }}
   >
-    <span className="left-list-icon" style={{ background: '#f1f5f9', borderRadius: 4, padding: 4, marginRight: 8 }}>
+    <span className="left-list-icon" style={{ background: 'var(--bg-tertiary)', borderRadius: 4, padding: 4, marginRight: 8 }}>
       {item.icon ? <IconFont type={item.icon} /> : null}
     </span>
     <div style={{ marginLeft: 8 }}>

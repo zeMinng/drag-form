@@ -30,7 +30,7 @@
             display: flex;
             padding: 4px;
             margin: 0 16px 0 8px;
-            background-color: #f1f5f9;
+            background-color: var(--bg-tertiary);
             border-radius: 4px;
             align-items: center;
             justify-content: center;
@@ -39,7 +39,6 @@
 
         .left-list-icon {
           font-size: 16px;
-          color: #1890ff;
         }
         
         &:hover {

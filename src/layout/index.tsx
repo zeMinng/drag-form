@@ -14,12 +14,12 @@ const headerStyle: React.CSSProperties = {
   height: 60,
   lineHeight: '60px',
   paddingInline: 16,
-  backgroundColor: '#fff',
-  borderBottom: '1px solid #e9ecf0',
+  backgroundColor: 'var(--bg-primary)',
+  borderBottom: '1px solid var(--border-primary)',
 }
 const contentStyle: React.CSSProperties = {
   height: 'calc(100vh - 60px)',
-  backgroundColor: '#fff',
+  backgroundColor: 'var(--bg-primary)',
 }
 
 const MyLayout: React.FC = () => {

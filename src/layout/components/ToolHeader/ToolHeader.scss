@@ -73,7 +73,7 @@
 
       &:hover {
         color: #1890ff;
-        background-color: #f0f8ff;
+        background-color: var(--hover-primary);
       }
     }
 
@@ -93,7 +93,7 @@
 
       &:hover {
         color: #000;
-        background-color: #f0f0f0;
+        background-color: var(--bg-hover);
       }
     }
   }

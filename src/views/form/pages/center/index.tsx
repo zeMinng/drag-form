@@ -569,7 +569,7 @@ const Center: React.FC<CenterProps> = ({ insertIndex, isDraggingOver = false }) 
         ref={setNodeRef}
         className="center-container"
         style={{
-          border: (isOver || isDraggingOver) ? '2px dashed #1890ff' : '2px dashed #eee',
+          border: (isOver || isDraggingOver) ? '2px dashed #1890ff' : '2px dashed var(--border-dashed)',
           minHeight: 120,
         }}
         onClick={handleContainerClick}

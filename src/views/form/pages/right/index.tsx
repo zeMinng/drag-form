@@ -71,7 +71,7 @@ const ComponentConfig: React.FC = () => {
       {/* 只有非布局型组件才显示基础信息 */}
       {!isLayoutComponent && (
         <div className="config-section">
-          <Divider size="small" dashed plain variant="dashed" style={{ borderColor: '#e9ecf0' }}>基础信息</Divider>
+          <Divider size="small" dashed plain variant="dashed" style={{ borderColor: 'var(--border-primary)' }}>基础信息</Divider>
           <Form layout="vertical">
             <Form.Item label="标题">
               <Input
@@ -94,7 +94,7 @@ const ComponentConfig: React.FC = () => {
       {/* 组件属性配置 */}
       {config.propsConfig && Object.keys(config.propsConfig).length > 0 && (
         <div className="config-section">
-          <Divider size="small" dashed plain variant="dashed" style={{ borderColor: '#e9ecf0' }}>组件属性</Divider>
+          <Divider size="small" dashed plain variant="dashed" style={{ borderColor: 'var(--border-primary)' }}>组件属性</Divider>
           <Form layout="vertical">
             {Object.entries(config.propsConfig).map(([propName, propConfig]) => {
               const typedPropConfig = propConfig as PropConfig
@@ -117,7 +117,7 @@ const ComponentConfig: React.FC = () => {
       {/* 校验规则配置 - 只有非布局型组件才显示 */}
       {!isLayoutComponent && (
         <div className="config-section">
-          <Divider size="small" dashed plain variant="dashed" style={{ borderColor: '#e9ecf0' }}>校验规则</Divider>
+          <Divider size="small" dashed plain variant="dashed" style={{ borderColor: 'var(--border-primary)' }}>校验规则</Divider>
           <ValidationEditor
             value={selectedItem.validation}
             onChange={handleValidationChange}
@@ -141,7 +141,7 @@ const FormConfig: React.FC = () => {
   return (
     <div className="formConfig">
       <div className="config-section">
-        <Divider size="small" dashed plain variant="dashed" style={{ borderColor: '#e9ecf0' }}>表单信息</Divider>
+        <Divider size="small" dashed plain variant="dashed" style={{ borderColor: 'var(--border-primary)' }}>表单信息</Divider>
         <Form layout="vertical">
           <Form.Item label="表单字段名称">
             <Input 
@@ -176,7 +176,7 @@ const FormConfig: React.FC = () => {
           </Form.Item>
         </Form>
 
-        <Divider size="small" dashed plain variant="dashed" style={{ borderColor: '#e9ecf0' }}>表单设置</Divider>
+        <Divider size="small" dashed plain variant="dashed" style={{ borderColor: 'var(--border-primary)' }}>表单设置</Divider>
         <Form layout="vertical">
           <Form.Item label="布局方式">
             <Select 
@@ -213,7 +213,7 @@ const FormConfig: React.FC = () => {
           </Form.Item>
         </Form>
 
-        <Divider size="small" dashed plain variant="dashed" style={{ borderColor: '#e9ecf0' }}>恢复默认</Divider>
+        <Divider size="small" dashed plain variant="dashed" style={{ borderColor: 'var(--border-primary)' }}>恢复默认</Divider>
         <Form layout="vertical">
           <Form.Item>
             <Button 
@@ -226,7 +226,7 @@ const FormConfig: React.FC = () => {
           </Form.Item>
         </Form>
 
-        <Divider size="small" dashed plain variant="dashed" style={{ borderColor: '#e9ecf0' }}>组件统计</Divider>
+        <Divider size="small" dashed plain variant="dashed" style={{ borderColor: 'var(--border-primary)' }}>组件统计</Divider>
         <div className="stats">
           <div className="stat-item">
             <span className="stat-label">总组件数：</span>

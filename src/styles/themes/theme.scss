@@ -1,0 +1,73 @@
+/* 主题色彩变量定义 */
+
+// ==================== 主色调 ====================
+$primary: #7c3aed;                    // 主色 - 紫色
+$primary-light: #a855f7;              // 主色浅色
+
+// ==================== 功能色 ====================
+$success: #1890ff;                    // 成功/主要操作色 - 蓝色
+$warning: #ff6b35;                    // 警告色 - 橙色
+$error: #ff4d4f;                      // 错误色 - 红色
+$info: #ffd700;                       // 信息色 - 金色
+
+// ==================== 文字颜色 ====================
+$text-black: #000;                    // 黑色文字
+$text-primary: #1a1a1a;               // 主要文字
+$text-secondary: #666;                // 次要文字
+$text-tertiary: #999;                 // 第三级文字
+$text-quaternary: #bbb;               // 第四级文字
+$text-disabled: #bfbfbf;              // 禁用文字
+$text-white: #fff;                    // 白色文字
+$text-dark: #1e293b;                  // 深色文字
+$text-light: #64748b;                 // 浅色文字  yes
+$text-muted: #888;                    // 描述文字
+$text-border: #94a3b8;                // 边框文字
+
+// ==================== 背景颜色 ====================
+$bg-primary: #fff;                    // 主背景色  yes
+$bg-secondary: #f5f5f5;               // 次背景色
+$bg-tertiary: #f1f5f9;                // 第三级背景  yes
+$bg-quaternary: #f8fafc;              // 第四级背景  yes
+$bg-hover: #f0f0f0;                   // 悬停背景
+$bg-active: #f0f7ff;                  // 激活背景  yes
+$bg-selected: #e9ecef;                // 选中背景  yes
+$bg-light: #f9f9fd;                   // 浅色背景
+$bg-code: #f6f8fa;                    // 代码背景
+$bg-dark: #1e1e1e;                    // 深色背景
+$bg-dark-hover: #2a2a2a;              // 深色悬停背景
+$bg-layout-hover: #f9fbfd;            // 布局悬停背景
+
+// ==================== 边框颜色 ====================
+$border-primary: #e9ecf0;             // 主边框色
+$border-secondary: #e1e4e8;           // 次边框色
+$border-tertiary: #e2e8f0;            // 第三级边框
+$border-quaternary: #e5e7eb;          // 第四级边框  yes
+$border-disabled: #adb5bd;            // 禁用边框  yes
+$border-focus: #1890ff;               // 聚焦边框
+$border-dashed: #eee;                 // 虚线边框  yes
+$border-divider: #f0f0f0;             // 分割线
+$border-layout-hover: #94a3b8;        // 布局悬停边框
+
+// ==================== 交互状态色 ====================
+$hover-primary: #f0f8ff;              // 主色悬停背景
+$hover-secondary: #fff5f0;            // 次色悬停背景
+$hover-dark: #2a2a2a;                 // 深色悬停背景
+
+// ==================== 选中状态 ====================
+$selected-bg: rgb(24 144 255 / 6%);   // 选中背景
+$selected-border: #1890ff;            // 选中边框
+
+// ==================== 阴影效果 ====================
+$shadow-primary: rgb(24 144 255 / 30%);    // 主色阴影
+$shadow-secondary: rgb(0 0 0 / 20%);       // 次色阴影
+$shadow-glow: rgb(52 152 219 / 30%);       // 发光效果
+$shadow-code: rgb(24 144 255 / 50%);       // 代码阴影
+
+// ==================== 代码相关 ====================
+$code-bg: #f6f8fa;                    // 代码背景
+$code-text: #24292e;                  // 代码文字
+$code-border: #e1e4e8;                // 代码边框
+
+// ==================== 特殊效果 ====================
+$transparent: transparent;             // 透明色
+$overlay: rgb(0 0 0 / 20%);           // 遮罩色
