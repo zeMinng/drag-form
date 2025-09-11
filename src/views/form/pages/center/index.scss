@@ -128,7 +128,7 @@
       .layout-children {
         min-height: 24px;
         padding: 6px;
-        border: 1px dashed #e5e7eb;
+        border: 1px dashed var(--border-quaternary);
         border-radius: 4px;
 
         &.drag-over {
@@ -219,7 +219,7 @@
       height: 24px;
       font-size: 14px;
       cursor: pointer;
-      background: #ff4d4f;
+      background: var(--error);
       border-radius: 8px;
       outline: none;
       box-shadow: 0 2px 4px rgb(0 0 0 / 20%);
