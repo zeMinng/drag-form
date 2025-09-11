@@ -186,7 +186,7 @@ const CenterTop: React.FC = () => {
             ref={codeRef}
             style={{
               margin: 0,
-              background: '#1e1e1e',
+              background: 'var(--bg-dark)',
               borderRadius: '8px',
               overflow: 'auto',
               fontSize: '13px',
@@ -243,15 +243,15 @@ const CenterTop: React.FC = () => {
               value={editedJson}
               onChange={(e) => setEditedJson(e.target.value)}
               style={{ 
-                background: '#f6f8fa', 
-                color: '#24292e',
+                background: 'var(--code-bg)', 
+                color: 'var(--code-text)',
                 padding: '16px', 
                 borderRadius: '6px',
                 overflow: 'auto',
                 fontSize: '13px',
                 lineHeight: '1.5',
                 fontFamily: 'Consolas, Monaco, "Courier New", monospace',
-                border: '1px solid #e1e4e8',
+                border: '1px solid var(--code-border)',
                 width: '100%',
                 height: '100%',
                 resize: 'vertical',
@@ -264,8 +264,8 @@ const CenterTop: React.FC = () => {
             <pre 
               ref={jsonPreRef}
               style={{ 
-                background: '#f6f8fa', 
-                color: '#24292e',
+                background: 'var(--code-bg)', 
+                color: 'var(--code-text)',
                 padding: '16px', 
                 borderRadius: '6px',
                 overflow: 'auto',
@@ -275,7 +275,7 @@ const CenterTop: React.FC = () => {
                 userSelect: 'text',
                 cursor: 'text',
                 whiteSpace: 'pre-wrap',
-                border: '1px solid #e1e4e8',
+                border: '1px solid var(--code-border)',
               }}
             >
               {jsonData}
