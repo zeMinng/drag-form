@@ -112,13 +112,13 @@
 
     &:hover {
       background: var(--bg-selected);
-      border-color: var(--border-disabled);
     }
 
     &.selected {
       background: var(--bg-selected);
-      border-color: var(--border-disabled);
       box-shadow: 0 0 0 1px rgb(173 181 189 / 20%);
+
+      // border: 1px solid var(--border-disabled);
     }
 
     .componentWrap {
@@ -128,7 +128,7 @@
       .layout-children {
         min-height: 24px;
         padding: 6px;
-        border: 1px dashed var(--border-quaternary);
+        border: 1px dashed var(--border-tertiary);
         border-radius: 4px;
 
         &.drag-over {
