@@ -205,7 +205,7 @@ const FormConfig: React.FC = () => {
               onChange={(checked) => updateFormConfig({ colon: checked })}
             />
           </Form.Item>
-          <Form.Item label="显示验证信息">
+          <Form.Item label="是否显示校验错误信息">
             <Switch 
               checked={formConfig.showValidation}
               onChange={(checked) => updateFormConfig({ showValidation: checked })}
