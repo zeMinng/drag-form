@@ -1,8 +1,8 @@
 import { Outlet } from 'react-router-dom'
 import ToolHeader from './components/ToolHeader/ToolHeader'
-import { Flex, Layout, Modal, Typography  } from 'antd'
+import { Flex, Layout, } from 'antd'
 const { Header, Content } = Layout
-const { Paragraph } = Typography
+// const { Paragraph } = Typography
 
 const layoutStyle = {
   overflow: 'hidden',
@@ -24,11 +24,11 @@ const contentStyle: React.CSSProperties = {
 
 const MyLayout: React.FC = () => {
   // 判断是否生产环境
-  const isProd = import.meta.env.PROD
-  const [isModalOpen, setIsModalOpen] = useState(isProd)
-  const handleClose = () => {
-    setIsModalOpen(false)
-  }
+  // const isProd = import.meta.env.PROD
+  // const [isModalOpen, setIsModalOpen] = useState(isProd)
+  // const handleClose = () => {
+  //   setIsModalOpen(false)
+  // }
 
   return <>
     <Flex gap="middle" wrap>
@@ -39,7 +39,7 @@ const MyLayout: React.FC = () => {
         <Content style={contentStyle}>
           <Outlet />
 
-          <Modal
+          {/* <Modal
             title="公告"
             centered
             open={isModalOpen}
@@ -50,7 +50,7 @@ const MyLayout: React.FC = () => {
             <Paragraph>
               🎉 恭喜，现已支持导出 Vue3 + Element-Plus + TS 代码！
             </Paragraph>
-          </Modal>
+          </Modal> */}
         </Content>
       </Layout>
     </Flex>
