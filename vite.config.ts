@@ -7,6 +7,7 @@ export default defineConfig({
   plugins: createVitePlugins(),
   define: {
     __BUILD_TIME__: JSON.stringify(new Date().toLocaleString('zh-CN', {
+      timeZone: 'Asia/Shanghai',
       year: 'numeric',
       month: 'long',
       day: 'numeric',
