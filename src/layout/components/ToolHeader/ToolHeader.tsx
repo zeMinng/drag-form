@@ -28,6 +28,8 @@ const ToolHeader: React.FC = () => {
       <Flex gap="small" align="center" className="action-buttons">
         <MenuWrap />
 
+        <div className="time" style={{fontSize: 14, color: 'var(--text-secondary)'}}>最后更新时间：{__BUILD_TIME__}</div>
+
         {/* 主题切换按钮 */}
         <Tooltip title={isDark ? '切换到亮色模式' : '切换到暗色模式'}>
           <Button
