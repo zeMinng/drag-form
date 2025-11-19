@@ -1,5 +1,5 @@
 import React from 'react'
-import { Input, InputNumber, Select, Radio, Checkbox, DatePicker, Switch, Slider, Row, Col, Card } from 'antd'
+import { Input, InputNumber, Select, Cascader,Radio, Checkbox, DatePicker, Switch, Slider, Row, Col, Card } from 'antd'
 import type { ComponentConfig } from '@/views/form/static/type/component'
 
 // 默认组件配置，按类型集中管理，便于日后拆分到更细的文件
@@ -246,6 +246,24 @@ export const defaultConfigs: Record<string, ComponentConfig> = {
         defaultValue: false
       }
     }
+  },
+  cascader: {
+    component: Cascader,
+    props: { placeholder: '请选择', style: { width: '100%' } },
+    label: '级联选择',
+    description: '级联选择框',
+    icon: 'icon-jilianxuanze',
+    category: 'select',
+    tag: 'el-cascader',
+    vmodel: 'cascader',
+    // propsConfig: {
+    //   options: {
+    //     type: 'string',
+    //     label: '选项配置',
+    //     defaultValue: '',
+    //     placeholder: '请输入el-cascader的遍历数据对象字段',
+    //   }
+    // }
   },
   radio: {
     component: Radio.Group,
