@@ -36,7 +36,7 @@ export const generateVueTemplate = (items: CenterItem[], formConfig: FormConfig)
     const additionalProps = getSpecialProps(item.type)
 
     // 生成v-model
-    const vmodelStr = `v-model="${formConfig.modelName}.${vmodel}"`
+    const vmodelStr = `v-model="${formConfig.modelName}.${vmodel}_${item.id}"`
     
     // 构建完整的标签
     const attributes = mergeProps(vmodelStr, propsStr, additionalProps)

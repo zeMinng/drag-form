@@ -81,7 +81,7 @@ const onReset = () => {
         return
       }
 
-      const vmodel = item.vmodel || config.vmodel || 'value'
+      const vmodel = `${item.vmodel || config.vmodel}_${item.id}` // item.vmodel || config.vmodel || 'value'
       const defaultValue = getDefaultValueByType(item.type)
       formFields.push(`  ${vmodel}: ${defaultValue},`)
 

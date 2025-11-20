@@ -140,7 +140,7 @@ const Form: React.FC = () => {
 
   // 递归为节点及其子节点分配 id（用于非 addCenterItem 的场景）
   const assignIdsRecursively = (node: Omit<CenterItem, 'id'>): CenterItem => {
-    const id = uuidv4().substring(0, 8)
+    const id = uuidv4().replace(/[^a-zA-Z]/g, '').slice(0, 3)
     const children = (node as any).children as Omit<CenterItem, 'id'>[] | undefined
     return {
       ...(node as any),
