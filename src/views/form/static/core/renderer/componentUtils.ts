@@ -68,7 +68,7 @@ export const renderComponentByType = (item: CenterItem, formConfig: FormConfig) 
     delete mergedProps[key]
   })
 
-  const fieldName = (item as any).vmodel || config.vmodel || item.type
+  const fieldName = `${item.type}_${item.id}` // || (item as any).vmodel || config.vmodel
 
   // 过滤掉不兼容的属性，避免 React 警告
   const filterIncompatibleProps = (props: Record<string, any>) => {
@@ -124,6 +124,9 @@ export const renderComponentByType = (item: CenterItem, formConfig: FormConfig) 
 
   // 检查是否有必填规则，用于显示红色星号
   const isRequired = hasRequiredRule(item.validation)
+  // console.log('%c [ Component ]-132', 'font-size:13px; background:pink; color:#bf2c9f;', Component)
+  // console.log('%c [ filterIncompatibleProps(mergedProps) ]-133', 'font-size:13px; background:pink; color:#bf2c9f;', filterIncompatibleProps(mergedProps))
+  // console.log('%c [ config.children ]-134', 'font-size:13px; background:pink; color:#bf2c9f;', config.children)
   // 普通表单组件显示标签
   return React.createElement(
     Form.Item,

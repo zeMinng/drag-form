@@ -1,11 +1,12 @@
 import React, { useState, useMemo, useCallback } from 'react'
 import { Tabs, Form, Input, Select, Switch, Divider, Empty, Button } from 'antd'
+import PropEditor from './components/PropEditor'
+import ValidationEditor from './components/ValidationEditor'
 import { useFormStore } from '@/store/modules/form'
 import { getComponentConfig } from '@/views/form/static'
 import type { PropConfig } from '@/views/form/static/type/component'
+
 import './index.scss'
-import PropEditor from './components/PropEditor'
-import ValidationEditor from './components/ValidationEditor'
 
 const { Option } = Select
 
@@ -82,7 +83,7 @@ const ComponentConfig: React.FC = () => {
             </Form.Item>
             <Form.Item label="字段名">
               <Input
-                value={selectedItem.vmodel || config.vmodel || ''}
+                value={ `${selectedItem.type}_${selectedItem.id}` || selectedItem.vmodel || config.vmodel }
                 placeholder="请输入字段名"
                 onChange={(e) => handleVmodelChange(e.target.value)}
               />
