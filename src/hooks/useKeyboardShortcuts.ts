@@ -1,5 +1,6 @@
 import { useEffect, useRef, useCallback } from 'react'
 import { message } from 'antd'
+import { v4 as uuidv4 } from 'uuid'
 import type { CenterItem } from '@/store/modules/form'
 
 export interface KeyboardShortcutsOptions {
@@ -26,7 +27,8 @@ export const useKeyboardShortcuts = (options: KeyboardShortcutsOptions) => {
 
   // 递归克隆节点并分配新 id
   const cloneItemWithNewIds = useCallback((node: CenterItem): CenterItem => {
-    const newId = (crypto?.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2, 10)).substring(0, 8)
+    // const newId = (crypto?.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2, 10)).substring(0, 3)
+    const newId = uuidv4().replace(/[^a-zA-Z]/g, '').slice(0, 3)
     const clonedChildren = Array.isArray(node.children) ? node.children.map(cloneItemWithNewIds) : node.children
     return { ...node, id: newId, children: clonedChildren as any }
   }, [])
