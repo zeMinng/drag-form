@@ -257,12 +257,13 @@ export const defaultConfigs: Record<string, ComponentConfig> = {
     tag: 'el-cascader',
     vmodel: 'cascader',
     propsConfig: {
-      // options: {
-      //   type: 'string',
-      //   label: '选项配置',
-      //   defaultValue: '',
-      //   placeholder: '请输入el-cascader的遍历数据对象字段',
-      // },
+      options: {
+        type: 'string',
+        label: '选项配置',
+        defaultValue: '',
+        isParam: true,
+        placeholder: '请输入el-cascader的遍历数据对象字段',
+      },
       placeholder: {
         type: 'string',
         label: '占位提示',
@@ -291,7 +292,7 @@ export const defaultConfigs: Record<string, ComponentConfig> = {
       },
       multiple: {
         type: 'boolean',
-        label: '多选模式',
+        label: '是否多选',
         defaultValue: false
       },
       checkStrictly: {

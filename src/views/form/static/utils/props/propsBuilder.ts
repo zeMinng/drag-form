@@ -1,3 +1,5 @@
+import type { PropConfig } from '@/views/form/static/type/component'
+
 /**
  * 属性构建工具
  * 用于处理组件属性的构建和格式化
@@ -13,14 +15,14 @@ export interface PropValue {
  * @param props 属性对象
  * @returns 格式化后的属性字符串
  */
-export const buildPropsString = (props: Record<string, any>): string => {
+export const buildPropsString = (props: Record<string, any>, config?: Record<string, PropConfig>): string => {
   if (!props || Object.keys(props).length === 0) {
     return ''
   }
 
   return Object.entries(props)
     .filter(([_key, value]) => value !== undefined && value !== null && value !== '')
-    .map(([key, value]) => formatProp(key, value))
+    .map(([key, value]) => formatProp(key, value, config))
     .filter(Boolean)
     .join(' ')
 }
@@ -31,11 +33,14 @@ export const buildPropsString = (props: Record<string, any>): string => {
  * @param value 属性值
  * @returns 格式化后的属性字符串
  */
-export const formatProp = (key: string, value: any): string => {
+export const formatProp = (key: string, value: any, config?: Record<string, PropConfig>): string => {
   if (typeof value === 'boolean') {
     return value ? key : ''
   }
   if (typeof value === 'string') {
+    if (config && config[key] && config[key].isParam) {
+      return `:${key}="${value}"`
+    }
     return `${key}="${value}"`
   }
   if (typeof value === 'number') {
