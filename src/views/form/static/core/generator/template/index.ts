@@ -30,7 +30,7 @@ export const generateVueTemplate = (items: CenterItem[], formConfig: FormConfig)
     const props = mapPropsToVue(item.type as unknown as string, item.props || {})
     
     // 构建属性字符串
-    const propsStr = buildPropsString(props)
+    const propsStr = buildPropsString(props, config.propsConfig)
     
     // 为特殊组件添加额外属性
     const additionalProps = getSpecialProps(item.type)

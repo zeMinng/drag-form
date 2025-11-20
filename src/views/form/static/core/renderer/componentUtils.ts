@@ -1,7 +1,7 @@
 import React from 'react'
 import { Form, Radio, Checkbox } from 'antd'
 import { getComponentConfig } from '../registry/componentRegistry'
-import type { FormComponent } from '@/views/form/static/type/component'
+import type { FormComponent, ComponentConfig } from '@/views/form/static/type/component'
 import type { CenterItem, FormConfig } from '@/store/modules/form'
 import { ComponentWrapper } from './componentRenderer'
 
@@ -58,8 +58,16 @@ export const renderComponentByType = (item: CenterItem, formConfig: FormConfig) 
 
   const Component = config.component
 
+  // 提取 isParam:true 的字段
+  const params = extractParams(item, config)
+
   // 合并默认属性和自定义属性
   const mergedProps: Record<string, any> = { ...config.props, ...item.props }
+  // 删除掉所有 isParam 字段（它们不应该直接传给组件）
+  Object.keys(params).forEach(key => {
+    delete mergedProps[key]
+  })
+
   const fieldName = (item as any).vmodel || config.vmodel || item.type
 
   // 过滤掉不兼容的属性，避免 React 警告
@@ -122,4 +130,21 @@ export const renderComponentByType = (item: CenterItem, formConfig: FormConfig) 
     { label: item.title, name: fieldName, required: isRequired },
     React.createElement(Component as any, filterIncompatibleProps(mergedProps), config.children)
   )
+}
+
+
+function extractParams(item: CenterItem, config: ComponentConfig) {
+  const props = item.props || {}
+  const propsConfig = config.propsConfig || {}
+
+  const result: { [key: string]: any } = {}
+
+  for (const key in propsConfig) {
+    const conf = propsConfig[key]
+    if (conf.isParam) {
+      result[key] = props[key]
+    }
+  }
+
+  return result
 }

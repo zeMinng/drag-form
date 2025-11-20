@@ -41,6 +41,7 @@ export interface PropConfig {
   rows?: number
   marks?: boolean
   allowClear?: boolean
+  isParam?: boolean // 设置这个参数后，默认react会被detele掉，在vue中会被保留，生成代码也会默认添加上:号
 }
 
 // 组件配置

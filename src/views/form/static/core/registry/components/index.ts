@@ -256,14 +256,56 @@ export const defaultConfigs: Record<string, ComponentConfig> = {
     category: 'select',
     tag: 'el-cascader',
     vmodel: 'cascader',
-    // propsConfig: {
-    //   options: {
-    //     type: 'string',
-    //     label: '选项配置',
-    //     defaultValue: '',
-    //     placeholder: '请输入el-cascader的遍历数据对象字段',
-    //   }
-    // }
+    propsConfig: {
+      options: {
+        type: 'string',
+        label: '选项配置',
+        defaultValue: '',
+        isParam: true,
+        placeholder: '请输入el-cascader的遍历数据对象字段',
+      },
+      placeholder: {
+        type: 'string',
+        label: '占位提示',
+        defaultValue: '请选择',
+        placeholder: '请输入占位符文本'
+      },
+      disabled: {
+        type: 'boolean',
+        label: '禁用状态',
+        defaultValue: false
+      },
+      clearable: {
+        type: 'boolean',
+        label: '允许清空',
+        defaultValue: true
+      },
+      showAllLevels: {
+        type: 'boolean',
+        label: '显示完整路径',
+        defaultValue: true
+      },
+      filterable: {
+        type: 'boolean',
+        label: '可搜索',
+        defaultValue: false
+      },
+      multiple: {
+        type: 'boolean',
+        label: '是否多选',
+        defaultValue: false
+      },
+      checkStrictly: {
+        type: 'boolean',
+        label: '任意级可选',
+        defaultValue: false
+      },
+      emitPath: {
+        type: 'boolean',
+        label: '返回完整路径',
+        defaultValue: true
+      },
+    }
   },
   radio: {
     component: Radio.Group,
