@@ -68,7 +68,7 @@ export const renderComponentByType = (item: CenterItem, formConfig: FormConfig) 
     delete mergedProps[key]
   })
 
-  const fieldName = (item as any).vmodel || config.vmodel || item.type
+  const fieldName = `${item.type}_${item.id}` // || (item as any).vmodel || config.vmodel
 
   // 过滤掉不兼容的属性，避免 React 警告
   const filterIncompatibleProps = (props: Record<string, any>) => {

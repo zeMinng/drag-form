@@ -22,7 +22,8 @@ export const useFormStore = createPersistedStore<FormStore>(
         return
       }
       const assignIdsRecursively = (node: any): any => {
-        const newId = uuidv4().substring(0, 8)
+        // const newId = uuidv4().substring(0, 3)
+        const newId = uuidv4().replace(/[^a-zA-Z]/g, '').slice(0, 3)
         const hasChildren = Array.isArray(node.children) && node.children.length > 0
         return {
           ...node,
