@@ -52,7 +52,6 @@ ${formFields.join('\n')}
  * @returns Vue脚本字符串
  */
 export const generateVueScript = (items: CenterItem[], formConfig: FormConfig): string => {
-  console.log('%c [ items ]-55', 'font-size:13px; background:pink; color:#bf2c9f;', items)
   if (items.length === 0) {
     return `import { reactive } from 'vue'
 
