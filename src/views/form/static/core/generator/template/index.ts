@@ -109,9 +109,9 @@ export const generateVueTemplate = (items: CenterItem[], formConfig: FormConfig)
       const finalPropsStr = buildPropsString(finalProps)
       const finalAttributes = mergeProps(vmodelStr, finalPropsStr, additionalProps)
       
-      return `<el-form-item label="${item.title || ''}" prop="${vmodel}">\n  <${tag} ${finalAttributes}>\n${optionsContent}\n  </${tag}>\n</el-form-item>`
+      return `<el-form-item label="${item.title || ''}" prop="${vmodel}_${item.id}">\n  <${tag} ${finalAttributes}>\n${optionsContent}\n  </${tag}>\n</el-form-item>`
     } else {
-      return `<el-form-item label="${item.title || ''}" prop="${vmodel}">\n  <${tag} ${attributes}></${tag}>\n</el-form-item>`
+      return `<el-form-item label="${item.title || ''}" prop="${vmodel}_${item.id}">\n  <${tag} ${attributes}></${tag}>\n</el-form-item>`
     }
   }
 
