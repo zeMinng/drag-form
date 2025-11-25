@@ -105,7 +105,7 @@ const ValidationEditor: React.FC<ValidationEditorProps> = ({ value, onChange }) 
             />
           }
         >
-          <Space direction="vertical" style={{ width: '100%' }}>
+          <Space orientation="vertical" style={{ width: '100%' }}>
             <div>
               <div style={{ marginBottom: 4, fontSize: 12 }}>校验类型</div>
               <Select
