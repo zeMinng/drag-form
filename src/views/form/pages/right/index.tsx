@@ -14,8 +14,8 @@ const { Option } = Select
 
 // 组件属性配置
 const ComponentConfig: React.FC = () => {
-  const { getSelectedItem, updateCenterItem } = useFormStore()
-  const selectedItem = getSelectedItem()
+  const selectedItem = useFormStore((state) => state.getSelectedItem())
+  const updateCenterItem = useFormStore((state) => state.updateCenterItem)
 
   const handlePropChange = useCallback((propName: string, value: any) => {
     if (!selectedItem) return
@@ -77,13 +77,15 @@ const ComponentConfig: React.FC = () => {
             <Form.Item label="标题">
               <Input
                 value={selectedItem.title}
+                allowClear
                 placeholder="请输入标题"
                 onChange={(e) => handleTitleChange(e.target.value)}
               />
             </Form.Item>
             <Form.Item label="字段名">
               <Input
-                value={ `${selectedItem.type}_${selectedItem.id}` || selectedItem.vmodel || config.vmodel }
+                value={selectedItem.vmodel ?? `${selectedItem.type}_${selectedItem.id}`}
+                allowClear
                 placeholder="请输入字段名"
                 onChange={(e) => handleVmodelChange(e.target.value)}
               />
@@ -148,6 +150,7 @@ const FormConfig: React.FC = () => {
             <Input 
               placeholder="请输入表单字段名称" 
               value={formConfig.modelName}
+              allowClear
               onChange={(e) => updateFormConfig({ modelName: e.target.value })}
             />
           </Form.Item>
@@ -155,6 +158,7 @@ const FormConfig: React.FC = () => {
             <Input 
               placeholder="请输入标签宽度，如：120px 或 120" 
               value={formConfig.labelWidth}
+              allowClear
               onChange={(e) => updateFormConfig({ labelWidth: e.target.value })}
             />
           </Form.Item>

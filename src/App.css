@@ -39,10 +39,9 @@ body {
   font-size: 2rem;
   font-weight: 800;
   letter-spacing: 3px;
-  text-shadow: 0 0 20px rgba(52, 152, 219, 30%);
+  text-shadow: 0 0 20px rgb(52 152 219 / 30%);
   background: linear-gradient(135deg, #2c3e50 0%, #34495e 50%, #3498db 100%);
   animation: fadeInUp 1s ease-out, glow 2s ease-in-out infinite alternate;
-  -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -65,6 +64,7 @@ body {
     opacity: 0%;
     transform: translateY(30px);
   }
+
   to {
     opacity: 100%;
     transform: translateY(0);
@@ -73,10 +73,11 @@ body {
 
 @keyframes glow {
   from {
-    text-shadow: 0 0 20px rgba(52, 152, 219, 30%);
+    text-shadow: 0 0 20px rgb(52 152 219 / 30%);
   }
+
   to {
-    text-shadow: 0 0 30px rgba(52, 152, 219, 60%), 0 0 40px rgba(52, 152, 219, 30%);
+    text-shadow: 0 0 30px rgb(52 152 219 / 60%), 0 0 40px rgb(52 152 219 / 30%);
   }
 }
 
@@ -85,6 +86,7 @@ body {
     width: 0%;
     opacity: 0%;
   }
+
   to {
     width: 60%;
     opacity: 100%;

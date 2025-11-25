@@ -1,15 +1,6 @@
-{
-   "overrides": [
-    {
-      "files": ["**/*.scss"],
-      "extends": ["stylelint-config-standard-scss"],
-      "customSyntax": "postcss-scss"
-    },
-    {
-      "files": ["**/*.{js,jsx,ts,tsx}"],
-      "customSyntax": "postcss-styled"
-    }
-  ],
+/** @type {import("stylelint").Config} */
+export default {
+  "extends": ["stylelint-config-standard-scss"],
   "plugins": ["stylelint-scss", "stylelint-order"],
   "rules": {
     "selector-class-pattern": null,

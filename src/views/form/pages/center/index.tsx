@@ -1,5 +1,5 @@
 import React, { useState, useRef, useMemo, useCallback, useEffect } from 'react'
-import { Modal, Flex, Button, message, Drawer, Space, Form } from 'antd'
+import { App, Flex, Button, message, Drawer, Space, Form } from 'antd'
 import { DeleteOutlined, EyeOutlined, DownloadOutlined, CopyOutlined, FormOutlined } from '@ant-design/icons'
 import { useDroppable } from '@dnd-kit/core'
 import { useSortable } from '@dnd-kit/sortable'
@@ -15,20 +15,31 @@ import { generateVueComponent } from '@/views/form/static'
 import { renderComponentByType } from '@/views/form/static/core/renderer/componentUtils'
 import { getComponentConfig } from '@/views/form/static/core/registry/componentRegistry'
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts'
+
 import './index.scss'
 
-const clearTheCanvas = () => {
-  Modal.confirm({
-    title: '提示',
-    content: '确定要清空画布吗？',
-    centered: true,
-    onOk: () => {
-      useFormStore.setState({
-        centerItems: [],
-        selectedItemId: null,
-      })
-    },
-  })
+const CanvasTools: React.FC = () => {
+  const { modal } = App.useApp()
+
+  const clearTheCanvas = () => {
+    modal.confirm({
+      title: '提示',
+      content: '确定要清空画布吗？',
+      centered: true,
+      onOk: () => {
+        useFormStore.setState({
+          centerItems: [],
+          selectedItemId: null,
+        })
+      },
+    })
+  }
+
+  return (
+    <Button icon={<DeleteOutlined />} color="danger" variant="filled" onClick={() => clearTheCanvas()}>
+      清空画布
+    </Button>
+  )
 }
 
 const CenterTop: React.FC = () => {
@@ -144,9 +155,8 @@ const CenterTop: React.FC = () => {
   return (
     <div className="centerTop">
       <Flex gap="small" wrap>
-        <Button icon={<DeleteOutlined />} color="danger" variant="filled" onClick={() => clearTheCanvas()}>
-          清空画布
-        </Button>
+        
+        <CanvasTools />
         <Button icon={<FormOutlined />} color="primary" variant="filled" onClick={handleViewJSON}>
           编辑JSON
         </Button>
@@ -503,18 +513,20 @@ const SortableItem: React.FC<{ item: CenterItem; index?: number }> = ({ item }) 
   )
 }
 
-interface CenterProps {
+const Center: React.FC<{
   insertIndex?: number | null
   isDraggingOver?: boolean
-}
-
-const Center: React.FC<CenterProps> = ({ insertIndex, isDraggingOver = false }) => {
+}> = ({ insertIndex, isDraggingOver = false }) => {
   const { centerItems, formConfig, updateItems, removeCenterItem, getSelectedItem, setSelectedItemId } = useFormStore()
   const { setNodeRef, isOver } = useDroppable({ id: 'center-drop-area' })
 
   /** 键盘快捷键处理 */
   // 在树中将 newNode 插入到 targetId 的后面（作为同级）
-  const insertSiblingAfter = useCallback((items: CenterItem[], targetId: string, newNode: CenterItem): CenterItem[] => {
+  const insertSiblingAfter = useCallback(function insertSiblingAfterFn(
+    items: CenterItem[],
+    targetId: string,
+    newNode: CenterItem
+  ): CenterItem[] {
     const rootIndex = items.findIndex((it) => it.id === targetId)
     if (rootIndex !== -1) {
       const newItems = [...items]
@@ -530,7 +542,7 @@ const Center: React.FC<CenterProps> = ({ insertIndex, isDraggingOver = false }) 
           newChildren.splice(idx + 1, 0, newNode)
           return { ...node, children: newChildren }
         }
-        return { ...node, children: insertSiblingAfter(node.children as any, targetId, newNode) }
+        return { ...node, children: insertSiblingAfterFn(node.children as any, targetId, newNode) }
       }
       return node
     })
@@ -560,10 +572,10 @@ const Center: React.FC<CenterProps> = ({ insertIndex, isDraggingOver = false }) 
   // 点击空白区域取消选中
   const handleContainerClick = useCallback(() => {
     setSelectedItemId(null)
-  }, [])
+  }, [setSelectedItemId])
 
   return (
-    <div className='centerWrap'>
+    <div className="centerWrap">
       <CenterTop />
       <div
         ref={setNodeRef}

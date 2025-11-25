@@ -26,7 +26,7 @@ export const generateTypeScriptInterfaces = (items: CenterItem[]): string => {
         return
       }
 
-      const vmodel = item.vmodel || config.vmodel || 'value'
+      const vmodel = item.vmodel ?? `${item.type}_${item.id}`
       const type = getTypeScriptTypeByComponentType(item.type)
       formFields.push(`  ${vmodel}: ${type}`)
     })
@@ -81,7 +81,7 @@ const onReset = () => {
         return
       }
 
-      const vmodel = `${item.vmodel || config.vmodel}_${item.id}` // item.vmodel || config.vmodel || 'value'
+      const vmodel = item.vmodel ?? `${item.type}_${item.id}`
       const defaultValue = getDefaultValueByType(item.type)
       formFields.push(`  ${vmodel}: ${defaultValue},`)
 

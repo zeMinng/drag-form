@@ -7,7 +7,7 @@ import type { ComponentCategory, ComponentMeta } from '@/views/form/static/type/
 import './index.scss'
 
 const DraggableListItem: React.FC<{ item: ComponentMeta }> = React.memo(({ item }) => {
-  const draggable = useDraggable({ 
+  const { attributes, listeners, setNodeRef } = useDraggable({ 
     id: item.key, 
     data: { 
       ...item, 
@@ -15,12 +15,7 @@ const DraggableListItem: React.FC<{ item: ComponentMeta }> = React.memo(({ item 
     } 
   })
   return (
-    <List.Item
-      className="left-list-item"
-      ref={draggable.setNodeRef}
-      {...draggable.attributes}
-      {...draggable.listeners}
-    >
+    <List.Item className="left-list-item" ref={setNodeRef} {...attributes} {...listeners}>
       <List.Item.Meta
         avatar={<IconFont type={item.icon || ''} className="left-list-icon" />}
         title={item.title}
@@ -54,7 +49,7 @@ const Left: React.FC = () => {
       </div>
       <div className="left-list">
         <List
-          className='ListData'
+          className="ListData"
           split={false}
           dataSource={data}
           itemLayout="horizontal"
