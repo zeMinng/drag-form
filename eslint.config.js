@@ -3,16 +3,16 @@ import globals from 'globals'
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
 import tseslint from 'typescript-eslint'
-import { globalIgnores } from 'eslint/config'
+import { defineConfig, globalIgnores } from 'eslint/config'
 
-export default tseslint.config([
+export default defineConfig([
   globalIgnores(['dist']),
   {
     files: ['**/*.{ts,tsx}'],
     extends: [
       js.configs.recommended,
       tseslint.configs.recommended,
-      reactHooks.configs['recommended-latest'],
+      reactHooks.configs.flat.recommended,
       reactRefresh.configs.vite,
     ],
     languageOptions: {
@@ -36,6 +36,11 @@ export default tseslint.config([
       '@typescript-eslint/no-empty-function': 'warn',
       // 是否可以any类型
       '@typescript-eslint/no-explicit-any': 'off',
+      // 是否单引号
+      'quotes': ['error', 'single'],
+      'jsx-quotes': ['error', 'prefer-double'],
+      // 禁用代码结尾分号
+      'semi': ['error', 'never'],
     },
   },
 ])

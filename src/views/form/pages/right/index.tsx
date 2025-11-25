@@ -82,8 +82,9 @@ const ComponentConfig: React.FC = () => {
               />
             </Form.Item>
             <Form.Item label="字段名">
+              {/* ?? selectedItem.vmodel ?? config.vmodel */}
               <Input
-                value={ `${selectedItem.type}_${selectedItem.id}` || selectedItem.vmodel || config.vmodel }
+                value={ `${selectedItem.type}_${selectedItem.id}` }
                 placeholder="请输入字段名"
                 onChange={(e) => handleVmodelChange(e.target.value)}
               />
