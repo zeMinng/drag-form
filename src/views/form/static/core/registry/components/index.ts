@@ -41,7 +41,7 @@ export const defaultConfigs: Record<string, ComponentConfig> = {
   },
   number: {
     component: InputNumber,
-    props: { placeholder: '请输入数字', autoComplete: 'off' },
+    props: { placeholder: '请输入数字', autoComplete: 'off', mode: 'spinner' },
     label: '数字输入',
     description: '只允许输入数字的输入框',
     icon: 'icon-shuzishurukuang',
