@@ -37,6 +37,7 @@ const PropEditor: React.FC<PropEditorProps> = React.memo(({ propName, propConfig
           min={propConfig.min}
           max={propConfig.max}
           step={propConfig.step}
+          mode="spinner"
         />
       )
 
