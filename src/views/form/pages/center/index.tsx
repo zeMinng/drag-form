@@ -547,27 +547,30 @@ const Center: React.FC<{
       return node
     })
   }, [])
-  // 键盘快捷键处理
-  useKeyboardShortcuts({
-    onDelete: (item) => {
-      removeCenterItem(item.id)
-    },
-    onCopy: () => {
-      // 复制逻辑已在 hook 内部处理
-    },
-    onPaste: (clonedItem, targetItem) => {
-      if (!clonedItem) return
+  /**
+   * 使用 useKeyboardShortcuts 处理键盘快捷键
+   * 暂时不用
+   */
+  // useKeyboardShortcuts({
+  //   onDelete: (item) => {
+  //     removeCenterItem(item.id)
+  //   },
+  //   onCopy: () => {
+  //     // 复制逻辑已在 hook 内部处理
+  //   },
+  //   onPaste: (clonedItem, targetItem) => {
+  //     if (!clonedItem) return
       
-      if (targetItem) {
-        const newItems = insertSiblingAfter(centerItems, targetItem.id, clonedItem)
-        updateItems(newItems)
-      } else {
-        updateItems([...centerItems, clonedItem])
-      }
-      setSelectedItemId(clonedItem.id)
-    },
-    getSelectedItem
-  })
+  //     if (targetItem) {
+  //       const newItems = insertSiblingAfter(centerItems, targetItem.id, clonedItem)
+  //       updateItems(newItems)
+  //     } else {
+  //       updateItems([...centerItems, clonedItem])
+  //     }
+  //     setSelectedItemId(clonedItem.id)
+  //   },
+  //   getSelectedItem
+  // })
 
   // 点击空白区域取消选中
   const handleContainerClick = useCallback(() => {
