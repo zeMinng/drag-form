@@ -1,73 +1,76 @@
 # drag-vue-form
-Vue 表单可视化编辑器（支持拖拽生成代码）
 
+可视化表单搭建器（拖拽编排）+ Vue 代码导出工具。  
+运行端基于 React + Vite，导出目标为 Vue 3 + TypeScript + Element Plus 单文件组件（`.vue`）。
 
-# React + TypeScript + Vite
+## 功能特性
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+- 左侧组件面板拖拽到画布，快速搭建表单页面
+- 支持组件排序、选中和属性配置
+- 支持布局类组件（如 `row/col`）的嵌套编排
+- 实时维护表单结构状态，支持代码生成
+- 一键导出 Vue 3 + TS + Element Plus 代码文件
 
-Currently, two official plugins are available:
+## 技术栈
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- React 19
+- TypeScript
+- Vite
+- Ant Design
+- dnd-kit
+- Zustand
 
-## Expanding the ESLint configuration
+## 快速开始
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### 1) 安装依赖
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### 2) 启动开发环境
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run dev
 ```
+
+### 3) 打包构建
+
+```bash
+npm run build
+```
+
+### 4) 本地预览
+
+```bash
+npm run preview
+```
+
+### 5) 代码检查
+
+```bash
+npm run lint
+```
+
+## 项目结构（核心）
+
+```text
+src/
+├─ views/form/pages/           # 搭建器页面（左中右面板）
+├─ views/form/static/core/     # 生成器/渲染器/组件注册核心逻辑
+├─ views/form/static/utils/    # props、类型、缓存等工具
+├─ store/modules/form.ts       # 表单状态管理（Zustand）
+├─ router/                     # 路由配置
+└─ layout/                     # 页面布局与头部工具栏
+```
+
+## 使用说明
+
+1. 在左侧选择组件并拖拽到中间画布
+2. 在右侧面板调整组件属性、校验等配置
+3. 点击导出，输入文件名后生成 `.vue` 文件
+
+## 注意事项
+
+- 当前仓库名包含 `vue`，但编辑器本身为 React 项目
+- `vue` 体现在导出结果：生成 Vue 3 + TypeScript + Element Plus 代码
