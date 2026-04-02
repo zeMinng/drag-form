@@ -1,16 +1,21 @@
 import React, { useState, useEffect } from 'react'
+import { v4 as uuidv4 } from 'uuid'
+import {
+  DndContext,
+  DragOverlay,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  pointerWithin
+} from '@dnd-kit/core'
+import type { DragStartEvent, DragEndEvent, DragOverEvent } from '@dnd-kit/core'
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import IconFont from '@/components/business/Icon'
 import Left from './left'
 import Center from './center'
 import Right from './right'
-import { DndContext, DragOverlay } from '@dnd-kit/core'
-import type { DragStartEvent, DragEndEvent, DragOverEvent } from '@dnd-kit/core'
-import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
-import { useSensor, useSensors, PointerSensor } from '@dnd-kit/core'
 import { useFormStore, type CenterItem } from '@/store/modules/form'
 import { getComponentConfig } from '@/pages/form/static/core/registry/componentRegistry'
-import { v4 as uuidv4 } from 'uuid'
-
 import './index.scss'
 
 interface DraggingItem {
@@ -75,10 +80,10 @@ const Form: React.FC = () => {
   // 处理拖拽开始
   const handleDragStart = (event: DragStartEvent) => {
     const { active } = event
-    
+    const current = active.data.current
     // 只处理从左侧拖入的新组件，不显示center内部排序的拖拽覆盖层
-    if (active.data.current && active.data.current.type === 'component') {
-      setDraggingItem(event.active.data.current as DraggingItem)
+    if (current?.type === 'component') {
+      setDraggingItem(current as DraggingItem)
     } else {
       // center内部的排序拖拽 - 不显示拖拽覆盖层
       setDraggingItem(null)
@@ -100,16 +105,27 @@ const Form: React.FC = () => {
   // 处理拖拽过程中
   const handleDragOver = (event: DragOverEvent) => {
     const { active, over } = event
-    
-    // 只处理从左侧拖入的新组件
-    if (active.data.current && active.data.current.type === 'component' && over) {
-      const insertIndex = calculateInsertIndex(over.id)
+    const current = active.data.current
+
+    // 如果没有拖拽到center目标上，提前终止
+    if (!over) {
+      setInsertIndex(null)
+      setIsDraggingOver(false)
+      return
+    }
+
+    const overId = over.id
+    // 只处理从左侧拖入的新组件的拖拽覆盖效果，内部排序不显示拖拽覆盖层
+    if (current?.type === 'component') {
+      const insertIndex = calculateInsertIndex(overId)
       setInsertIndex(insertIndex)
       setIsDraggingOver(true)
     } else {
+      // center内部的排序
       setInsertIndex(null)
       // 只有在没有拖拽到任何有效目标时才关闭边框
-      if (!over || (over.id !== 'center-drop-area' && !centerItems.find(item => item.id === over.id))) {
+      const isOverCenter = (overId === 'center-drop-area' || over.data.current?.sortable) && centerItems.find(item => item.id === over.id)
+      if (!isOverCenter) {
         setIsDraggingOver(false)
       }
     }
@@ -206,19 +222,18 @@ const Form: React.FC = () => {
   // 处理拖拽结束 - 处理从左侧拖入新组件和内部排序
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event
-    setDraggingItem(null)
-    setInsertIndex(null)
-    setIsDraggingOver(false)
-    
+    const current = active.data.current
+
+    handleDragCancel()
     if (!over) return
     
     // 处理从左侧拖入的新组件
-    if (active.data.current && active.data.current.type === 'component') {
-      const newItem = createNewItem(active.data.current as DraggingItem)
+    if (current?.type === 'component') {
+      const newItem = createNewItem(current as DraggingItem)
       handleNewComponentDrop(newItem, over.id)
       return
     }
-    
+
     // 处理内部排序
     if (active.id !== over.id) {
       handleInternalSort(active.id, over.id)
@@ -235,6 +250,7 @@ const Form: React.FC = () => {
   return (
     <DndContext
       sensors={sensors}
+      collisionDetection={pointerWithin}
       onDragStart={handleDragStart}
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
@@ -256,6 +272,7 @@ const Form: React.FC = () => {
           <Right />
         </div>
       </div>
+
       <DragOverlay dropAnimation={null}>
         {draggingItem ? <DragOverlayItem item={draggingItem} /> : null}
       </DragOverlay>
