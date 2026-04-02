@@ -180,6 +180,7 @@ const CenterTop: React.FC = () => {
         size="large"
         onClose={() => setCodeModalVisible(false)}
         open={codeModalVisible}
+        forceRender
         extra={
           <Space>
             <Button key="copy" icon={<CopyOutlined />} type="primary" onClick={handleCopyCode}>
