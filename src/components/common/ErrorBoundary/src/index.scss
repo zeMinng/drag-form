@@ -1,0 +1,254 @@
+@use "sass:color";
+
+.error-boundary {
+  position: relative;
+  display: flex;
+  width: 100%;
+  max-width: 100vw;
+  min-height: 100vh;
+  padding: 20px;
+  margin: 0;
+  overflow-x: hidden;
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+
+  .error-result {
+    display: flex;
+    width: 100%;
+    max-width: 600px;
+    text-align: center;
+    box-sizing: border-box;
+    flex-direction: column;
+    align-items: center;
+
+    .error-icon {
+      display: flex;
+      width: 64px;
+      height: 64px;
+      margin-bottom: 24px;
+      color: #ff4d4f;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .error-result-title {
+      margin: 0 0 24px;
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+  }
+
+  .error-details {
+    width: 100%;
+    max-width: 100%;
+    padding: 0;
+    margin: 0 0 32px;
+    overflow: hidden;
+    text-align: left;
+    box-sizing: border-box;
+
+    .error-outline {
+      .error-title {
+        width: 100%;
+      }
+
+      .error-message {
+        padding: 12px 0;
+        margin: 0 0 16px;
+        font-family: Monaco, Menlo, 'Ubuntu Mono', monospace;
+        font-size: 14px;
+        color: var(--color-error);
+        background-color: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        box-sizing: border-box;
+        overflow-wrap: break-word;
+      }
+    }
+
+
+    .error-stack {
+      width: 100%;
+      max-width: 100%;
+      margin-top: 16px;
+      cursor: pointer;
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      box-sizing: border-box;
+
+      summary {
+        margin-bottom: 8px;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--text-secondary);
+        user-select: none;
+
+        &:hover {
+          color: var(--text-primary);
+        }
+      }
+
+      pre {
+        width: 100%;
+        height: 300px;
+        max-width: 100%;
+        padding: 8px;
+        margin: 8px 0 0;
+        overflow: auto;
+        font-family: Monaco, Menlo, 'Ubuntu Mono', monospace;
+        font-size: 12px;
+        line-height: 1.5;
+        color: var(--text-secondary);
+        word-break: break-all;
+        white-space: pre-wrap;
+        background-color: var(--bg-primary);
+        border-radius: 4px;
+        box-sizing: border-box;
+        overflow-wrap: break-word;
+        
+        // 确保内容不会溢出
+        * {
+          max-width: 100%;
+          box-sizing: border-box;
+        }
+      }
+
+      &[open] {
+        summary {
+          color: var(--text-primary);
+        }
+      }
+    }
+  }
+
+  .error-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    width: 100%;
+
+    .error-btn {
+      display: inline-flex;
+      padding: 8px 16px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-primary);
+      cursor: pointer;
+      background-color: transparent;
+      border: 1px solid var(--border-color, rgb(255 255 255 / 20%));
+      border-radius: 6px;
+      box-sizing: border-box;
+      transition: all 0.2s ease;
+      align-items: center;
+      gap: 6px;
+
+      &:hover {
+        background-color: rgb(255 255 255 / 10%);
+        border-color: rgb(255 255 255 / 30%);
+      }
+
+      &:active {
+        transform: scale(0.98);
+      }
+
+      .error-btn-icon {
+        flex-shrink: 0;
+      }
+
+      &.error-btn-primary {
+        color: #fff;
+        background-color: #1890ff;
+        border-color: #1890ff;
+
+        &:hover {
+          background-color: #40a9ff;
+          border-color: #40a9ff;
+        }
+      }
+    }
+  }
+}
+
+// 移动端适配
+@media (width <= 768px) {
+  .error-boundary {
+    padding: 12px;
+    align-items: flex-start;
+    overflow: hidden auto;
+
+    .error-result {
+      width: 100%;
+      max-width: 100%;
+
+      .error-icon {
+        width: 48px;
+        height: 48px;
+        margin-bottom: 16px;
+      }
+
+      .error-result-title {
+        margin-bottom: 16px;
+        font-size: 20px;
+      }
+    }
+
+    .error-actions {
+      flex-direction: column;
+      width: 100%;
+
+      .error-btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    .error-details {
+      width: 100%;
+      max-width: 100%;
+      overflow: hidden;
+
+      .error-message {
+        width: 100%;
+        max-width: 100%;
+        padding: 10px;
+        margin-bottom: 12px;
+        font-size: 12px;
+        line-height: 1.5;
+        word-break: break-all;
+        overflow-wrap: break-word;
+      }
+
+      .error-stack {
+        width: 100%;
+        max-width: 100%;
+        padding: 10px;
+        margin-top: 12px;
+        overflow: hidden;
+
+        summary {
+          font-size: 13px;
+          overflow-wrap: break-word;
+        }
+
+        pre {
+          width: 100%;
+          height: 200px;
+          max-width: 100%;
+          padding: 6px;
+          margin-top: 8px;
+          overflow: auto;
+          font-size: 10px;
+          line-height: 1.4;
+          word-break: break-all;
+          overflow-wrap: break-word;
+        }
+      }
+    }
+  }
+}

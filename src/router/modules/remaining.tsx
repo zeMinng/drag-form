@@ -1,16 +1,16 @@
 import type { RouteObject } from 'react-router-dom'
-import { lazy } from 'react'
-import Layout from '@/layout'
-const Form = lazy(() => import('@/views/form/pages/index'))
-const NotFound = lazy(() => import('@/views/error/notFound'))
+import { ErrorThrower } from '@/components/common/ErrorBoundary'
+import Layout from '@/components/layouts'
+import { Form, NotFound } from './remaining.lazy'
 
 const routes: RouteObject[] = [
   {
     path: '/',
     element: <Layout />,
+    errorElement: <ErrorThrower />,
     children: [
       {
-        index: true, // 默认子路由
+        index: true,
         element: <Form />,
       },
     ],
@@ -18,6 +18,7 @@ const routes: RouteObject[] = [
   {
     path: '*',
     element: <NotFound />,
+    errorElement: <ErrorThrower />,
   },
 ]
 
