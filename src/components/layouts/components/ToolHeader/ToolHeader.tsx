@@ -49,7 +49,7 @@ const ToolHeader: React.FC = () => {
               <div className="help-popover">
                 <p className="help-title">表单可视化编辑器</p>
                 <p className="help-description">
-                  生成 Vue 3.x + Element Plus 代码，支持拖拽、配置、预览等功能。
+                  支持拖拽搭建，预览/导出 Vue3 + Element Plus 或 React + Ant Design 代码。
                 </p>
               </div>
             }

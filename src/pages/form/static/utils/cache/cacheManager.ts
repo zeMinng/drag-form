@@ -43,7 +43,7 @@ export class CodeCacheManager {
    * @param formConfig 表单配置
    * @returns 缓存键
    */
-  generateCacheKey(items: any[], formConfig: any): string {
+  generateCacheKey(items: any[], formConfig: any, target: 'vue' | 'react' = 'vue'): string {
     const compactItem = (item: any): any => ({
       id: item.id,
       type: item.type,
@@ -56,6 +56,7 @@ export class CodeCacheManager {
     })
 
     const compact = {
+      target,
       items: (items || []).map(compactItem),
       formConfig
     }

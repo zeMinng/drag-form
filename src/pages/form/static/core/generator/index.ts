@@ -12,6 +12,7 @@ import { defaultCacheManager } from '../../utils/cache'
 
 // 重新导出子模块的函数，保持向后兼容
 export { generateVueTemplate, generateVueScript, generateTypeScriptInterfaces, generateVueStyle }
+export { generateReactComponent, generateReactJsx } from './react'
 
 /**
  * 生成完整的Vue 3 + TypeScript + Element Plus组件代码

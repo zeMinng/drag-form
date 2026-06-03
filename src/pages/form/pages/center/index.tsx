@@ -1,5 +1,5 @@
 import React, { useState, useRef, useMemo, useCallback, useEffect } from 'react'
-import { App, Flex, Button, message, Drawer, Space, Form } from 'antd'
+import { App, Flex, Button, message, Drawer, Space, Form, Segmented } from 'antd'
 import { DeleteOutlined, EyeOutlined, DownloadOutlined, CopyOutlined, FormOutlined } from '@ant-design/icons'
 import { useDroppable } from '@dnd-kit/core'
 import { useSortable } from '@dnd-kit/sortable'
@@ -11,7 +11,8 @@ import 'prismjs/components/prism-css'
 import IconFont from '@/components/business/Icon'
 import DownloadOutVue from '../downloadOutVue/index'
 import { useFormStore, type CenterItem, type FormConfig } from '@/store/modules/form'
-import { generateVueComponent } from '@/pages/form/static'
+import { generateVueComponent, generateReactComponent } from '@/pages/form/static'
+import type { ExportCodeTarget } from '../downloadOutVue/index'
 import { renderComponentByType } from '@/pages/form/static/core/renderer/componentUtils'
 import { getComponentConfig } from '@/pages/form/static/core/registry/componentRegistry'
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts'
@@ -45,6 +46,7 @@ const CanvasTools: React.FC = () => {
 const CenterTop: React.FC = () => {
   const [modalVisible, setModalVisible] = useState(false)
   const [codeModalVisible, setCodeModalVisible] = useState(false)
+  const [codeTarget, setCodeTarget] = useState<ExportCodeTarget>('vue')
   const [jsonModalVisible, setJsonModalVisible] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
   const [editedJson, setEditedJson] = useState('')
@@ -57,9 +59,17 @@ const CenterTop: React.FC = () => {
     setCodeModalVisible(true)
   }, [])
 
+  const getGeneratedCode = useCallback(
+    (target: ExportCodeTarget) =>
+      target === 'react'
+        ? generateReactComponent(centerItems, formConfig)
+        : generateVueComponent(centerItems, formConfig),
+    [centerItems, formConfig]
+  )
+
   const handleCopyCode = useCallback(async () => {
     try {
-      const generatedCode = generateVueComponent(centerItems, formConfig)
+      const generatedCode = getGeneratedCode(codeTarget)
       await navigator.clipboard.writeText(generatedCode)
       message.success('代码已复制到剪贴板')
     } catch {
@@ -77,7 +87,7 @@ const CenterTop: React.FC = () => {
         }
       }
     }
-  }, [centerItems, formConfig])
+  }, [centerItems, formConfig, codeTarget, getGeneratedCode])
 
   const handleViewJSON = useCallback(() => {
     setJsonModalVisible(true)
@@ -143,7 +153,11 @@ const CenterTop: React.FC = () => {
     setEditedJson(JSON.stringify(centerItems, null, 2))
   }, [centerItems])
 
-  const generatedCode = useMemo(() => generateVueComponent(centerItems, formConfig), [centerItems, formConfig])
+  const generatedCode = useMemo(
+    () => getGeneratedCode(codeTarget),
+    [getGeneratedCode, codeTarget]
+  )
+  const codeLanguageClass = codeTarget === 'react' ? 'language-typescript' : 'language-markup'
   const jsonData = useMemo(() => JSON.stringify(centerItems, null, 2), [centerItems])
 
   useEffect(() => {
@@ -161,7 +175,7 @@ const CenterTop: React.FC = () => {
           编辑JSON
         </Button>
         <Button icon={<DownloadOutlined />} color="primary" variant="filled" onClick={() => setModalVisible(true)}>
-          导出vue文件
+          导出代码
         </Button>
         <Button icon={<EyeOutlined />} color="primary" variant="filled" onClick={handleViewCode}>
           预览代码
@@ -192,6 +206,16 @@ const CenterTop: React.FC = () => {
           </Space>
         }
       >
+        <div style={{ marginBottom: 12 }}>
+          <Segmented<ExportCodeTarget>
+            value={codeTarget}
+            onChange={(value) => setCodeTarget(value)}
+            options={[
+              { label: 'Vue + Element Plus', value: 'vue' },
+              { label: 'React + Ant Design', value: 'react' },
+            ]}
+          />
+        </div>
         <div style={{ position: 'relative' }}>
           <pre
             ref={codeRef}
@@ -208,7 +232,7 @@ const CenterTop: React.FC = () => {
               whiteSpace: 'pre-wrap',
             }}
           >
-            <code className="language-markup">{generatedCode}</code>
+            <code className={codeLanguageClass}>{generatedCode}</code>
           </pre>
         </div>
       </Drawer>
