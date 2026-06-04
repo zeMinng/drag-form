@@ -1,7 +1,9 @@
 import React from 'react'
 import { Modal, Radio, Form, Input, message } from 'antd'
 import { useFormStore } from '@/store/modules/form'
-import { generateVueComponent } from '@/pages/form/static'
+import { generateVueComponent, generateReactComponent } from '@/pages/form/static'
+
+export type ExportCodeTarget = 'vue' | 'react'
 
 interface Props {
   open: boolean
@@ -9,7 +11,7 @@ interface Props {
 }
 
 type FieldType = {
-  buildType?: number
+  exportTarget?: ExportCodeTarget
   filename?: string
 }
 
@@ -20,17 +22,24 @@ const DownloadOutVue: React.FC<Props> = ({ open, onClose }) => {
   const onOk = async () => {
     try {
       const values = await form.validateFields()
-      const { filename } = values
+      const { filename, exportTarget = 'vue' } = values
 
-      // 使用新的代码生成器生成Vue 3 + TypeScript + Element Plus代码
-      const vueContent = generateVueComponent(centerItems, formConfig)
+      const content =
+        exportTarget === 'react'
+          ? generateReactComponent(centerItems, formConfig)
+          : generateVueComponent(centerItems, formConfig)
 
-      const blob = new Blob([vueContent], { type: 'text/plain;charset=utf-8' })
+      const defaultExt = exportTarget === 'react' ? '.tsx' : '.vue'
+      const finalName = filename!.endsWith(defaultExt)
+        ? filename!
+        : filename!.replace(/\.(vue|tsx)$/i, '') + defaultExt
+
+      const blob = new Blob([content], { type: 'text/plain;charset=utf-8' })
       const url = window.URL.createObjectURL(blob)
 
       const link = document.createElement('a')
       link.href = url
-      link.download = filename!.endsWith('.vue') ? filename! : filename + '.vue'
+      link.download = finalName
       link.click()
 
       window.URL.revokeObjectURL(url)
@@ -42,52 +51,47 @@ const DownloadOutVue: React.FC<Props> = ({ open, onClose }) => {
   }
 
   return (
-    <>
-      <Modal
-        title="导出 Vue 3 + TypeScript + Element Plus 文件"
-        centered
-        open={open}
-        onCancel={onClose}
-        onOk={onOk}
-        okText="导出"
-        cancelText="取消"
+    <Modal
+      title="导出代码文件"
+      centered
+      open={open}
+      onCancel={onClose}
+      onOk={onOk}
+      okText="导出"
+      cancelText="取消"
+      destroyOnHidden
+    >
+      <Form
+        form={form}
+        name="exportCode"
+        labelCol={{ span: 5 }}
+        wrapperCol={{ span: 19 }}
+        initialValues={{ exportTarget: 'vue' }}
+        autoComplete="off"
       >
-        <Form
-          form={form}
-          name="basic"
-          labelCol={{ span: 5 }}
-          wrapperCol={{ span: 19 }}
-          initialValues={{ buildType: 1 }}
-          autoComplete="off"
+        <Form.Item<FieldType>
+          label="代码类型"
+          name="exportTarget"
+          rules={[{ required: true, message: '请选择代码类型' }]}
         >
-          <Form.Item<FieldType>
-            label="生成类型" 
-            name="buildType"
-            rules={[{ required: true, message: '请选择生成类型' }]}
-          >
-            <Radio.Group
-              id="buildType"
-              optionType="button"
-              buttonStyle="solid"
-              disabled
-              options={[
-                { value: 1, label: '页面' },
-                { value: 2, label: '弹窗' },
-              ]}
-            />
-          </Form.Item>
-          <Form.Item<FieldType>
-            label="文件名"
-            name="filename"
-            rules={[{ required: true, message: '请输入文件名' }]}
-          >
-            <Input
-              placeholder="请输入文件名，如 MyForm.vue"
-            />
-          </Form.Item>
-        </Form>
-      </Modal>
-    </>
+          <Radio.Group
+            optionType="button"
+            buttonStyle="solid"
+            options={[
+              { value: 'vue', label: 'Vue3 + Element Plus' },
+              { value: 'react', label: 'React + Ant Design' },
+            ]}
+          />
+        </Form.Item>
+        <Form.Item<FieldType>
+          label="文件名"
+          name="filename"
+          rules={[{ required: true, message: '请输入文件名' }]}
+        >
+          <Input placeholder="如 MyForm.vue 或 MyForm.tsx" />
+        </Form.Item>
+      </Form>
+    </Modal>
   )
 }
 

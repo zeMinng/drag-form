@@ -56,9 +56,12 @@ npm run lint
 
 ```text
 src/
-├─ views/form/pages/           # 搭建器页面（左中右面板）
-├─ views/form/static/core/     # 生成器/渲染器/组件注册核心逻辑
-├─ views/form/static/utils/    # props、类型、缓存等工具
+├─ pages/form/pages/           # 搭建器页面（左中右面板）
+├─ pages/form/static/          # 重构后的代码生成器/渲染器/注册器核心模块
+│  ├─ types/                   # 核心类型定义
+│  ├─ registry/                # 组件注册器与配置 (分类维护)
+│  ├─ renderer/                # 组件运行时渲染器
+│  └─ generator/               # 代码生成器 (Vue ElementPlus / React Antd 双轨)
 ├─ store/modules/form.ts       # 表单状态管理（Zustand）
 ├─ router/                     # 路由配置
 └─ layout/                     # 页面布局与头部工具栏

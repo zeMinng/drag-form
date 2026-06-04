@@ -1,4 +1,4 @@
-import type { FormComponent, ValidationConfig } from '@/pages/form/static/type/component'
+import type { FormComponent, ValidationConfig } from '@/pages/form/static/types/component'
 
 export interface CenterItem extends FormComponent {
   id: string

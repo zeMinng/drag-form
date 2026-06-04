@@ -8,18 +8,18 @@
 
 ### 1. 统一组件注册系统
 
-#### 类型定义 (`src/types/component.ts`)
+#### 类型定义 (`src/pages/form/static/types/component.ts`)
 - `ComponentCategory`: 组件分类（input、select、layout、advanced）
 - `ComponentMeta`: 组件元信息（标题、描述、图标等）
 - `ComponentConfig`: 组件配置（组件实例、属性配置等）
 - `FormComponent`: 表单中的组件项
 - `ComponentRegistry`: 组件注册器接口
 
-#### 组件注册器 (`src/utils/componentRegistry.ts`)
+#### 组件注册器 (`src/pages/form/static/registry/index.ts`)
 - 统一的组件注册和管理
 - 支持按分类获取组件
 - 提供组件配置的增删改查
-- 默认包含所有基础组件配置
+- 按分类（input / select / layout）拆分维护组件的预设配置，提高可读性与维护效率
 
 ### 2. 模块化设计
 
@@ -66,7 +66,7 @@
 
 ### 添加新组件
 ```typescript
-import { registerComponent } from '@/utils/componentRegistry'
+import { registerComponent } from '@/pages/form/static'
 import { Input } from 'antd'
 
 registerComponent('custom-input', {
@@ -88,7 +88,7 @@ registerComponent('custom-input', {
 
 ### 获取组件列表
 ```typescript
-import { getComponentMetasByCategory } from '@/utils/componentRegistry'
+import { getComponentMetasByCategory } from '@/pages/form/static'
 
 // 获取所有输入型组件
 const inputComponents = getComponentMetasByCategory('input')
@@ -96,7 +96,7 @@ const inputComponents = getComponentMetasByCategory('input')
 
 ### 渲染组件
 ```typescript
-import { renderComponent } from '@/utils/componentUtils'
+import { renderComponent } from '@/pages/form/static'
 
 const component = renderComponent({
   type: 'input',
@@ -109,28 +109,24 @@ const component = renderComponent({
 
 ```
 src/
-├── types/
-│   └── component.ts          # 组件类型定义
-├── utils/
-│   ├── componentRegistry.ts  # 组件注册器
-│   ├── componentRenderer.tsx # 组件渲染器
-│   └── componentUtils.ts     # 组件工具函数
 ├── store/
 │   └── modules/
 │       └── form.ts          # 表单状态管理
-└── views/
+└── pages/
     └── form/
-        └── pages/
-            ├── left/         # 左侧组件列表
-            ├── center/       # 中间画布
-            └── right/        # 右侧配置面板
+        ├── pages/           # 搭建器页面（左中右面板）
+        └── static/          # 重构后的代码生成器/静态渲染器/注册中心模块
+            ├── types/       # 核心类型定义
+            ├── registry/    # 组件注册器与配置 (分类维护)
+            ├── renderer/    # 组件运行时渲染器
+            └── generator/   # 代码生成器 (Vue ElementPlus / React Antd 双轨)
 ```
 
 ## 迁移指南
 
 ### 从旧架构迁移
-1. 删除 `src/views/form/static/mapping/leftListMapping.ts`
-2. 删除 `src/views/form/static/formComponents/formComponents.ts`
+1. 删除 `src/pages/form/static/mapping/leftListMapping.ts`
+2. 删除 `src/pages/form/static/formComponents/formComponents.ts`
 3. 更新所有导入路径，使用新的注册器
 4. 更新类型定义，使用统一的类型系统
 

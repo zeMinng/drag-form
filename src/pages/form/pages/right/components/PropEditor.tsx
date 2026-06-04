@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
 import { Input, InputNumber, Select, Switch, Slider, Radio, Checkbox, ColorPicker, Row, Col } from 'antd'
-import type { PropConfig } from '@/pages/form/static/type/component'
+import type { PropConfig } from '@/pages/form/static/types/component'
 
 const { TextArea } = Input
 const { Option } = Select

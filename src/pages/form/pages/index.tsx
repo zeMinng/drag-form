@@ -15,7 +15,7 @@ import Left from './left'
 import Center from './center'
 import Right from './right'
 import { useFormStore, type CenterItem } from '@/store/modules/form'
-import { getComponentConfig } from '@/pages/form/static/core/registry/componentRegistry'
+import { getComponentConfig } from '@/pages/form/static'
 import './index.scss'
 
 interface DraggingItem {
