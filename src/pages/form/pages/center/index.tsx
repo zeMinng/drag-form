@@ -1,13 +1,36 @@
 import React, { useState, useRef, useMemo, useCallback, useEffect } from 'react'
 import { App, Flex, Button, message, Drawer, Space, Form, Segmented } from 'antd'
-import { DeleteOutlined, EyeOutlined, DownloadOutlined, CopyOutlined, FormOutlined } from '@ant-design/icons'
+import { DeleteOutlined, EyeOutlined, DownloadOutlined, CopyOutlined, FormOutlined, CheckOutlined } from '@ant-design/icons'
 import { useDroppable } from '@dnd-kit/core'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import Prism from 'prismjs'
 import 'prismjs/themes/prism-tomorrow.css'
+
+// Set global Prism for modular components
+if (typeof window !== 'undefined') {
+  window.Prism = window.Prism || Prism
+}
+
+import 'prismjs/components/prism-markup'
+import 'prismjs/components/prism-javascript'
 import 'prismjs/components/prism-typescript'
+import 'prismjs/components/prism-jsx'
+import 'prismjs/components/prism-tsx'
 import 'prismjs/components/prism-css'
+
+// Configure Prism to support TypeScript syntax inside script tags in Vue/HTML files
+if (Prism.languages.markup && Prism.languages.typescript) {
+  Prism.languages.insertBefore('markup', 'script', {
+    'typescript-script': {
+      pattern: /(<script[\s\S]*?lang=["']?(?:ts|typescript|tsx)["']?[\s\S]*?>)[\s\S]*?(?=<\/script>)/i,
+      lookbehind: true,
+      inside: Prism.languages.typescript
+    }
+  });
+  Prism.languages.html = Prism.languages.markup
+}
+
 import IconFont from '@/components/business/Icon'
 import DownloadOutVue from '../downloadOutVue/index'
 import { useFormStore, type CenterItem, type FormConfig } from '@/store/modules/form'
@@ -48,6 +71,7 @@ const CenterTop: React.FC = () => {
   const [jsonModalVisible, setJsonModalVisible] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
   const [editedJson, setEditedJson] = useState('')
+  const [copied, setCopied] = useState(false)
   const { centerItems, updateItems, formConfig } = useFormStore()
   const codeRef = useRef<HTMLPreElement>(null)
   const jsonTextareaRef = useRef<HTMLTextAreaElement>(null)
@@ -69,6 +93,8 @@ const CenterTop: React.FC = () => {
     try {
       const generatedCode = getGeneratedCode(codeTarget)
       await navigator.clipboard.writeText(generatedCode)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
       message.success('代码已复制到剪贴板')
     } catch {
       // 如果 clipboard API 不可用，使用传统方法
@@ -81,40 +107,19 @@ const CenterTop: React.FC = () => {
           selection.addRange(range)
           document.execCommand('copy')
           selection.removeAllRanges()
+          setCopied(true)
+          setTimeout(() => setCopied(false), 2000)
           message.success('代码已复制到剪贴板')
         }
       }
     }
-  }, [centerItems, formConfig, codeTarget, getGeneratedCode])
+  }, [codeTarget, getGeneratedCode])
 
   const handleViewJSON = useCallback(() => {
     setJsonModalVisible(true)
     setEditedJson(JSON.stringify(centerItems, null, 2))
     setIsEditing(false)
   }, [centerItems])
-
-  // const handleCopyJSON = useCallback(async () => {
-  //   try {
-  //     const jsonData = isEditing ? editedJson : JSON.stringify(centerItems, null, 2)
-  //     await navigator.clipboard.writeText(jsonData)
-  //     message.success('JSON数据已复制到剪贴板')
-  //   } catch (error) {
-  //     // 如果 clipboard API 不可用，使用传统方法
-  //     const currentRef = isEditing ? jsonTextareaRef.current : jsonPreRef.current
-  //     if (currentRef) {
-  //       const range = document.createRange()
-  //       range.selectNodeContents(currentRef)
-  //       const selection = window.getSelection()
-  //       if (selection) {
-  //         selection.removeAllRanges()
-  //         selection.addRange(range)
-  //         document.execCommand('copy')
-  //         selection.removeAllRanges()
-  //         message.success('JSON数据已复制到剪贴板')
-  //       }
-  //     }
-  //   }
-  // }, [centerItems, isEditing, editedJson])
 
   const handleEditJSON = useCallback(() => {
     setIsEditing(true)
@@ -155,14 +160,34 @@ const CenterTop: React.FC = () => {
     () => getGeneratedCode(codeTarget),
     [getGeneratedCode, codeTarget]
   )
-  const codeLanguageClass = codeTarget === 'react' ? 'language-typescript' : 'language-markup'
+  const codeLanguageClass = codeTarget === 'react' ? 'language-tsx' : 'language-html'
   const jsonData = useMemo(() => JSON.stringify(centerItems, null, 2), [centerItems])
+
+  const lines = useMemo(() => generatedCode.split('\n'), [generatedCode])
+  const lineNumbers = useMemo(() => lines.map((_, index) => index + 1).join('\n'), [lines])
+
+  const codeSize = useMemo(() => {
+    const bytes = new Blob([generatedCode]).size
+    if (bytes < 1024) return `${bytes} B`
+    return `${(bytes / 1024).toFixed(2)} KB`
+  }, [generatedCode])
+
+  const highlightCode = useCallback(() => {
+    if (codeRef.current) {
+      const codeEl = codeRef.current.querySelector('code')
+      if (codeEl) {
+        codeEl.removeAttribute('data-highlighted')
+        Prism.highlightElement(codeEl)
+      }
+    }
+  }, [])
 
   useEffect(() => {
     if (codeModalVisible) {
-      Prism.highlightAll()
+      const timer = setTimeout(highlightCode, 50)
+      return () => clearTimeout(timer)
     }
-  }, [codeModalVisible, generatedCode])
+  }, [codeModalVisible, generatedCode, codeTarget, highlightCode])
 
   return (
     <div className="centerTop">
@@ -188,50 +213,186 @@ const CenterTop: React.FC = () => {
       <Drawer
         title="预览代码"
         placement="right"
-        closable={false}
-        size="large"
+        width={800}
         onClose={() => setCodeModalVisible(false)}
         open={codeModalVisible}
-        forceRender
+        destroyOnClose
+        afterOpenChange={(open) => {
+          if (open) {
+            setTimeout(highlightCode, 50)
+          }
+        }}
+        styles={{
+          body: {
+            padding: '16px',
+            display: 'flex',
+            flexDirection: 'column',
+            height: '100%',
+            overflow: 'hidden'
+          }
+        }}
         extra={
-          <Space>
-            <Button key="copy" icon={<CopyOutlined />} type="primary" onClick={handleCopyCode}>
-              复制代码
-            </Button>
-            <Button key="close" onClick={() => setCodeModalVisible(false)}>
-              关闭
-            </Button>
-          </Space>
+          <Button key="close" onClick={() => setCodeModalVisible(false)}>
+            关闭
+          </Button>
         }
       >
-        <div style={{ marginBottom: 12 }}>
-          <Segmented<ExportCodeTarget>
-            value={codeTarget}
-            onChange={(value) => setCodeTarget(value)}
-            options={[
-              { label: 'Vue + Element Plus', value: 'vue' },
-              { label: 'React + Ant Design', value: 'react' },
-            ]}
-          />
-        </div>
-        <div style={{ position: 'relative' }}>
-          <pre
-            ref={codeRef}
-            style={{
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          flex: 1,
+          background: '#282c34',
+          borderRadius: '8px',
+          overflow: 'hidden',
+          border: '1px solid #3e4451',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+          minHeight: 0
+        }}>
+          {/* macOS window control header with IDE tabs */}
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            background: '#1e2227',
+            borderBottom: '1px solid #181a1f',
+            height: '40px',
+            userSelect: 'none'
+          }}>
+            {/* Left part: macOS styled dots + Tabs */}
+            <div style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
+              <div style={{ display: 'flex', alignItems: 'center', paddingLeft: '16px', paddingRight: '16px', gap: '6px' }}>
+                <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#ff5f56', display: 'inline-block' }}></span>
+                <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#ffbd2e', display: 'inline-block' }}></span>
+                <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#27c93f', display: 'inline-block' }}></span>
+              </div>
+              
+              <div style={{ display: 'flex', alignItems: 'center', height: '100%', borderLeft: '1px solid #181a1f' }}>
+                <div 
+                  onClick={() => setCodeTarget('vue')}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    padding: '0 16px',
+                    height: '100%',
+                    background: codeTarget === 'vue' ? '#282c34' : '#1e2227',
+                    color: codeTarget === 'vue' ? '#ffffff' : '#abb2bf',
+                    cursor: 'pointer',
+                    borderTop: codeTarget === 'vue' ? '2px solid #41b883' : '2px solid transparent',
+                    borderRight: '1px solid #181a1f',
+                    fontSize: '12px',
+                    fontWeight: codeTarget === 'vue' ? 500 : 400,
+                    transition: 'all 0.15s ease'
+                  }}
+                >
+                  <svg viewBox="0 0 128 128" width="14" height="14" style={{ display: 'block' }}>
+                    <path fill="#41B883" d="M74.4 0L64 18L53.6 0H0l64 110.8L128 0z"/>
+                    <path fill="#35495E" d="M74.4 0L64 18L53.6 0H19.5L64 77.2l44.5-77.2z"/>
+                  </svg>
+                  <span style={{ marginLeft: 6 }}>App.vue</span>
+                </div>
+                
+                <div 
+                  onClick={() => setCodeTarget('react')}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    padding: '0 16px',
+                    height: '100%',
+                    background: codeTarget === 'react' ? '#282c34' : '#1e2227',
+                    color: codeTarget === 'react' ? '#ffffff' : '#abb2bf',
+                    cursor: 'pointer',
+                    borderTop: codeTarget === 'react' ? '2px solid #61dafb' : '2px solid transparent',
+                    borderRight: '1px solid #181a1f',
+                    fontSize: '12px',
+                    fontWeight: codeTarget === 'react' ? 500 : 400,
+                    transition: 'all 0.15s ease'
+                  }}
+                >
+                  <svg viewBox="-11.5 -10.23174 23 20.46348" width="14" height="14" style={{ display: 'block' }}>
+                    <circle cx="0" cy="0" r="2.05" fill="#61dafb"/>
+                    <g stroke="#61dafb" stroke-width="1" fill="none">
+                      <ellipse rx="11" ry="4.2"/>
+                      <ellipse rx="11" ry="4.2" transform="rotate(60)"/>
+                      <ellipse rx="11" ry="4.2" transform="rotate(120)"/>
+                    </g>
+                  </svg>
+                  <span style={{ marginLeft: 6 }}>GeneratedForm.tsx</span>
+                </div>
+              </div>
+            </div>
+            
+            {/* Right part: File size + Copy button */}
+            <div style={{ display: 'flex', alignItems: 'center', paddingRight: '16px', gap: '16px' }}>
+              <span style={{ color: '#5c6370', fontSize: '11px', fontFamily: 'monospace' }}>
+                {codeSize}
+              </span>
+              <Button 
+                type="text" 
+                size="small"
+                icon={copied ? <CheckOutlined style={{ color: '#52c41a' }} /> : <CopyOutlined style={{ color: '#abb2bf' }} />} 
+                onClick={handleCopyCode}
+                style={{ 
+                  color: copied ? '#52c41a' : '#abb2bf', 
+                  fontSize: '12px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  padding: '4px 8px',
+                  height: 'auto'
+                }}
+              >
+                {copied ? '已复制' : '复制代码'}
+              </Button>
+            </div>
+          </div>
+          
+          {/* Code Body with native sticky Line Numbers */}
+          <div style={{ 
+            flex: 1, 
+            overflow: 'auto', 
+            display: 'flex',
+            background: '#282c34'
+          }}>
+            {/* Line Numbers Gutter */}
+            <pre style={{
               margin: 0,
-              background: 'var(--bg-dark)',
-              borderRadius: '8px',
-              overflow: 'auto',
+              padding: '16px 12px 16px 16px',
+              background: '#21252b',
+              color: '#5c6370',
+              textAlign: 'right',
               fontSize: '13px',
-              lineHeight: '1.5',
+              lineHeight: '1.6',
               fontFamily: 'Consolas, Monaco, "Courier New", monospace',
-              userSelect: 'text',
-              cursor: 'text',
-              whiteSpace: 'pre-wrap',
-            }}
-          >
-            <code className={codeLanguageClass}>{generatedCode}</code>
-          </pre>
+              userSelect: 'none',
+              borderRight: '1px solid #181a1f',
+              position: 'sticky',
+              left: 0,
+              zIndex: 10,
+              whiteSpace: 'pre',
+              overflow: 'visible' // Prevent gutter pre from showing scrollbars
+            }}>
+              {lineNumbers}
+            </pre>
+            
+            {/* Real Code */}
+            <pre
+              ref={codeRef}
+              className={codeLanguageClass}
+              style={{
+                margin: 0,
+                padding: '16px 16px 16px 12px',
+                background: 'transparent',
+                fontSize: '13px',
+                lineHeight: '1.6',
+                fontFamily: 'Consolas, Monaco, "Courier New", monospace',
+                userSelect: 'text',
+                whiteSpace: 'pre',
+                flex: 1,
+                overflow: 'visible' // Prevent code pre from showing scrollbars (parent div will handle scrolling)
+              }}
+            >
+              <code className={codeLanguageClass}>{generatedCode}</code>
+            </pre>
+          </div>
         </div>
       </Drawer>
 

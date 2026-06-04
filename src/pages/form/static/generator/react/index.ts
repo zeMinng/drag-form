@@ -52,7 +52,7 @@ const collectInitialValues = (items: CenterItem[]): string[] => {
         return
       }
       const name = getReactFieldName(item)
-      fields.push(`    ${name}: ${getDefaultValueByType(item.type)},`)
+      fields.push(`  ${name}: ${getDefaultValueByType(item.type)},`)
     })
   }
 
@@ -78,14 +78,16 @@ export const generateReactComponent = (
   const initialValueLines = collectInitialValues(items)
   const initialValuesBlock =
     initialValueLines.length > 0
-      ? `initialValues={{\n${initialValueLines.join('\n')}\n    }}`
+      ? `initialValues={{\n${initialValueLines.join('\n')}\n}}`
       : ''
 
   const formAttrs = [...buildFormAttributes(formConfig)]
   if (initialValuesBlock) formAttrs.push(initialValuesBlock)
 
   const jsxBody = generateReactJsx(items, formConfig)
-  const formAttrStr = formAttrs.map((a) => `      ${a}`).join('\n')
+  const formAttrStr = formAttrs
+    .map((a) => a.split('\n').map((line) => `      ${line}`).join('\n'))
+    .join('\n')
 
   const fullCode = `import React from 'react'
 ${importLine}

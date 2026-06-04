@@ -31,7 +31,9 @@ export const generateVueComponent = (items: CenterItem[], formConfig: FormConfig
   
   // 根据表单配置生成表单属性
   const formProps = buildFormProps(formConfig)
-  const formPropsStr = formatFormProps(formProps)
+  const formPropsStr = formProps.length > 0
+    ? '\n' + formProps.map(prop => `      ${prop}`).join('\n')
+    : ''
   
   const fullCode = `<template>
   <div class="form-container">
@@ -39,10 +41,9 @@ export const generateVueComponent = (items: CenterItem[], formConfig: FormConfig
       ref="formRef"
       :model="${formConfig.modelName}"
       :rules="formRules"
-      @submit.prevent="onSubmit"
-${formPropsStr}
+      @submit.prevent="onSubmit"${formPropsStr}
     >
-${template.split('\n').map(line => `      ${line}`).join('\n')}
+${template.split('\n').map(line => line.trim() ? `      ${line}` : '').join('\n')}
 
       <el-form-item>
         <el-button type="primary" @click="onSubmit">提交</el-button>

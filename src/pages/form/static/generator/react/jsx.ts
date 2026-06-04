@@ -182,5 +182,5 @@ export const processReactJsx = (
 }
 
 export const generateReactJsx = (items: CenterItem[], formConfig: FormConfig): string => {
-  return processReactJsx(items, formConfig, 2)
+  return processReactJsx(items, formConfig, 4)
 }
