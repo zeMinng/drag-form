@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react'
 import { Button, Select, Input, InputNumber, Space, Card } from 'antd'
 import { PlusOutlined, DeleteOutlined } from '@ant-design/icons'
-import type { ValidationRule, ValidationConfig } from '@/pages/form/static/type/component'
+import type { ValidationRule, ValidationConfig } from '@/pages/form/static/types/component'
 
 const { Option } = Select
 

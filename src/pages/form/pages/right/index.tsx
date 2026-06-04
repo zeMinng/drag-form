@@ -4,7 +4,7 @@ import PropEditor from './components/PropEditor'
 import ValidationEditor from './components/ValidationEditor'
 import { useFormStore } from '@/store/modules/form'
 import { getComponentConfig } from '@/pages/form/static'
-import type { PropConfig } from '@/pages/form/static/type/component'
+import type { PropConfig } from '@/pages/form/static/types/component'
 
 import './index.scss'
 

@@ -3,7 +3,7 @@ import { Segmented, List } from 'antd'
 import { useDraggable } from '@dnd-kit/core'
 import IconFont from '@/components/business/Icon'
 import { getComponentMetasByCategory } from '@/pages/form/static'
-import type { ComponentCategory, ComponentMeta } from '@/pages/form/static/type/component'
+import type { ComponentCategory, ComponentMeta } from '@/pages/form/static/types/component'
 import './index.scss'
 
 const DraggableListItem: React.FC<{ item: ComponentMeta }> = React.memo(({ item }) => {
