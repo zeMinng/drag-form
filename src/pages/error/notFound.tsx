@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import IconFont from '@/components/business/Icon'
+import { APP_TITLE } from '@/constants/index.ts'
 import './notFound.scss'
 
 const NotFound: React.FC = () => {
@@ -49,7 +50,7 @@ const NotFound: React.FC = () => {
       <div className="copyright">
         © 2025
         {new Date().getFullYear() > 2025 && `-${new Date().getFullYear()}`}{' '}
-        zeMing | drag-vue-form. 保留所有权利
+        zeMing | {APP_TITLE}. 保留所有权利
       </div>
     </div>
   )

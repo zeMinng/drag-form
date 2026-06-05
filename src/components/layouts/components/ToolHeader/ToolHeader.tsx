@@ -1,13 +1,11 @@
 import { useNavigate } from 'react-router-dom'
 import { Popover, Flex, Button, Tooltip } from 'antd'
 import { QuestionCircleOutlined, GithubOutlined, MoonOutlined, SunOutlined } from '@ant-design/icons'
+import { APP_TITLE_UP, githubRepoUrl } from '@/constants/index.ts'
 import { useTheme } from '@/hooks/useTheme'
 import MenuWrap from '../Menu/Menu'
 import LOGO_URL from '@/assets/logo_w60.svg'
 import './ToolHeader.scss'
-
-const GITHUB_URL = 'https://github.com/zeMinng/drag-vue-form'
-const APP_NAME = 'DragVueForm'
 
 const ToolHeader: React.FC = () => {
   const navigate = useNavigate()
@@ -18,10 +16,10 @@ const ToolHeader: React.FC = () => {
       <div className="logo-section" onClick={() => navigate('/', { replace: true })}>
         <img
           src={LOGO_URL}
-          alt='logo'
+          alt="logo"
           className="logo-image"
         />
-        <span className="app-name">{APP_NAME}</span>
+        <span className="app-name">{APP_TITLE_UP}</span>
       </div>
 
       {/* 右侧功能区 */}
@@ -43,8 +41,8 @@ const ToolHeader: React.FC = () => {
         {/* 帮助按钮 */}
         <Tooltip title="帮助信息">
           <Popover
-            trigger='click'
-            placement='bottomRight'
+            trigger="click"
+            placement="bottomRight"
             content={
               <div className="help-popover">
                 <p className="help-title">表单可视化编辑器</p>
@@ -67,7 +65,7 @@ const ToolHeader: React.FC = () => {
           <Button
             type="text"
             icon={<GithubOutlined />}
-            onClick={() => window.open(GITHUB_URL, '_blank', 'noopener,noreferrer')}
+            onClick={() => window.open(githubRepoUrl, '_blank', 'noopener,noreferrer')}
             className="github-btn"
           />
         </Tooltip>

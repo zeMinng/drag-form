@@ -1,4 +1,4 @@
-# drag-vue-form
+# drag-form
 
 可视化表单搭建器（拖拽编排）+ Vue 代码导出工具。  
 运行端基于 React + Vite，导出目标为 Vue 3 + TypeScript + Element Plus 单文件组件（`.vue`）。
@@ -72,8 +72,3 @@ src/
 1. 在左侧选择组件并拖拽到中间画布
 2. 在右侧面板调整组件属性、校验等配置
 3. 点击导出，输入文件名后生成 `.vue` 文件
-
-## 注意事项
-
-- 当前仓库名包含 `vue`，但编辑器本身为 React 项目
-- `vue` 体现在导出结果：生成 Vue 3 + TypeScript + Element Plus 代码
