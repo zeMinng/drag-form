@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from 'react'
+import { useEffect, useRef } from 'react'
 import { message } from 'antd'
 import { v4 as uuidv4 } from 'uuid'
 import type { CenterItem } from '@/store/modules/form'
@@ -9,6 +9,13 @@ export interface KeyboardShortcutsOptions {
   onPaste?: (item: CenterItem | null, targetItem: CenterItem | null) => void
   getSelectedItem: () => CenterItem | null
   shouldIgnoreInput?: (target: HTMLElement) => boolean
+}
+
+// 递归克隆节点并分配新 id
+const cloneItemWithNewIds = (node: CenterItem): CenterItem => {
+  const newId = uuidv4().replace(/[^a-zA-Z]/g, '').slice(0, 3)
+  const clonedChildren = Array.isArray(node.children) ? node.children.map(cloneItemWithNewIds) : node.children
+  return { ...node, id: newId, children: clonedChildren as any }
 }
 
 export const useKeyboardShortcuts = (options: KeyboardShortcutsOptions) => {
@@ -24,14 +31,6 @@ export const useKeyboardShortcuts = (options: KeyboardShortcutsOptions) => {
   } = options
 
   const clipboardRef = useRef<CenterItem | null>(null)
-
-  // 递归克隆节点并分配新 id
-  const cloneItemWithNewIds = useCallback((node: CenterItem): CenterItem => {
-    // const newId = (crypto?.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2, 10)).substring(0, 3)
-    const newId = uuidv4().replace(/[^a-zA-Z]/g, '').slice(0, 3)
-    const clonedChildren = Array.isArray(node.children) ? node.children.map(cloneItemWithNewIds) : node.children
-    return { ...node, id: newId, children: clonedChildren as any }
-  }, [])
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -77,9 +76,5 @@ export const useKeyboardShortcuts = (options: KeyboardShortcutsOptions) => {
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [onDelete, onCopy, onPaste, getSelectedItem, shouldIgnoreInput, cloneItemWithNewIds])
-
-  return {
-    clipboardItem: clipboardRef.current
-  }
+  }, [onDelete, onCopy, onPaste, getSelectedItem, shouldIgnoreInput])
 }

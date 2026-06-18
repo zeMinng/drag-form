@@ -29,12 +29,12 @@ export const buildFormProps = (formConfig: FormConfig): string[] => {
   
   // 禁用表单
   if (formConfig.disabled) {
-    formProps.push(`:disabled="true"`)
+    formProps.push(':disabled="true"')
   }
 
   // 是否加入冒号
   if (formConfig.colon) {
-    formProps.push(`label-suffix=":"`)
+    formProps.push('label-suffix=":"')
   }
   
   // 布局方式转换：Ant Design -> Element Plus
@@ -47,7 +47,7 @@ export const buildFormProps = (formConfig: FormConfig): string[] => {
   
   // 验证信息显示控制
   if (formConfig.showValidation === false) {
-    formProps.push(`:show-message="false"`)
+    formProps.push(':show-message="false"')
   }
 
   return formProps
@@ -64,10 +64,10 @@ const buildLayoutProps = (formConfig: FormConfig): string[] => {
   if (formConfig.layout) {
     if (formConfig.layout === 'inline') {
       // Element Plus 行内表单需要设置 :inline="true"
-      props.push(`:inline="true"`)
+      props.push(':inline="true"')
     } else if (formConfig.layout === 'vertical') {
       // Element Plus 垂直布局需要设置 label-position="top"
-      props.push(`label-position="top"`)
+      props.push('label-position="top"')
     }
     // horizontal 是默认值，不需要特殊设置
   }
@@ -87,7 +87,7 @@ const buildLabelAlignProps = (formConfig: FormConfig): string[] => {
   // 因为 horizontal 和 vertical 已经通过 layout 设置了 label-position
   if (formConfig.labelAlign && formConfig.layout === 'inline') {
     if (formConfig.labelAlign === 'left') {
-      props.push(`label-position="left"`)
+      props.push('label-position="left"')
     }
     // right 是默认值，不需要特殊设置
   }

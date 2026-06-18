@@ -1,5 +1,5 @@
 import React, { useState, useRef, useMemo, useCallback, useEffect } from 'react'
-import { App, Flex, Button, message, Drawer, Space, Form, Segmented } from 'antd'
+import { App, Flex, Button, message, Drawer, Space, Form } from 'antd'
 import { DeleteOutlined, EyeOutlined, DownloadOutlined, CopyOutlined, FormOutlined, CheckOutlined } from '@ant-design/icons'
 import { useDroppable } from '@dnd-kit/core'
 import { useSortable } from '@dnd-kit/sortable'
@@ -27,7 +27,7 @@ if (Prism.languages.markup && Prism.languages.typescript) {
       lookbehind: true,
       inside: Prism.languages.typescript
     }
-  });
+  })
   Prism.languages.html = Prism.languages.markup
 }
 
@@ -36,7 +36,7 @@ import DownloadOutVue from '../downloadOutVue/index'
 import { useFormStore, type CenterItem, type FormConfig } from '@/store/modules/form'
 import { generateVueComponent, generateReactComponent, renderComponentByType, getComponentConfig } from '@/pages/form/static'
 import type { ExportCodeTarget } from '../downloadOutVue/index'
-import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts'
+// import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts'
 
 import './index.scss'
 
@@ -701,11 +701,13 @@ const Center: React.FC<{
   insertIndex?: number | null
   isDraggingOver?: boolean
 }> = ({ insertIndex, isDraggingOver = false }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { centerItems, formConfig, updateItems, removeCenterItem, getSelectedItem, setSelectedItemId } = useFormStore()
   const { setNodeRef, isOver } = useDroppable({ id: 'center-drop-area' })
 
   /** 键盘快捷键处理 */
   // 在树中将 newNode 插入到 targetId 的后面（作为同级）
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const insertSiblingAfter = useCallback(function insertSiblingAfterFn(
     items: CenterItem[],
     targetId: string,
@@ -731,6 +733,9 @@ const Center: React.FC<{
       return node
     })
   }, [])
+  /**
+   * 使用 useKeyboardShortcuts 处理键盘快捷键
+   */
   /**
    * 使用 useKeyboardShortcuts 处理键盘快捷键
    * 暂时不用

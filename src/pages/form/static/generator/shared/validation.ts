@@ -9,7 +9,7 @@ import type { ValidationRule } from '@/pages/form/static/types/component'
  * 转义校验消息中的特殊字符
  */
 export const escapeMessage = (msg: string): string =>
-  msg.replace(/'/g, "\\'")
+  msg.replace(/'/g, '\\\'')
 
 /**
  * 替换消息模板中的 {value} 占位符
