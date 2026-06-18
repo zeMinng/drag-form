@@ -7,7 +7,7 @@ import type { CenterItem, FormConfig } from '@/store/modules/form'
 import { generateVueTemplate } from './template'
 import { generateVueScript, generateTypeScriptInterfaces } from './script'
 import { generateVueStyle } from './style'
-import { buildFormProps, formatFormProps } from './formConfig'
+import { buildFormProps } from './formConfig'
 import { defaultCacheManager } from '../shared/cache'
 
 // 重新导出子模块的函数，保持向后兼容

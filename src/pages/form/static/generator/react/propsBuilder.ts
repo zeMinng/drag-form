@@ -15,7 +15,7 @@ export const filterAntdProps = (props: Record<string, unknown> = {}): Record<str
 }
 
 const escapeString = (value: string): string =>
-  value.replace(/\\/g, '\\\\').replace(/'/g, "\\'")
+  value.replace(/\\/g, '\\\\').replace(/'/g, '\\\'')
 
 export const formatReactProp = (key: string, value: unknown): string => {
   if (typeof value === 'boolean') {

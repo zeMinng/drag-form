@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { Button, Select, Input, InputNumber, Space, Card } from 'antd'
 import { PlusOutlined, DeleteOutlined } from '@ant-design/icons'
 import type { ValidationRule, ValidationConfig } from '@/pages/form/static/types/component'
@@ -11,7 +11,7 @@ export interface ValidationEditorProps {
 }
 
 const ValidationEditor: React.FC<ValidationEditorProps> = ({ value, onChange }) => {
-  const validation = value || { rules: [] }
+  const validation = useMemo(() => value || { rules: [] }, [value])
 
   const handleAddRule = useCallback(() => {
     const newRule: ValidationRule = {

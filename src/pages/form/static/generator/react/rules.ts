@@ -5,7 +5,7 @@
 import type { CenterItem } from '@/store/modules/form'
 import type { ValidationRule } from '@/pages/form/static/types/component'
 
-const escapeMessage = (msg: string) => msg.replace(/'/g, "\\'")
+const escapeMessage = (msg: string) => msg.replace(/'/g, '\\\'')
 
 const formatSingleRule = (rule: ValidationRule, item: CenterItem): string => {
   const message = escapeMessage(rule.message)

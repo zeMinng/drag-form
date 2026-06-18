@@ -33,20 +33,20 @@ export const getTypeScriptTypeByComponentType = (type: string): string => {
  */
 export const getDefaultValueByType = (type: string): string => {
   const defaultValueMap: Record<string, string> = {
-    input: "''",
-    textarea: "''",
-    password: "''",
+    input: '\'\'',
+    textarea: '\'\'',
+    password: '\'\'',
     number: '0',
     slider: '0',
     switch: 'false',
     checkbox: '[]',
-    radio: "''",
-    select: "''",
-    date: "''",
-    time: "''"
+    radio: '\'\'',
+    select: '\'\'',
+    date: '\'\'',
+    time: '\'\''
   }
   
-  return defaultValueMap[type] || "''"
+  return defaultValueMap[type] || '\'\''
 }
 
 /**
