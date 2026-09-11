@@ -10,7 +10,7 @@ importers:
     dependencies:
       '@ant-design/icons':
         specifier: ^6.1.0
-        version: 6.2.5(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+        version: 6.3.4(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@dnd-kit/core':
         specifier: ^6.3.1
         version: 6.3.1(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
@@ -130,11 +130,11 @@ packages:
     resolution: {integrity: sha512-esKJegpW4nckh0o6kV3Tkb7NPIZYbPnnFxmQDUmL08ukXZAvV85TZBr70eGuke/CIArLaP6aw8lt9KILjnWuOw==}
     engines: {node: '>=8.x'}
 
-  '@ant-design/icons-svg@4.4.2':
-    resolution: {integrity: sha512-vHbT+zJEVzllwP+CM+ul7reTEfBR0vgxFe7+lREAsAA7YGsYpboiq2sQNeQeRvh09GfQgs/GyFEvZpJ9cLXpXA==}
+  '@ant-design/icons-svg@4.6.0':
+    resolution: {integrity: sha512-PRomU725ABMf/lnQp5HiB7my1kjEbFY0D10N4lXYxK6TIB1gKjIVD5MRThpDaezLgw1D774J8eOeeDB0M6wHrQ==}
 
-  '@ant-design/icons@6.2.5':
-    resolution: {integrity: sha512-0hKtoKqTjGFOndUyJLJmC9Cg6k4rEO7rLo6xmgbNJH+/ZX1C57RVals2v1j1knHl9n7Q+sBOveTvn931wLOCKw==}
+  '@ant-design/icons@6.3.4':
+    resolution: {integrity: sha512-kDoUlppczVyCUTFthF6cHmPzMBYqNZQhu9j6EyIX/YIdM9j9CZNZoJUjzVw7/1v1VO8WwVMmPp15r/uwIAS0AQ==}
     engines: {node: '>=8'}
     peerDependencies:
       react: '>=16.0.0'
@@ -1882,12 +1882,12 @@ snapshots:
 
   '@ant-design/fast-color@3.0.1': {}
 
-  '@ant-design/icons-svg@4.4.2': {}
+  '@ant-design/icons-svg@4.6.0': {}
 
-  '@ant-design/icons@6.2.5(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
+  '@ant-design/icons@6.3.4(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
     dependencies:
       '@ant-design/colors': 8.0.1
-      '@ant-design/icons-svg': 4.4.2
+      '@ant-design/icons-svg': 4.6.0
       '@rc-component/util': 1.11.1(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       clsx: 2.1.1
       react: 19.3.0
@@ -2691,7 +2691,7 @@ snapshots:
       '@ant-design/cssinjs': 2.1.2(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@ant-design/cssinjs-utils': 2.1.2(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@ant-design/fast-color': 3.0.1
-      '@ant-design/icons': 6.2.5(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@ant-design/icons': 6.3.4(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@ant-design/react-slick': 2.0.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@babel/runtime': 7.29.7
       '@rc-component/cascader': 1.15.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
