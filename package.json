@@ -1,11 +1,12 @@
 {
   "name": "drag-form",
   "private": true,
-  "version": "1.0.0",
+  "version": "0.0.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "release": "bumpp",
     "lint": "oxlint",
     "lint:style": "stylelint \"src/**/*.{css,scss}\"",
     "preview": "vite preview"
@@ -32,11 +33,12 @@
     "@rolldown/plugin-babel": "^0.2.3",
     "@types/babel__core": "^7.20.5",
     "@types/node": "^24.13.3",
+    "@types/prismjs": "^1.26.5",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.7",
-    "@types/prismjs": "^1.26.5",
     "@vitejs/plugin-react": "^6.1.1",
     "babel-plugin-react-compiler": "^1.0.0",
+    "bumpp": "^12.3.0",
     "oxlint": "^1.81.0",
     "sass": "^1.95.0",
     "stylelint": "^16.26.1",

@@ -1,0 +1,14 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "minimumReleaseAge": "3 days",
+  "semanticCommits": "enabled",
+  "labels": ["dependencies"],
+  "packageRules": [
+    {
+      "matchPackageNames": ["node", "typescript", "actions/setup-node"],
+      "enabled": false
+    }
+  ],
+  "ignorePaths": [".nvmrc"]
+}
