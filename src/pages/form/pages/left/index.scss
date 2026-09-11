@@ -1,0 +1,54 @@
+.left {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+
+  .segmented {
+    padding: 16px 20px;
+  }
+
+  .left-list {
+    height: 100%;
+    padding: 0 20px;
+    overflow-y: auto;
+    flex: 1;
+
+    .ListData {
+      user-select: none;
+
+      .left-list-item {
+        padding: 6px 0;
+        margin: 10px 0;
+        cursor: pointer;
+        transition: box-shadow 0.3s, border-radius 0.3s;
+
+        .ant-list-item-meta {
+          align-items: center;
+
+          .ant-list-item-meta-avatar {
+            display: flex;
+            padding: 4px;
+            margin: 0 16px 0 8px;
+            background-color: var(--bg-tertiary);
+            border-radius: 4px;
+            align-items: center;
+            justify-content: center;
+          }
+        }
+
+        .left-list-icon {
+          font-size: 16px;
+        }
+        
+        &:hover {
+          --tw-shadow: 0px 0px 10px 0 rgb(0 0 0 / 20%);
+          --tw-shadow-colored: 0px 0px 10px 0 var(--tw-shadow-color);
+
+          border-radius: 8px;
+          box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+        }
+      }
+    }
+  }
+}

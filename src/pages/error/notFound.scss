@@ -1,0 +1,147 @@
+@use "sass:color";
+
+$float-duration: 8s;
+$flicker-duration: 2s;
+
+.notfound-container {
+  position: relative;
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+  padding: 20px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+  background-color: var(--bg-light);
+  box-sizing: border-box;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  // 顶部装饰条
+  .top-accent {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 6px;
+    background: linear-gradient(90deg, var(--primary), var(--primary-light));
+  }
+
+  // 装饰性图标
+  .decorative-icon {
+    position: absolute;
+    font-size: 4rem;
+    color: var(--primary);
+    opacity: 10%;
+    animation: float-random $float-duration ease-in-out infinite;
+
+    &.icon-1 { top: 20%; left: 10%; animation-delay: 0s; }
+    &.icon-2 { top: 70%; left: 85%; animation-delay: 1s; }
+    &.icon-3 { top: 30%; left: 80%; animation-delay: 2s; }
+    &.icon-4 { top: 60%; left: 15%; animation-delay: 3s; }
+  }
+
+  .error-content {
+    width: 100%;
+    max-width: 600px;
+    padding: 60px 30px;
+    text-align: center;
+  }
+
+  // 404 样式
+  .error-code {
+    margin-bottom: 20px;
+    font-size: 8rem;
+    font-weight: 800;
+    color: transparent;
+    background: linear-gradient(90deg, var(--primary), var(--primary-light));
+    animation: flicker $flicker-duration infinite, float 4s ease-in-out infinite;
+    background-clip: text;
+  }
+
+  .error-title {
+    margin-bottom: 15px;
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--text-dark);
+  }
+
+  .error-desc {
+    max-width: 450px;
+    margin: 0 auto 35px;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--text-light);
+  }
+
+  .btn-group {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+  }
+
+  .error-btn {
+    display: inline-flex;
+    padding: 12px 24px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    align-items: center;
+    gap: 8px;
+
+    &.btn-primary {
+      color: var(--text-white);
+      background-color: var(--primary);
+
+      &:hover {
+        background-color: color.adjust($primary, $lightness: -10%);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba($primary, 0.25);
+      }
+
+      &:active {
+        transform: scale(0.97); // 移动端点击反馈
+      }
+    }
+  }
+
+  .copyright {
+    margin-top: 40px;
+    font-size: 0.85rem;
+    color: var(--text-border);
+  }
+}
+
+// ========== 动画 ==========
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-10px) rotate(2deg); }
+  50% { transform: translateY(0) rotate(0deg); }
+  75% { transform: translateY(10px) rotate(-2deg); }
+}
+
+@keyframes float-random {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-20px) rotate(10deg); }
+}
+
+@keyframes flicker {
+  0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 100%; }
+  20%, 24%, 55% { opacity: 70%; }
+}
+
+// ========== 移动端 ==========
+@media (width <= 768px) {
+  .notfound-container {
+    .error-code { font-size: 6rem; }
+    .error-title { font-size: 1.5rem; }
+    .error-content { padding: 40px 20px; }
+    .btn-group { flex-direction: column; gap: 12px; }
+    .error-btn { width: 100%; justify-content: center; }
+  }
+}
