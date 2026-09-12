@@ -100,8 +100,8 @@ importers:
         specifier: ^8.0.0
         version: 8.1.1(stylelint@17.15.0(supports-color@7.2.0)(typescript@6.0.3))
       stylelint-scss:
-        specifier: ^6.13.0
-        version: 6.14.0(stylelint@17.15.0(supports-color@7.2.0)(typescript@6.0.3))
+        specifier: ^7.0.0
+        version: 7.2.0(stylelint@17.15.0(supports-color@7.2.0)(typescript@6.0.3))
       typescript:
         specifier: ~6.0.2
         version: 6.0.3
@@ -1503,9 +1503,6 @@ packages:
   mdn-data@2.27.1:
     resolution: {integrity: sha512-9Yubnt3e8A0OKwxYSXyhLymGW4sCufcLG6VdiDdUGVkPhpqLxlvP5vl1983gQjJl3tqbrM731mjaZaP68AgosQ==}
 
-  mdn-data@2.28.1:
-    resolution: {integrity: sha512-U9w+PzSZ00Z5m9rZ5ARVFL5xOfuCHdKYi/1RRwDCJsboFgJDNT3zT6PIPD7mZQYaQLhsZM3GfDRgSMRHhSmVng==}
-
   meow@14.1.0:
     resolution: {integrity: sha512-EDYo6VlmtnumlcBCbh1gLJ//9jvM/ndXHfVXIFrZVr6fGcwTUyCTFNTLCKuY3ffbK8L/+3Mzqnd58RojiZqHVw==}
     engines: {node: '>=20'}
@@ -1597,10 +1594,6 @@ packages:
     engines: {node: '>=12.0'}
     peerDependencies:
       postcss: ^8.4.29
-
-  postcss-selector-parser@7.1.1:
-    resolution: {integrity: sha512-orRsuYpJVw8LdAwqqLykBj9ecS5/cRHlI5+nvTo8LcCKmzDmqVORXtOIYEEQuL9D4BxtA1lm5isAqzQZCoQ6Eg==}
-    engines: {node: '>=4'}
 
   postcss-selector-parser@7.1.6:
     resolution: {integrity: sha512-7qASPzhKF2l2KLboRZux8CCTRMdGiV08vWmyKzPz22qZ7ZjQBOeY7rNzNoCLSUiftJ7HUq0GERHmxw/t0dCdMw==}
@@ -1783,12 +1776,6 @@ packages:
     engines: {node: '>=20.19.0'}
     peerDependencies:
       stylelint: ^16.18.0 || ^17.0.0
-
-  stylelint-scss@6.14.0:
-    resolution: {integrity: sha512-ZKmHMZolxeuYsnB+PCYrTpFce0/QWX9i9gh0hPXzp73WjuIMqUpzdQaBCrKoLWh6XtCFSaNDErkMPqdjy1/8aA==}
-    engines: {node: '>=18.12.0'}
-    peerDependencies:
-      stylelint: ^16.8.2
 
   stylelint-scss@7.2.0:
     resolution: {integrity: sha512-6E79Bachv0Iz0gqRUZgdqdXCsiq26DWBWIBNHYtjTmAp3wJu6cp/I37VfW7BPntmh2puF3bY09XWl4HZGrLhzw==}
@@ -3246,8 +3233,6 @@ snapshots:
 
   mdn-data@2.27.1: {}
 
-  mdn-data@2.28.1: {}
-
   meow@14.1.0: {}
 
   merge2@1.4.1: {}
@@ -3324,11 +3309,6 @@ snapshots:
   postcss-scss@4.0.9(postcss@8.5.28):
     dependencies:
       postcss: 8.5.28
-
-  postcss-selector-parser@7.1.1:
-    dependencies:
-      cssesc: 3.0.0
-      util-deprecate: 1.0.2
 
   postcss-selector-parser@7.1.6:
     dependencies:
@@ -3500,18 +3480,6 @@ snapshots:
     dependencies:
       postcss: 8.5.28
       postcss-sorting: 10.0.0(postcss@8.5.28)
-      stylelint: 17.15.0(supports-color@7.2.0)(typescript@6.0.3)
-
-  stylelint-scss@6.14.0(stylelint@17.15.0(supports-color@7.2.0)(typescript@6.0.3)):
-    dependencies:
-      css-tree: 3.2.1
-      is-plain-object: 5.0.0
-      known-css-properties: 0.37.0
-      mdn-data: 2.28.1
-      postcss-media-query-parser: 0.2.3
-      postcss-resolve-nested-selector: 0.1.6
-      postcss-selector-parser: 7.1.1
-      postcss-value-parser: 4.2.0
       stylelint: 17.15.0(supports-color@7.2.0)(typescript@6.0.3)
 
   stylelint-scss@7.2.0(stylelint@17.15.0(supports-color@7.2.0)(typescript@6.0.3)):
