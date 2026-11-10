@@ -1,0 +1,85 @@
+.right {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  .custom-tabs {
+    .ant-tabs-nav {
+      width: 100%;
+      margin-bottom: 8px;
+    }
+
+    .ant-tabs-nav-list {
+      display: grid;
+      width: 100%;
+      grid-template-columns: 1fr 1fr; /* 两列，各占一半 */
+    }
+
+    .ant-tabs-tab {
+      display: flex;
+      width: 100%;
+      margin: 0;
+      justify-content: center;
+    }
+  }
+
+  .right-board {
+    flex: 1;
+    padding: 0 16px 16px;
+    overflow-y: auto;
+
+    .empty-state {
+      display: flex;
+      height: 70%;
+      font-size: 14px;
+      color: #999;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .componentConfig,
+    .formConfig {
+      .config-section {
+        margin-bottom: 16px;
+
+        .ant-form-item {
+          margin-bottom: 12px;
+
+          .ant-form-item-label {
+            padding-bottom: 4px;
+          }
+
+          .ant-form-item-label > label {
+            font-size: 12px;
+            color: #666;
+          }
+        }
+      }
+
+      .stats {
+        .stat-item {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 8px 0;
+          border-bottom: 1px solid var(--border-primary);
+
+          &:last-child {
+            border-bottom: none;
+          }
+
+          .stat-label {
+            font-size: 12px;
+            color: #666;
+          }
+
+          .stat-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1890ff;
+          }
+        }
+      }
+    }
+  }
+}

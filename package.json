@@ -1,0 +1,50 @@
+{
+  "name": "drag-form",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "engines": {
+    "node": "^22.18.0 || ^24.11.0 || >=26.0.0"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "release": "bumpp",
+    "lint": "oxlint .",
+    "format": "oxfmt .",
+    "format:check": "oxfmt --check .",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@ant-design/icons": "^6.3.4",
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/modifiers": "^9.0.0",
+    "@dnd-kit/sortable": "^10.0.0",
+    "@dnd-kit/utilities": "^3.2.2",
+    "antd": "^6.7.0",
+    "lucide-react": "^1.70.0",
+    "prismjs": "^1.30.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "react-error-boundary": "^6.1.6",
+    "react-router-dom": "^7.18.5",
+    "uuid": "^14.0.3",
+    "zustand": "^5.1.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^8.1.0",
+    "@rolldown/plugin-babel": "^0.3.1",
+    "@types/node": "^26.6.6",
+    "@types/prismjs": "^1.26.6",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.3.0",
+    "babel-plugin-react-compiler": "^1.0.0",
+    "bumpp": "^12.3.0",
+    "oxfmt": "^0.77.0",
+    "oxlint": "^1.92.0",
+    "sass": "^1.108.1",
+    "typescript": "~7.0.2",
+    "vite": "^8.3.6"
+  }
+}

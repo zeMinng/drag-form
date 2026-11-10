@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 256 256" fill="none">
+  <defs>
+    <!-- 紫色渐变边框 -->
+    <linearGradient id="bgBorderGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7c3aed" />
+      <stop offset="100%" stop-color="#a855f7" />
+    </linearGradient>
+  </defs>
+
+  <!-- 背景 -->
+  <rect 
+    x="24" y="24" width="208" height="208" rx="40" 
+    stroke="url(#bgBorderGradient)" stroke-width="12" fill="white"
+  />
+  
+  <!-- 抽象表单块 -->
+  <rect x="84" y="96" width="88" height="20" rx="4" fill="#7c3aed"/>
+  <rect x="84" y="132" width="64" height="18" rx="4" fill="#a855f7" opacity="0.9"/>
+
+  <!-- 拼装模块 -->
+  <rect x="104" y="172" width="48" height="16" rx="4" fill="#7c3aed" opacity="0.6"/>
+</svg>

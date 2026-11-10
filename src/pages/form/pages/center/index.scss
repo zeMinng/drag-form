@@ -1,0 +1,506 @@
+.centerWrap {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+
+  .centerTop {
+    display: flex;
+    height: 50px;
+    padding: 0 16px;
+    background-color: var(--bg-primary);
+    border-bottom: 1px solid var(--border-primary);
+    align-items: center;
+    justify-content: flex-end;
+  }
+
+  .center-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+    margin: 8px;
+    overflow: hidden;
+    overflow-y: auto;
+    background: var(--bg-primary);
+    border-radius: 8px;
+
+    .center-placeholder {
+      margin: auto;
+      font-size: 16px;
+      color: #bbb;
+      text-align: center;
+    }
+
+    // 表单配置样式
+    .ant-form {
+      // 取消每个form-item的下边距
+      .ant-form-item {
+        margin-bottom: 0;
+      }
+
+      // 标签宽度配置
+      &[style*='--form-label-width'] {
+        .ant-form-item-label {
+          width: var(--form-label-width);
+          max-width: var(--form-label-width);
+          min-width: var(--form-label-width);
+        }
+      }
+
+      .ant-input-number {
+        width: 100%;
+      }
+
+      // 禁用状态样式
+      &.ant-form-disabled {
+        .ant-form-item-label {
+          color: #bfbfbf;
+        }
+
+        .ant-input,
+        .ant-select,
+        .ant-input-number,
+        .ant-switch,
+        .ant-checkbox,
+        .ant-radio {
+          color: #bfbfbf;
+          cursor: not-allowed;
+          background-color: #f5f5f5;
+        }
+      }
+
+      // 尺寸配置样式
+      &.ant-form-large {
+        .ant-form-item-label {
+          font-size: 16px;
+          line-height: 40px;
+        }
+
+        .ant-input,
+        .ant-select,
+        .ant-input-number {
+          height: 40px;
+          font-size: 16px;
+        }
+      }
+
+      &.ant-form-small {
+        .ant-form-item-label {
+          font-size: 12px;
+          line-height: 24px;
+        }
+
+        .ant-input,
+        .ant-select,
+        .ant-input-number {
+          height: 24px;
+          font-size: 12px;
+        }
+      }
+    }
+  }
+
+  .center-item {
+    position: relative;
+    display: flex;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    cursor: move;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    align-items: center;
+
+    &:hover {
+      background: var(--bg-selected);
+    }
+
+    &.selected {
+      background: var(--bg-selected);
+      box-shadow: 0 0 0 1px rgb(173 181 189 / 20%);
+
+      // border: 1px solid var(--border-disabled);
+    }
+
+    .componentWrap {
+      width: 100%;
+
+      // 投放、卡片布局相关的css
+      .layout-children {
+        min-height: 24px;
+        padding: 6px;
+        border: 1px dashed var(--border-tertiary);
+        border-radius: 4px;
+
+        &.drag-over {
+          background: rgb(24 144 255 / 6%);
+          border-color: #1890ff;
+        }
+      }
+
+      // 投放在 Row/Col 上的高亮
+      :where(.ant-row, .ant-col).drag-over {
+        background: rgb(24 144 255 / 6%);
+        border-color: #1890ff;
+      }
+
+      .layout-row,
+      .layout-col {
+        position: relative;
+        padding: 16px;
+        border: 1px dashed var(--border-tertiary);
+        border-radius: 4px;
+
+        // 顶角标签（行/列）
+        &::after {
+          position: absolute;
+          top: -10px;
+          left: 8px;
+          padding: 0 6px;
+          font-size: 12px;
+          color: var(--text-light);
+          background: var(--bg-quaternary);
+          border: 1px solid var(--border-tertiary);
+          border-radius: 6px;
+          content: attr(data-layout-label) ' ' attr(data-meta);
+        }
+      }
+
+      // 鼠标悬停效果（不影响布局，仅视觉）
+      .layout-col:hover {
+        cursor: pointer;
+        background: var(--bg-layout-hover);
+        border-color: var(--border-layout-hover);
+        box-shadow: 0 0 0 1px rgb(148 163 184 / 20%) inset;
+      }
+
+      // Row 仅在没有 hover 到内部 Col 时才高亮
+      .layout-row:hover:not(:has(.layout-col:hover)) {
+        cursor: pointer;
+        background: var(--bg-layout-hover);
+        border-color: var(--border-layout-hover);
+        box-shadow: 0 0 0 1px rgb(148 163 184 / 20%) inset;
+      }
+
+      // 拖拽经过高亮（与 JS 中的 drag-over 类配合）
+      .layout-row.drag-over,
+      .layout-col.drag-over {
+        background: rgb(24 144 255 / 6%);
+        border-color: #1890ff;
+        box-shadow: 0 0 0 1px rgb(24 144 255 / 20%) inset;
+      }
+
+      // 选中态：布局组件（Row/Col）
+      .layout-row.is-selected,
+      .layout-col.is-selected {
+        background: var(--bg-active);
+        border-color: #1890ff;
+        box-shadow: 0 0 0 2px rgb(24 144 255 / 15%) inset;
+      }
+
+      // 选中态：普通组件（非布局）
+      .nested-clickable.selected {
+        background: var(--bg-active);
+        border-radius: 4px;
+        outline: 1px dashed #1890ff;
+        outline-offset: 2px;
+      }
+
+      .nested-item {
+        margin-bottom: 8px;
+      }
+    }
+
+    // 删除按钮
+    .delete-btn {
+      position: absolute;
+      top: -12px;
+      right: -8px;
+      z-index: 10;
+      width: 24px;
+      height: 24px;
+      font-size: 14px;
+      cursor: pointer;
+      background: var(--error);
+      border-radius: 8px;
+      outline: none;
+      box-shadow: 0 2px 4px rgb(0 0 0 / 20%);
+      transition: all 0.2s ease;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+  .insert-indicator {
+    position: relative;
+    display: flex;
+    height: 4px;
+    margin: 2px 0;
+    transition: all 0.2s ease;
+    align-items: center;
+    justify-content: center;
+
+    .insert-line {
+      width: 100%;
+      height: 4px;
+      background: #1890ff;
+      border-radius: 8px;
+      box-shadow: 0 0 4px rgb(24 144 255 / 30%);
+    }
+
+    .insert-dot {
+      position: absolute;
+      left: 50%;
+      padding: 4px 8px;
+      font-size: 12px;
+      color: #fff;
+      background: #1890ff;
+      border-radius: 16px;
+      transform: translateX(-50%);
+      box-shadow: 0 0 4px rgb(24 144 255 / 50%);
+    }
+
+    &.insert-top {
+      margin-bottom: 4px;
+    }
+
+    &.insert-bottom {
+      margin-top: 4px;
+    }
+  }
+}
+
+.code-preview {
+  display: flex;
+  min-height: 0;
+  flex: 1;
+  overflow: hidden;
+  color: #d7deea;
+  background: #111827;
+  border: 1px solid rgb(148 163 184 / 16%);
+  border-radius: 14px;
+  box-shadow: 0 24px 70px rgb(15 23 42 / 24%);
+  flex-direction: column;
+  width: 100%;
+  max-height: 100%;
+
+  &__toolbar {
+    display: flex;
+    min-height: 52px;
+    padding: 0 12px;
+    background: #161f30;
+    border-bottom: 1px solid rgb(148 163 184 / 12%);
+    align-items: center;
+  }
+
+  &__window-dots {
+    display: flex;
+    padding: 0 14px 0 4px;
+    gap: 6px;
+
+    i {
+      width: 9px;
+      height: 9px;
+      background: #ff6b6b;
+      border-radius: 50%;
+
+      &:nth-child(2) {
+        background: #ffd166;
+      }
+      &:nth-child(3) {
+        background: #51cf66;
+      }
+    }
+  }
+
+  &__tabs,
+  &__toolbar-actions {
+    display: flex;
+    height: 100%;
+    align-items: center;
+  }
+
+  &__tabs {
+    flex: 1;
+  }
+
+  &__tab {
+    display: inline-flex;
+    height: 100%;
+    padding: 0 15px;
+    color: #94a3b8;
+    cursor: pointer;
+    background: transparent;
+    border: 0;
+    border-bottom: 2px solid transparent;
+    align-items: center;
+    gap: 8px;
+
+    &:hover {
+      color: #e2e8f0;
+    }
+    &:focus-visible {
+      outline: 2px solid #60a5fa;
+      outline-offset: -3px;
+    }
+
+    &.is-active {
+      color: #f8fafc;
+      background: #111827;
+    }
+    &.is-vue {
+      border-bottom-color: #42b883;
+    }
+    &.is-react {
+      border-bottom-color: #61dafb;
+    }
+  }
+
+  &__file-icon {
+    display: grid;
+    width: 18px;
+    height: 18px;
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 5px;
+    place-items: center;
+
+    &--vue {
+      color: #42b883;
+      background: rgb(66 184 131 / 12%);
+    }
+    &--react {
+      color: #61dafb;
+      background: rgb(97 218 251 / 12%);
+    }
+  }
+
+  &__toolbar-actions {
+    gap: 10px;
+  }
+  &__size {
+    color: #718096;
+    font:
+      11px ui-monospace,
+      SFMono-Regular,
+      Menlo,
+      monospace;
+  }
+  &__copy {
+    color: #cbd5e1 !important;
+  }
+
+  &__editor {
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-gutter: stable;
+    background: #111827;
+    flex: 1;
+    user-select: text;
+  }
+
+  &__gutter,
+  &__source {
+    padding: 20px 0;
+    margin: 0;
+    font:
+      12px/1.75 ui-monospace,
+      SFMono-Regular,
+      Menlo,
+      Consolas,
+      monospace;
+    white-space: pre;
+  }
+
+  &__gutter {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    min-width: 52px;
+    padding-right: 13px;
+    padding-left: 12px;
+    color: #64748b;
+    text-align: right;
+    user-select: none;
+    background: #151e2d;
+    border-right: 1px solid rgb(148 163 184 / 10%);
+  }
+
+  &__source {
+    min-width: 0;
+    padding-right: 24px;
+    padding-left: 18px;
+    background: transparent !important;
+    flex: 1;
+    overflow-x: hidden;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+
+  // Prism's theme gives language pre blocks their own scrollbars. Keep scrolling
+  // on the editor viewport so both axes move together as one surface.
+  pre.code-preview__source {
+    overflow: visible !important;
+    margin: 0;
+  }
+
+  &__source code {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    user-select: text;
+    -webkit-user-select: text;
+  }
+
+  &__copy-hint {
+    padding: 6px 14px;
+    margin: 0;
+    color: #94a3b8;
+    font-size: 11px;
+    background: #151e2d;
+    border-bottom: 1px solid rgb(148 163 184 / 10%);
+  }
+
+  &__statusbar {
+    display: flex;
+    min-height: 28px;
+    padding: 0 14px;
+    color: #94a3b8;
+    font-size: 11px;
+    background: #172235;
+    border-top: 1px solid rgb(148 163 184 / 10%);
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.code-preview-drawer {
+  .ant-drawer-body {
+    min-height: 0;
+  }
+}
+
+@media (width <= 640px) {
+  .code-preview {
+    &__window-dots {
+      display: none;
+    }
+    &__toolbar {
+      padding: 0 6px;
+    }
+    &__tab {
+      padding: 0 9px;
+      font-size: 12px;
+    }
+    &__size {
+      display: none;
+    }
+    &__statusbar {
+      font-size: 10px;
+    }
+  }
+}
